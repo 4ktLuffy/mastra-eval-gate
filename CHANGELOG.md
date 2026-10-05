@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.3.0
+
+- **Run time and token checks.** `latency: { maxIncrease }` and `tokens: { maxIncrease }` (CLI
+  `--max-latency-increase`, `--max-token-increase`) fail the gate when per-item run time or token use
+  grows beyond the allowance, significantly (one-sided sign-flip on per-item log ratios, geometric
+  mean reported). Without them the report still shows both, and warns on a significant rise over
+  20%. Read from Mastra's `startedAt`/`completedAt` and agent `usage.totalTokens`.
+- **Several runs per side.** `gate()` and `compareRows()` take one experiment or several runs of
+  the same dataset (CLI: repeat `--baseline` / `--candidate`). Items are averaged across runs. In
+  bench/gate-sim.ts, 1 / 3 / 5 runs of 20 pass/fail items caught a 0.1 drop 9% / 25% / 34% of the
+  time, with false alarms 2.7–3.3%.
+- **`test: 'betting'`** (CLI `--test betting`): a test by betting (Waudby-Smith & Ramdas) with no
+  symmetry assumption, for scores within `scoreBounds` (default [0, 1]); items are taken in a seeded
+  random order. It removes the skewed-scores weakness (false alarms 0–3.3% vs 12%); on the real
+  Codex runs it gives the same verdicts as sign-flip. It costs power: a 0.1 drop over 20 continuous
+  items is caught 3.4% of the time vs 63.0%, and it gains little from extra runs. The default stays
+  `'sign-flip'`.
+- The report shows the test used, the number of runs, and run time / tokens.
+- Fixes from a review of the 0.3.0 drafts (REVIEWS.md): betting takes items in a seeded random
+  order; tokens read `totalUsage` (all steps) before `usage` (last step); requested run-time /
+  token checks without valid measurements are insufficient; scores without an attempt number are
+  attributed within their own run, and ambiguous ones where attempts failed are insufficient (was a
+  warning); betting needs overlapping run pairs and equal run counts; attempt numbers can't collide
+  across runs.
+
+
 ## 0.2.0
 
 After an independent review (Codex gpt-6-astra, see REVIEWS.md) found ways the 0.1.0 gate could

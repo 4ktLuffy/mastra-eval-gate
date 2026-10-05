@@ -83,10 +83,21 @@ export interface CodexOptions {
 export async function runCodex(
   instructions: string,
   prompt: string,
-  { model = 'gpt-5.6-luna', effort = 'none', timeoutMs = 300_000 }: CodexOptions,
+  options: CodexOptions,
   schema?: unknown,
   abortSignal?: AbortSignal,
 ): Promise<string> {
+  return (await runCodexWithUsage(instructions, prompt, options, schema, abortSignal)).text;
+}
+
+/** One `codex exec` call; returns its reply and the tokens Codex reports for this call. */
+export async function runCodexWithUsage(
+  instructions: string,
+  prompt: string,
+  { model = 'gpt-5.6-luna', effort = 'none', timeoutMs = 300_000 }: CodexOptions,
+  schema?: unknown,
+  abortSignal?: AbortSignal,
+): Promise<{ text: string; tokens: number | undefined }> {
   const instructionsFile = writeOnce('instructions', instructions || 'Answer the request.', 'md');
   const outPath = join(WORKDIR, `out-${process.pid}-${Date.now()}-${Math.random().toString(36).slice(2)}.txt`);
   const args = [
@@ -110,7 +121,8 @@ export async function runCodex(
       clearTimeout(timer);
       abortSignal?.removeEventListener('abort', kill);
       const used = log.split('tokens used')[1]?.trim().split(/\s+/)[0]?.replace(/,/g, '');
-      if (used && /^\d+$/.test(used)) TOKENS.push(Number(used));
+      const tokens = used && /^\d+$/.test(used) ? Number(used) : undefined;
+      if (tokens !== undefined) TOKENS.push(tokens);
       if (abortSignal?.aborted) {
         rmSync(outPath, { force: true });
         return reject(abortSignal.reason instanceof Error ? abortSignal.reason : new Error('aborted'));
@@ -122,7 +134,7 @@ export async function runCodex(
       SECONDS.push((Date.now() - started) / 1000);
       const reply = readFileSync(outPath, 'utf8');
       rmSync(outPath, { force: true });
-      resolvePromise(reply);
+      resolvePromise({ text: reply, tokens });
     });
   });
 }
@@ -134,7 +146,8 @@ export function codexModel(options: CodexOptions = {}): MastraModelConfig {
     const tools = (call.tools ?? []).filter(t => t.type === 'function');
     if (tools.length > 0) return generateWithTools(instructions, prompt, tools, call);
     const schema = call.responseFormat?.type === 'json' ? (call.responseFormat.schema ?? undefined) : undefined;
-    const text = await runCodex(
+    // Tokens of this call (not TOKENS.at(-1), which under concurrency can be another call's).
+    const { text, tokens } = await runCodexWithUsage(
       instructions + (schema ? '\nReply with JSON only, matching the requested schema.' : ''),
       prompt,
       options,
@@ -144,7 +157,7 @@ export function codexModel(options: CodexOptions = {}): MastraModelConfig {
     return {
       content: [{ type: 'text' as const, text }],
       finishReason: 'stop' as const,
-      usage: { inputTokens: undefined, outputTokens: undefined, totalTokens: TOKENS.at(-1) },
+      usage: { inputTokens: undefined, outputTokens: undefined, totalTokens: tokens },
       warnings: [],
     };
   };
@@ -184,13 +197,14 @@ Results of tools you requested appear in the conversation as [tool result ...].`
       },
       required: ['action', 'answer', 'tool', 'arguments'],
     };
-    const reply = JSON.parse(await runCodex(toolInstructions, prompt, options, schema, call.abortSignal)) as {
+    const result = await runCodexWithUsage(toolInstructions, prompt, options, schema, call.abortSignal);
+    const reply = JSON.parse(result.text) as {
       action: 'answer' | 'call_tool';
       answer: string;
       tool: string;
       arguments: string;
     };
-    const usage = { inputTokens: undefined, outputTokens: undefined, totalTokens: TOKENS.at(-1) };
+    const usage = { inputTokens: undefined, outputTokens: undefined, totalTokens: result.tokens };
     if (reply.action === 'call_tool' && tools.some(t => t.name === reply.tool)) {
       return {
         content: [

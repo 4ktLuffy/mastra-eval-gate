@@ -80,6 +80,52 @@ export function signFlipPValue(
   return (below + (midP ? 0.5 : 1) * tied + 1) / (resamples + 1);
 }
 
+/**
+ * One-sided test by betting (Waudby-Smith & Ramdas, "Estimating means of bounded random variables
+ * by betting", JRSS-B 2024), for H0: mean(diffs) >= -tolerance against a regression beyond it.
+ *
+ * Valid, with no symmetry assumption, whenever each observation in [lower, upper] has expected value
+ * >= -tolerance given the ones before it (for example independent draws of tasks from a population
+ * whose mean change is >= -tolerance), and anytime-valid under that condition: the p-value stays valid
+ * however many observations are added and however often it is looked at. It gathers evidence slowly on noisy per-item differences (bench/gate-sim.ts: a 0.1
+ * drop in pass/fail scores over 20 items went from 9% to 13% detection with 1 to 5 runs, while
+ * sign-flip on per-item means went to 34%). Observations are used in the order given; that order
+ * must not depend on their values.
+ *
+ * The wealth K_t = prod (1 + lambda_i (y_i - m0)) bets on y = (-(d + tolerance) - xmin) / width,
+ * mapped to [0, 1], exceeding m0 (its largest mean under H0). lambda_i is the predictable plug-in
+ * from the paper, computed from earlier observations only. Ville's inequality gives
+ * P(sup K_t >= 1/alpha) <= alpha under H0, so p = min(1, 1 / sup K_t).
+ */
+export function bettingPValue(
+  diffs: readonly number[],
+  tolerance = 0,
+  { lower = -1, upper = 1, alpha = 0.05 }: { lower?: number; upper?: number; alpha?: number } = {},
+): number {
+  const n = diffs.length;
+  if (n === 0) return Number.NaN;
+  const width = upper - lower;
+  if (!(width > 0)) return Number.NaN;
+  // x = -(d + tolerance) is positive under a regression; its range is [-(upper + tol), -(lower + tol)].
+  const xmin = -(upper + tolerance);
+  const m0 = (0 - xmin) / width; // y = (x - xmin) / width has mean <= m0 under H0
+  if (m0 >= 1) return 1; // tolerance so large no regression beyond it is possible
+  const lambdaMax = 0.9 / m0; // bets up to 90% of the maximum
+  let wealth = 1, best = 1;
+  let sum = 0.5, sumSq = 0.25; // priors as in the paper: mu_0 = 1/2, sigma_0^2 = 1/4
+  for (let t = 1; t <= n; t++) {
+    const y = Math.min(1, Math.max(0, (-(diffs[t - 1]! + tolerance) - xmin) / width));
+    const muHat = sum / t;
+    const sigma2 = sumSq / t;
+    const lambda = Math.min(lambdaMax, Math.sqrt((2 * Math.log(1 / alpha)) / (Math.max(sigma2, 1e-12) * t * Math.log(1 + t))));
+    wealth *= 1 + lambda * (y - m0);
+    best = Math.max(best, wealth);
+    sum += y;
+    sumSq += (y - muHat) ** 2;
+  }
+  return Math.min(1, 1 / best);
+}
+
 /** Smallest p-value the exact sign-flip tests can return with n non-zero differences. */
 export const smallestSignFlipP = (n: number) => 2 ** -n;
 

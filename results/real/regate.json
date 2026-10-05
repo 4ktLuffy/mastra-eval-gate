@@ -22,6 +22,16 @@
   {
     "group": "R: same config (R1-R3)",
     "noChange": true,
+    "pair": "R1->R2",
+    "mode": "betting",
+    "verdict": "pass",
+    "reasons": [],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "R: same config (R1-R3)",
+    "noChange": true,
     "pair": "R2->R1",
     "mode": "strict",
     "verdict": "pass",
@@ -34,6 +44,16 @@
     "noChange": true,
     "pair": "R2->R1",
     "mode": "statistical",
+    "verdict": "pass",
+    "reasons": [],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "R: same config (R1-R3)",
+    "noChange": true,
+    "pair": "R2->R1",
+    "mode": "betting",
     "verdict": "pass",
     "reasons": [],
     "newFailures": 0,
@@ -62,6 +82,16 @@
   {
     "group": "R: same config (R1-R3)",
     "noChange": true,
+    "pair": "R1->R3",
+    "mode": "betting",
+    "verdict": "pass",
+    "reasons": [],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "R: same config (R1-R3)",
+    "noChange": true,
     "pair": "R3->R1",
     "mode": "strict",
     "verdict": "pass",
@@ -74,6 +104,16 @@
     "noChange": true,
     "pair": "R3->R1",
     "mode": "statistical",
+    "verdict": "pass",
+    "reasons": [],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "R: same config (R1-R3)",
+    "noChange": true,
+    "pair": "R3->R1",
+    "mode": "betting",
     "verdict": "pass",
     "reasons": [],
     "newFailures": 0,
@@ -102,6 +142,16 @@
   {
     "group": "R: same config (R1-R3)",
     "noChange": true,
+    "pair": "R2->R3",
+    "mode": "betting",
+    "verdict": "pass",
+    "reasons": [],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "R: same config (R1-R3)",
+    "noChange": true,
     "pair": "R3->R2",
     "mode": "strict",
     "verdict": "pass",
@@ -114,6 +164,16 @@
     "noChange": true,
     "pair": "R3->R2",
     "mode": "statistical",
+    "verdict": "pass",
+    "reasons": [],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "R: same config (R1-R3)",
+    "noChange": true,
+    "pair": "R3->R2",
+    "mode": "betting",
     "verdict": "pass",
     "reasons": [],
     "newFailures": 0,
@@ -144,6 +204,18 @@
   {
     "group": "R4 (2 Codex hangs) vs R1-R3",
     "noChange": true,
+    "pair": "R1->R4",
+    "mode": "betting",
+    "verdict": "fail",
+    "reasons": [
+      "fail:reliability"
+    ],
+    "newFailures": 2,
+    "reliabilityP": 0.25
+  },
+  {
+    "group": "R4 (2 Codex hangs) vs R1-R3",
+    "noChange": true,
     "pair": "R2->R4",
     "mode": "strict",
     "verdict": "fail",
@@ -160,6 +232,18 @@
     "mode": "statistical",
     "verdict": "pass",
     "reasons": [],
+    "newFailures": 2,
+    "reliabilityP": 0.25
+  },
+  {
+    "group": "R4 (2 Codex hangs) vs R1-R3",
+    "noChange": true,
+    "pair": "R2->R4",
+    "mode": "betting",
+    "verdict": "fail",
+    "reasons": [
+      "fail:reliability"
+    ],
     "newFailures": 2,
     "reliabilityP": 0.25
   },
@@ -188,6 +272,18 @@
   {
     "group": "R4 (2 Codex hangs) vs R1-R3",
     "noChange": true,
+    "pair": "R3->R4",
+    "mode": "betting",
+    "verdict": "fail",
+    "reasons": [
+      "fail:reliability"
+    ],
+    "newFailures": 2,
+    "reliabilityP": 0.25
+  },
+  {
+    "group": "R4 (2 Codex hangs) vs R1-R3",
+    "noChange": true,
     "pair": "R4->R1",
     "mode": "strict",
     "verdict": "pass",
@@ -200,6 +296,16 @@
     "noChange": true,
     "pair": "R4->R1",
     "mode": "statistical",
+    "verdict": "pass",
+    "reasons": [],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "R4 (2 Codex hangs) vs R1-R3",
+    "noChange": true,
+    "pair": "R4->R1",
+    "mode": "betting",
     "verdict": "pass",
     "reasons": [],
     "newFailures": 0,
@@ -228,6 +334,16 @@
   {
     "group": "R4 (2 Codex hangs) vs R1-R3",
     "noChange": true,
+    "pair": "R4->R2",
+    "mode": "betting",
+    "verdict": "pass",
+    "reasons": [],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "R4 (2 Codex hangs) vs R1-R3",
+    "noChange": true,
     "pair": "R4->R3",
     "mode": "strict",
     "verdict": "pass",
@@ -240,6 +356,16 @@
     "noChange": true,
     "pair": "R4->R3",
     "mode": "statistical",
+    "verdict": "pass",
+    "reasons": [],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "R4 (2 Codex hangs) vs R1-R3",
+    "noChange": true,
+    "pair": "R4->R3",
+    "mode": "betting",
     "verdict": "pass",
     "reasons": [],
     "newFailures": 0,
@@ -262,6 +388,18 @@
     "noChange": false,
     "pair": "R1->R5",
     "mode": "statistical",
+    "verdict": "fail",
+    "reasons": [
+      "fail:reliability"
+    ],
+    "newFailures": 7,
+    "reliabilityP": 0.007812500000000002
+  },
+  {
+    "group": "R5 (20 s timeout, 7/30 timed out) vs R1-R4",
+    "noChange": false,
+    "pair": "R1->R5",
+    "mode": "betting",
     "verdict": "fail",
     "reasons": [
       "fail:reliability"
@@ -296,6 +434,18 @@
   {
     "group": "R5 (20 s timeout, 7/30 timed out) vs R1-R4",
     "noChange": false,
+    "pair": "R2->R5",
+    "mode": "betting",
+    "verdict": "fail",
+    "reasons": [
+      "fail:reliability"
+    ],
+    "newFailures": 7,
+    "reliabilityP": 0.007812500000000002
+  },
+  {
+    "group": "R5 (20 s timeout, 7/30 timed out) vs R1-R4",
+    "noChange": false,
     "pair": "R3->R5",
     "mode": "strict",
     "verdict": "fail",
@@ -310,6 +460,18 @@
     "noChange": false,
     "pair": "R3->R5",
     "mode": "statistical",
+    "verdict": "fail",
+    "reasons": [
+      "fail:reliability"
+    ],
+    "newFailures": 7,
+    "reliabilityP": 0.007812500000000002
+  },
+  {
+    "group": "R5 (20 s timeout, 7/30 timed out) vs R1-R4",
+    "noChange": false,
+    "pair": "R3->R5",
+    "mode": "betting",
     "verdict": "fail",
     "reasons": [
       "fail:reliability"
@@ -340,6 +502,18 @@
     "reliabilityP": 0.08984375000000003
   },
   {
+    "group": "R5 (20 s timeout, 7/30 timed out) vs R1-R4",
+    "noChange": false,
+    "pair": "R4->R5",
+    "mode": "betting",
+    "verdict": "fail",
+    "reasons": [
+      "fail:reliability"
+    ],
+    "newFailures": 7,
+    "reliabilityP": 0.08984375000000003
+  },
+  {
     "group": "B1/B2 same config",
     "noChange": true,
     "pair": "B1->B2",
@@ -356,6 +530,18 @@
     "noChange": true,
     "pair": "B1->B2",
     "mode": "statistical",
+    "verdict": "insufficient",
+    "reasons": [
+      "insufficient:coverage"
+    ],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "B1/B2 same config",
+    "noChange": true,
+    "pair": "B1->B2",
+    "mode": "betting",
     "verdict": "insufficient",
     "reasons": [
       "insufficient:coverage"
@@ -388,6 +574,18 @@
     "reliabilityP": 1
   },
   {
+    "group": "B1/B2 same config",
+    "noChange": true,
+    "pair": "B2->B1",
+    "mode": "betting",
+    "verdict": "insufficient",
+    "reasons": [
+      "insufficient:coverage"
+    ],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
     "group": "live tool L1-L3",
     "noChange": true,
     "pair": "L1->L2",
@@ -402,6 +600,16 @@
     "noChange": true,
     "pair": "L1->L2",
     "mode": "statistical",
+    "verdict": "pass",
+    "reasons": [],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "live tool L1-L3",
+    "noChange": true,
+    "pair": "L1->L2",
+    "mode": "betting",
     "verdict": "pass",
     "reasons": [],
     "newFailures": 0,
@@ -430,6 +638,16 @@
   {
     "group": "live tool L1-L3",
     "noChange": true,
+    "pair": "L2->L1",
+    "mode": "betting",
+    "verdict": "pass",
+    "reasons": [],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "live tool L1-L3",
+    "noChange": true,
     "pair": "L1->L3",
     "mode": "strict",
     "verdict": "pass",
@@ -442,6 +660,16 @@
     "noChange": true,
     "pair": "L1->L3",
     "mode": "statistical",
+    "verdict": "pass",
+    "reasons": [],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "live tool L1-L3",
+    "noChange": true,
+    "pair": "L1->L3",
+    "mode": "betting",
     "verdict": "pass",
     "reasons": [],
     "newFailures": 0,
@@ -470,6 +698,16 @@
   {
     "group": "live tool L1-L3",
     "noChange": true,
+    "pair": "L3->L1",
+    "mode": "betting",
+    "verdict": "pass",
+    "reasons": [],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "live tool L1-L3",
+    "noChange": true,
     "pair": "L2->L3",
     "mode": "strict",
     "verdict": "pass",
@@ -490,6 +728,16 @@
   {
     "group": "live tool L1-L3",
     "noChange": true,
+    "pair": "L2->L3",
+    "mode": "betting",
+    "verdict": "pass",
+    "reasons": [],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "live tool L1-L3",
+    "noChange": true,
     "pair": "L3->L2",
     "mode": "strict",
     "verdict": "pass",
@@ -502,6 +750,16 @@
     "noChange": true,
     "pair": "L3->L2",
     "mode": "statistical",
+    "verdict": "pass",
+    "reasons": [],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "live tool L1-L3",
+    "noChange": true,
+    "pair": "L3->L2",
+    "mode": "betting",
     "verdict": "pass",
     "reasons": [],
     "newFailures": 0,
@@ -530,6 +788,16 @@
   {
     "group": "toolMocks M1-M3",
     "noChange": true,
+    "pair": "M1->M2",
+    "mode": "betting",
+    "verdict": "pass",
+    "reasons": [],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "toolMocks M1-M3",
+    "noChange": true,
     "pair": "M2->M1",
     "mode": "strict",
     "verdict": "pass",
@@ -542,6 +810,16 @@
     "noChange": true,
     "pair": "M2->M1",
     "mode": "statistical",
+    "verdict": "pass",
+    "reasons": [],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "toolMocks M1-M3",
+    "noChange": true,
+    "pair": "M2->M1",
+    "mode": "betting",
     "verdict": "pass",
     "reasons": [],
     "newFailures": 0,
@@ -570,6 +848,16 @@
   {
     "group": "toolMocks M1-M3",
     "noChange": true,
+    "pair": "M1->M3",
+    "mode": "betting",
+    "verdict": "pass",
+    "reasons": [],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "toolMocks M1-M3",
+    "noChange": true,
     "pair": "M3->M1",
     "mode": "strict",
     "verdict": "pass",
@@ -582,6 +870,16 @@
     "noChange": true,
     "pair": "M3->M1",
     "mode": "statistical",
+    "verdict": "pass",
+    "reasons": [],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "toolMocks M1-M3",
+    "noChange": true,
+    "pair": "M3->M1",
+    "mode": "betting",
     "verdict": "pass",
     "reasons": [],
     "newFailures": 0,
@@ -614,6 +912,18 @@
   {
     "group": "toolMocks M1-M3",
     "noChange": true,
+    "pair": "M2->M3",
+    "mode": "betting",
+    "verdict": "fail",
+    "reasons": [
+      "fail:regression"
+    ],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "toolMocks M1-M3",
+    "noChange": true,
     "pair": "M3->M2",
     "mode": "strict",
     "verdict": "pass",
@@ -626,6 +936,16 @@
     "noChange": true,
     "pair": "M3->M2",
     "mode": "statistical",
+    "verdict": "pass",
+    "reasons": [],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "toolMocks M1-M3",
+    "noChange": true,
+    "pair": "M3->M2",
+    "mode": "betting",
     "verdict": "pass",
     "reasons": [],
     "newFailures": 0,
@@ -648,6 +968,18 @@
     "noChange": false,
     "pair": "MED->NONE",
     "mode": "statistical",
+    "verdict": "fail",
+    "reasons": [
+      "fail:regression"
+    ],
+    "newFailures": 0,
+    "reliabilityP": 1
+  },
+  {
+    "group": "effort medium -> none (30/30 -> 13/30)",
+    "noChange": false,
+    "pair": "MED->NONE",
+    "mode": "betting",
     "verdict": "fail",
     "reasons": [
       "fail:regression"

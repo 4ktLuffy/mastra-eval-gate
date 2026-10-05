@@ -25,7 +25,7 @@ export class GateFailedError extends Error {
 
 export function expectGate(
   mastra: Mastra,
-  options: { baseline: string; candidate: string } & CompareOptions,
+  options: { baseline: string | string[]; candidate: string | string[] } & CompareOptions,
 ): { toPass(): Promise<Comparison> } {
   return {
     async toPass() {

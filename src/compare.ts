@@ -12,6 +12,8 @@
  */
 
 import {
+  bettingPValue,
+  rng,
   bootstrapMeanCI,
   holm,
   mcnemarExactPValue,
@@ -30,6 +32,10 @@ export interface ResultRow {
   itemId: string;
   attempt?: number | null;
   error?: unknown;
+  /** Wall-clock time of the target run, when known (Mastra: completedAt - startedAt). */
+  durationMs?: number | null;
+  /** Tokens the target used, when known (Mastra agents: output.usage.totalTokens). */
+  tokens?: number | null;
 }
 
 /** One persisted score row. For experiment scores, `entityId` is the dataset item ID. */
@@ -56,8 +62,31 @@ export interface ScorerThreshold {
   direction?: Direction;
 }
 
+export type QualityTest = 'sign-flip' | 'betting';
+
+export interface ResourceThreshold {
+  /** Largest allowed increase as a fraction (0.2 = 20% more), on the geometric mean per item. */
+  maxIncrease: number;
+}
+
 export interface CompareOptions {
   thresholds?: Record<string, ScorerThreshold>;
+  /**
+   * The quality test. 'sign-flip' (default): exact when paired changes are symmetric under no
+   * regression; the most powerful here, and it gains most from repeated runs (pass several runs:
+   * items are averaged across them), but ~12% false alarms on skewed changes (bench/gate-sim.ts).
+   * 'betting': no symmetry assumption, for scores within `scoreBounds` (0-3.3% false alarms on the
+   * same skewed changes). Like any item-level test it treats items as a sample of tasks (H0 is about
+   * that population's mean change), so items are taken in a seeded random order; it needs equal run
+   * counts per side and much more data to detect the same drop (0.1 over 20 continuous items: 3% vs 63%).
+   */
+  test?: QualityTest;
+  /** Score range per scorer for the 'betting' test. Default { min: 0, max: 1 }. */
+  scoreBounds?: Record<string, { min: number; max: number }>;
+  /** Fail when per-item run time grows beyond this (significant, one-sided). Off unless set. */
+  latency?: ResourceThreshold;
+  /** Fail when per-item token use grows beyond this (significant, one-sided). Off unless set. */
+  tokens?: ResourceThreshold;
   /**
    * Scorers that must have scores in both experiments. A missing one fails the gate (missing in
    * the candidate) or makes it insufficient (missing in the baseline). Without this, a scorer that
@@ -123,6 +152,8 @@ export type MissingReason = 'target-error' | 'no-score' | 'not-run';
 
 export interface ScorerReport {
   scorerId: string;
+  /** The quality test used. */
+  test: QualityTest;
   direction: Direction;
   tolerance: number;
   /** 'ok' when the scorer has scores in both experiments. */
@@ -177,7 +208,7 @@ export interface ReliabilityReport {
 export type Verdict = 'pass' | 'fail' | 'insufficient';
 
 export interface GateReason {
-  kind: 'regression' | 'reliability' | 'missing-scorer' | 'coverage' | 'no-evidence' | 'incomplete' | 'too-few-items';
+  kind: 'regression' | 'reliability' | 'latency' | 'cost' | 'missing-scorer' | 'coverage' | 'no-evidence' | 'incomplete' | 'too-few-items';
   /** 'fail' reasons make the verdict 'fail'; 'insufficient' ones make it 'insufficient' (when nothing failed). */
   severity: 'fail' | 'insufficient';
   scorerId?: string;
@@ -192,9 +223,24 @@ export interface ItemDetail {
   candidate: number | null;
 }
 
+export interface ResourceReport {
+  /** Items with a value in both runs. */
+  items: number;
+  /** Geometric mean over items of candidate / baseline. */
+  ratio: number;
+  /** One-sided p-value for "grew by more than the allowed increase" (or by anything, when not set). */
+  pValue: number;
+  maxIncrease: number | null;
+  regressed: boolean;
+}
+
 export interface Comparison {
   baselineId: string;
   candidateId: string;
+  /** Number of experiments on each side (several runs of the same dataset can be compared together). */
+  runs: { baseline: number; candidate: number };
+  /** Run time and token use, per item, when the rows carry them. */
+  resources: { latency?: ResourceReport; tokens?: ResourceReport };
   verdict: Verdict;
   /** verdict === 'pass' */
   passed: boolean;
@@ -231,6 +277,16 @@ export function validateOptions(options: CompareOptions): void {
   }
   if (options.seed !== undefined && !(Number.isSafeInteger(options.seed))) problems.push(`seed must be an integer (got ${options.seed})`);
   if (options.itemDetail !== undefined && !nonNegInt(options.itemDetail)) problems.push(`itemDetail must be an integer >= 0`);
+  if (options.test !== undefined && options.test !== 'sign-flip' && options.test !== 'betting') {
+    problems.push(`test must be 'sign-flip' or 'betting' (got ${options.test})`);
+  }
+  for (const [id, b] of Object.entries(options.scoreBounds ?? {})) {
+    if (!b || !Number.isFinite(b.min) || !Number.isFinite(b.max) || !(b.max > b.min)) problems.push(`scoreBounds.${id} must have finite min < max`);
+  }
+  for (const key of ['latency', 'tokens'] as const) {
+    const r = options[key];
+    if (r !== undefined && !(r && finiteNonNeg(r.maxIncrease))) problems.push(`${key}.maxIncrease must be a finite number >= 0`);
+  }
   if (options.reliability !== undefined && options.reliability !== 'strict' && options.reliability !== 'statistical') {
     problems.push(`reliability must be 'strict' or 'statistical' (got ${options.reliability})`);
   }
@@ -326,10 +382,79 @@ function clusterChanges(itemIds: string[], change: (itemId: string) => number, c
 
 const emptyReasons = (): Record<MissingReason, number> => ({ 'target-error': 0, 'no-score': 0, 'not-run': 0 });
 
-export function compareRows(baseline: ExperimentRows, candidate: ExperimentRows, options: CompareOptions = {}): Comparison {
+/** Attempts of run k are renumbered k * RUN_STRIDE + attempt; attempts must be integers below it. */
+const RUN_STRIDE = 2 ** 32;
+
+/**
+ * A score with no attempt number, attributed within its own run: to the item's only result row, or
+ * to a failed attempt when every attempt of the item in that run failed, or to the first attempt when
+ * none did. Left unknown when the run's attempts for that item both failed and succeeded.
+ */
+function attributeAttempt(sc: ScoreRow, attemptsByItem: Map<string, Array<{ attempt: number; failed: boolean }>>): number | null {
+  if (sc.attempt !== null && sc.attempt !== undefined) return sc.attempt;
+  const attempts = attemptsByItem.get(sc.entityId);
+  if (!attempts || attempts.length === 0) return null;
+  if (attempts.length === 1) return attempts[0]!.attempt;
+  if (attempts.every(a => a.failed)) return attempts[0]!.attempt;
+  if (attempts.every(a => !a.failed)) return attempts[0]!.attempt;
+  return null;
+}
+
+/** Several runs of the same dataset as one experiment, with attempts renumbered per run. */
+function mergeRuns(runs: ExperimentRows[]): ExperimentRows {
+  for (const run of runs) {
+    for (const r of [...run.results, ...run.scores]) {
+      const a = r.attempt;
+      if (a !== null && a !== undefined && !(Number.isInteger(a) && a >= 0 && a < RUN_STRIDE)) {
+        throw new TypeError(`attempt numbers must be integers from 0 to ${RUN_STRIDE - 1} (got ${a} in ${run.id})`);
+      }
+    }
+  }
+  if (runs.length === 1) return runs[0]!;
+  const results: ResultRow[] = [];
+  const scores: ScoreRow[] = [];
+  runs.forEach((run, k) => {
+    const attemptsByItem = new Map<string, Array<{ attempt: number; failed: boolean }>>();
+    for (const r of run.results) {
+      results.push({ ...r, attempt: k * RUN_STRIDE + (r.attempt ?? 0) });
+      (attemptsByItem.get(r.itemId) ?? attemptsByItem.set(r.itemId, []).get(r.itemId)!).push({ attempt: r.attempt ?? 0, failed: isFailed(r) });
+    }
+    for (const sc of run.scores) {
+      const attempt = attributeAttempt(sc, attemptsByItem);
+      scores.push({ ...sc, attempt: attempt === null ? null : k * RUN_STRIDE + attempt });
+    }
+  });
+  return { id: runs.map(r => r.id).join('+'), results, scores, status: runs.every(r => r.status === 'completed' || r.status == null) ? 'completed' : 'mixed' };
+}
+
+/** Per item: mean of a numeric field over successful attempts (non-negative finite values only). */
+function perItem(results: ResultRow[], field: 'durationMs' | 'tokens'): Map<string, number> {
+  const acc = new Map<string, number[]>();
+  for (const r of results) {
+    const v = r[field];
+    if (isFailed(r) || typeof v !== 'number' || !Number.isFinite(v) || v < 0) continue;
+    (acc.get(r.itemId) ?? acc.set(r.itemId, []).get(r.itemId)!).push(v);
+  }
+  return new Map([...acc].map(([i, xs]) => [i, mean(xs)]));
+}
+
+export function compareRows(
+  baselineIn: ExperimentRows | ExperimentRows[],
+  candidateIn: ExperimentRows | ExperimentRows[],
+  options: CompareOptions = {},
+): Comparison {
   validateOptions(options);
+  const baselineRuns = Array.isArray(baselineIn) ? baselineIn : [baselineIn];
+  const candidateRuns = Array.isArray(candidateIn) ? candidateIn : [candidateIn];
+  if (baselineRuns.length === 0 || candidateRuns.length === 0) throw new TypeError('compareRows needs at least one baseline and one candidate run');
+  const baseline = mergeRuns(baselineRuns);
+  const candidate = mergeRuns(candidateRuns);
   const {
     thresholds = {},
+    test = 'sign-flip',
+    scoreBounds = {},
+    latency,
+    tokens,
     expectedScorers = [],
     alpha = 0.05,
     reliability: reliabilityMode = 'strict',
@@ -353,11 +478,16 @@ export function compareRows(baseline: ExperimentRows, candidate: ExperimentRows,
     reasons.push({ kind, severity: 'fail', message, ...(scorerId ? { scorerId } : {}) });
 
   // The runs themselves
-  for (const [label, run] of [['baseline', baseline], ['candidate', candidate]] as const) {
-    if (requireCompleted && run.status && run.status !== 'completed') {
-      insufficient('incomplete', `The ${label} experiment has status "${run.status}", not "completed".`);
+  for (const [label, runs] of [['baseline', baselineRuns], ['candidate', candidateRuns]] as const) {
+    for (const run of runs) {
+      if (requireCompleted && run.status && run.status !== 'completed') {
+        insufficient('incomplete', `The ${label} experiment ${run.id} has status "${run.status}", not "completed".`);
+      }
+      if (run.results.length === 0) insufficient('no-evidence', `The ${label} experiment ${run.id} has no results.`);
     }
-    if (run.results.length === 0) insufficient('no-evidence', `The ${label} experiment has no results.`);
+  }
+  if (test === 'betting' && baselineRuns.length !== candidateRuns.length) {
+    insufficient('no-evidence', `The betting test pairs runs in order and needs as many baseline runs as candidate runs (${baselineRuns.length} vs ${candidateRuns.length}).`);
   }
   if (baseline.datasetVersion != null && candidate.datasetVersion != null && baseline.datasetVersion !== candidate.datasetVersion) {
     warnings.push(`Dataset versions differ (${baseline.datasetVersion} vs ${candidate.datasetVersion}); items with the same id may have changed.`);
@@ -429,6 +559,8 @@ export function compareRows(baseline: ExperimentRows, candidate: ExperimentRows,
   const reports: ScorerReport[] = [];
   const sideOf: Record<string, { a: Map<string, number>; b: Map<string, number> }> = {};
   const coverageOf: Record<string, number> = {};
+  const outOfBoundsScorers = new Set<string>();
+  const bettingEmpty = new Set<string>();
   for (const scorerId of scorerIds) {
     const threshold = (Object.hasOwn(thresholds, scorerId) ? thresholds[scorerId] : undefined) ?? { value: 0 };
     const direction: Direction = threshold.direction ?? 'higher-is-better';
@@ -440,7 +572,11 @@ export function compareRows(baseline: ExperimentRows, candidate: ExperimentRows,
     if (sideA.invalid) warnings.push(`"${scorerId}": ${sideA.invalid} non-finite score(s) in the baseline were ignored.`);
     if (sideB.invalid) warnings.push(`"${scorerId}": ${sideB.invalid} non-finite score(s) in the candidate were ignored.`);
     if (sideA.unattributed + sideB.unattributed > 0) {
-      warnings.push(`"${scorerId}": ${sideA.unattributed + sideB.unattributed} score(s) could not be matched to an attempt, so a score from a failed attempt may be included.`);
+      insufficient(
+        'coverage',
+        `"${scorerId}": ${sideA.unattributed + sideB.unattributed} score(s) could not be matched to an attempt on items where some attempts failed, so a failed run's score could be counted; record score attempts.`,
+        scorerId,
+      );
     }
     const paired = [...a.keys()].filter(i => b.has(i)).sort();
     const changes = clusterChanges(paired, i => sign * (b.get(i)! - a.get(i)!), clusters);
@@ -449,7 +585,42 @@ export function compareRows(baseline: ExperimentRows, candidate: ExperimentRows,
     for (const i of b.keys()) if (!a.has(i)) lostInA[missingReason(i, runA)]++;
     const status: ScorerReport['status'] = !sideA.ran ? 'missing-in-baseline' : !sideB.ran ? 'missing-in-candidate' : 'ok';
     const n = changes.length;
-    const p = status !== 'ok' || n === 0 ? Number.NaN : signFlipPValue(changes, threshold.value, { seed, resamples, midP });
+    const bounds = (Object.hasOwn(scoreBounds, scorerId) ? scoreBounds[scorerId] : undefined) ?? { min: 0, max: 1 };
+    let p: number;
+    if (status !== 'ok' || n === 0) p = Number.NaN;
+    else if (test === 'betting') {
+      // Observations in a fixed order: run pair by run pair, items sorted by id.
+      const outOfBounds = [...baseline.scores, ...candidate.scores].some(
+        x => x.scorerId === scorerId && Number.isFinite(x.score) && ((x.score as number) < bounds.min || (x.score as number) > bounds.max),
+      );
+      if (outOfBounds) {
+        outOfBoundsScorers.add(scorerId);
+        p = Number.NaN;
+      } else {
+        // Observations run pair by run pair, each in a seeded random order chosen without looking at
+        // the data (a fixed order such as sorted ids can line up with item difficulty).
+        const obs: number[] = [];
+        if (baselineRuns.length === candidateRuns.length) {
+          for (let k = 0; k < baselineRuns.length; k++) {
+            const ra = indexRun(baselineRuns[k]!.results), rb = indexRun(candidateRuns[k]!.results);
+            const ak = scorerSide(baselineRuns[k]!.scores, scorerId, ra, !includeScoresOfFailedRuns).byItem;
+            const bk = scorerSide(candidateRuns[k]!.scores, scorerId, rb, !includeScoresOfFailedRuns).byItem;
+            const shared = [...ak.keys()].filter(i => bk.has(i)).sort();
+            const units = clusterChanges(shared, i => sign * (bk.get(i)! - ak.get(i)!), clusters);
+            const u = rng(seed * 1009 + k);
+            const order = units.map((x, i) => [u(), i, x] as const).sort((x, y) => x[0] - y[0] || x[1] - y[1]);
+            obs.push(...order.map(([, , x]) => x));
+          }
+        }
+        if (obs.length === 0) {
+          bettingEmpty.add(scorerId);
+          p = Number.NaN;
+        } else {
+          const range = bounds.max - bounds.min;
+          p = bettingPValue(obs, threshold.value, { lower: -range, upper: range, alpha });
+        }
+      }
+    } else p = signFlipPValue(changes, threshold.value, { seed, resamples, midP });
     // Coverage per successful attempt, relative to the baseline
     let coverageLoss = 0;
     for (const [item, attemptsA] of runA) {
@@ -463,6 +634,7 @@ export function compareRows(baseline: ExperimentRows, candidate: ExperimentRows,
     coverageOf[scorerId] = coverageLoss;
     reports.push({
       scorerId,
+      test,
       direction,
       tolerance: threshold.value,
       status,
@@ -506,6 +678,14 @@ export function compareRows(baseline: ExperimentRows, candidate: ExperimentRows,
       insufficient('no-evidence', `"${r.scorerId}" has no item scored in both experiments.`, r.scorerId);
       return;
     }
+    if (bettingEmpty.has(r.scorerId)) {
+      insufficient('no-evidence', `"${r.scorerId}": no item was scored in both runs of any run pair, so the betting test has nothing to use.`, r.scorerId);
+      return;
+    }
+    if (outOfBoundsScorers.has(r.scorerId)) {
+      insufficient('no-evidence', `"${r.scorerId}" has scores outside scoreBounds, which the betting test needs; declare its range.`, r.scorerId);
+      return;
+    }
     if (![r.meanA, r.meanB, r.change].every(Number.isFinite)) {
       insufficient('no-evidence', `"${r.scorerId}": scores are too large to average (the mean overflows).`, r.scorerId);
       return;
@@ -516,7 +696,8 @@ export function compareRows(baseline: ExperimentRows, candidate: ExperimentRows,
       return clusterChanges([...a.keys()].filter(i => b.has(i)).sort(), i => sign * (b.get(i)! - a.get(i)!), clusters);
     })();
     const units = changes.length; // clusters when clustered, items otherwise
-    r.minimumDetectable = minimumDetectableEffect(sd(changes), units, perTestAlpha, 0.8, r.tolerance);
+    // The normal approximation describes the sign-flip test; the betting test needs more data, so no estimate.
+    r.minimumDetectable = r.test === 'betting' ? Number.NaN : minimumDetectableEffect(sd(changes), units, perTestAlpha, 0.8, r.tolerance);
     // Tolerate float noise when the drop equals the tolerance exactly.
     const eps = 1e-9 * Math.max(1, Math.abs(r.tolerance), Math.abs(r.meanA), Math.abs(r.meanB));
     const beyond = r.change < -r.tolerance - eps;
@@ -528,7 +709,7 @@ export function compareRows(baseline: ExperimentRows, candidate: ExperimentRows,
         `"${r.scorerId}" is worse by ${fmt(-r.change)} on ${r.pairedN} paired items (95% CI of change ${fmt(r.changeCI[0])} to ${fmt(r.changeCI[1])}; Holm p = ${fmt(r.pAdjusted)}).`,
         r.scorerId,
       );
-    } else if (smallestSignFlipP(units) >= perTestAlpha) {
+    } else if (r.test === 'sign-flip' && smallestSignFlipP(units) >= perTestAlpha) {
       const unit = clusters ? 'cluster(s)' : 'paired item(s)';
       insufficient(
         'too-few-items',
@@ -537,7 +718,11 @@ export function compareRows(baseline: ExperimentRows, candidate: ExperimentRows,
       );
     } else if (r.inconclusive) {
       const detect = Number.isFinite(r.minimumDetectable) ? `; a drop of about ${fmt(r.minimumDetectable)} would be caught 80% of the time` : '';
-      warnings.push(`"${r.scorerId}" looks worse by ${fmt(-r.change)} but that is not significant at n = ${r.pairedN} (Holm p = ${fmt(r.pAdjusted)})${detect}.`);
+      const more =
+        r.test === 'betting'
+          ? ' The betting test stays valid if you run both again and pass all runs, but it gathers evidence slowly; for power, prefer more runs with the sign-flip test.'
+          : '';
+      warnings.push(`"${r.scorerId}" looks worse by ${fmt(-r.change)} but that is not significant at n = ${r.pairedN} (Holm p = ${fmt(r.pAdjusted)})${detect}.${more}`);
     }
     const coverageLoss = coverageOf[r.scorerId] ?? 0;
     if (coverageLoss > maxCoverageLoss + 1e-9) {
@@ -563,6 +748,38 @@ export function compareRows(baseline: ExperimentRows, candidate: ExperimentRows,
     }
   });
 
+  // Run time and token use
+  const resources: Comparison['resources'] = {};
+  for (const [key, field, opt] of [['latency', 'durationMs', latency], ['tokens', 'tokens', tokens]] as const) {
+    const a = perItem(baseline.results, field), b = perItem(candidate.results, field);
+    const shared = [...a.keys()].filter(i => b.has(i)).sort();
+    const label = key === 'latency' ? 'Run time' : 'Token use';
+    if (opt) {
+      // A requested check needs a measurement for every item that succeeded in both runs.
+      const succeededBoth = [...runA.keys()].filter(i => runB.has(i) && [...runA.get(i)!.values()].some(f => !f) && [...runB.get(i)!.values()].some(f => !f));
+      const missing = succeededBoth.filter(i => !a.has(i) || !b.has(i)).length;
+      if (succeededBoth.length === 0 || missing > 0) {
+        insufficient('no-evidence', `${label} check requested, but ${missing || 'all'} of ${succeededBoth.length} item(s) that succeeded in both runs have no valid measurement (missing, negative or non-finite).`);
+        continue;
+      }
+    }
+    if (shared.length === 0) continue;
+    // +1 so zero values (cached calls, instant runs) compare instead of dividing by zero.
+    const logRatios = shared.map(i => Math.log((b.get(i)! + 1) / (a.get(i)! + 1)));
+    const allowed = opt?.maxIncrease ?? 0;
+    // Negative = worse, like quality changes, so the same one-sided test applies.
+    const pv = signFlipPValue(logRatios.map(x => -x), Math.log(1 + allowed), { seed, resamples });
+    const ratio = Math.exp(mean(logRatios));
+    const report: ResourceReport = { items: shared.length, ratio, pValue: pv, maxIncrease: opt ? allowed : null, regressed: false };
+    if (opt) {
+      report.regressed = ratio > 1 + allowed && pv < alpha;
+      if (report.regressed) fail(key === 'latency' ? 'latency' : 'cost', `${label} per item rose ${fmt((ratio - 1) * 100)}% (geometric mean over ${shared.length} items; allowed ${fmt(allowed * 100)}%; p = ${fmt(pv)}).`);
+    } else if (ratio > 1.2 && pv < alpha) {
+      warnings.push(`${label} per item rose ${fmt((ratio - 1) * 100)}% (p = ${fmt(pv)}); set \`${key}: { maxIncrease }\` to gate on it.`);
+    }
+    resources[key] = report;
+  }
+
   // A verdict needs at least one scorer actually compared.
   const comparable = reports.some(r => r.status === 'ok' && r.pairedN > 0 && [r.meanA, r.meanB, r.change].every(Number.isFinite));
   if (scorerIds.length > 0 && !comparable) {
@@ -577,6 +794,8 @@ export function compareRows(baseline: ExperimentRows, candidate: ExperimentRows,
   return {
     baselineId: baseline.id,
     candidateId: candidate.id,
+    runs: { baseline: baselineRuns.length, candidate: candidateRuns.length },
+    resources,
     verdict,
     passed: verdict === 'pass',
     reasons,

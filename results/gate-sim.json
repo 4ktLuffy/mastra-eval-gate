@@ -289,6 +289,188 @@
       "insufficient": 0,
       "pass": 0.497,
       "qualityFail": 0.503
+    },
+    {
+      "scenario": "symmetric null, continuous [betting]",
+      "n": 20,
+      "drop": 0,
+      "fail": 0,
+      "insufficient": 0,
+      "pass": 1,
+      "qualityFail": 0
+    },
+    {
+      "scenario": "skewed null (0.1 vs 0/1 at 10%) [betting]",
+      "n": 20,
+      "drop": 0,
+      "fail": 0,
+      "insufficient": 0,
+      "pass": 1,
+      "qualityFail": 0
+    },
+    {
+      "scenario": "clustered null, clusters declared [betting]",
+      "n": 20,
+      "drop": 0,
+      "fail": 0,
+      "insufficient": 0,
+      "pass": 1,
+      "qualityFail": 0
+    },
+    {
+      "scenario": "drop 0.1, continuous [betting]",
+      "n": 20,
+      "drop": 0.1,
+      "fail": 0.034,
+      "insufficient": 0,
+      "pass": 0.966,
+      "qualityFail": 0.034
+    },
+    {
+      "scenario": "drop 0.1, binary [betting]",
+      "n": 20,
+      "drop": 0.1,
+      "fail": 0.082,
+      "insufficient": 0,
+      "pass": 0.918,
+      "qualityFail": 0.082
+    },
+    {
+      "scenario": "skewed drop 0.05 (0.1 vs 0/1 at 5%) [betting]",
+      "n": 20,
+      "drop": 0.05,
+      "fail": 0,
+      "insufficient": 0,
+      "pass": 1,
+      "qualityFail": 0
+    },
+    {
+      "scenario": "symmetric null, continuous [betting]",
+      "n": 50,
+      "drop": 0,
+      "fail": 0.001,
+      "insufficient": 0,
+      "pass": 0.999,
+      "qualityFail": 0.001
+    },
+    {
+      "scenario": "skewed null (0.1 vs 0/1 at 10%) [betting]",
+      "n": 50,
+      "drop": 0,
+      "fail": 0.033,
+      "insufficient": 0,
+      "pass": 0.967,
+      "qualityFail": 0.033
+    },
+    {
+      "scenario": "clustered null, clusters declared [betting]",
+      "n": 50,
+      "drop": 0,
+      "fail": 0,
+      "insufficient": 0,
+      "pass": 1,
+      "qualityFail": 0
+    },
+    {
+      "scenario": "drop 0.1, continuous [betting]",
+      "n": 50,
+      "drop": 0.1,
+      "fail": 0.603,
+      "insufficient": 0,
+      "pass": 0.397,
+      "qualityFail": 0.603
+    },
+    {
+      "scenario": "drop 0.1, binary [betting]",
+      "n": 50,
+      "drop": 0.1,
+      "fail": 0.095,
+      "insufficient": 0,
+      "pass": 0.905,
+      "qualityFail": 0.095
+    },
+    {
+      "scenario": "skewed drop 0.05 (0.1 vs 0/1 at 5%) [betting]",
+      "n": 50,
+      "drop": 0.05,
+      "fail": 0.173,
+      "insufficient": 0,
+      "pass": 0.827,
+      "qualityFail": 0.173
+    }
+  ],
+  "multiRun": [
+    {
+      "runs": 1,
+      "drop": 0,
+      "test": "sign-flip",
+      "fail": 0.027
+    },
+    {
+      "runs": 1,
+      "drop": 0,
+      "test": "betting",
+      "fail": 0.026
+    },
+    {
+      "runs": 3,
+      "drop": 0,
+      "test": "sign-flip",
+      "fail": 0.033
+    },
+    {
+      "runs": 3,
+      "drop": 0,
+      "test": "betting",
+      "fail": 0.028
+    },
+    {
+      "runs": 5,
+      "drop": 0,
+      "test": "sign-flip",
+      "fail": 0.031
+    },
+    {
+      "runs": 5,
+      "drop": 0,
+      "test": "betting",
+      "fail": 0.024
+    },
+    {
+      "runs": 1,
+      "drop": 0.1,
+      "test": "sign-flip",
+      "fail": 0.088
+    },
+    {
+      "runs": 1,
+      "drop": 0.1,
+      "test": "betting",
+      "fail": 0.083
+    },
+    {
+      "runs": 3,
+      "drop": 0.1,
+      "test": "sign-flip",
+      "fail": 0.245
+    },
+    {
+      "runs": 3,
+      "drop": 0.1,
+      "test": "betting",
+      "fail": 0.121
+    },
+    {
+      "runs": 5,
+      "drop": 0.1,
+      "test": "sign-flip",
+      "fail": 0.342
+    },
+    {
+      "runs": 5,
+      "drop": 0.1,
+      "test": "betting",
+      "fail": 0.126
     }
   ],
   "resampleCheck": [

@@ -1,6 +1,6 @@
 {
   "name": "mastra-eval-gate",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A trustworthy CI gate for Mastra experiments: paired, error-aware comparison with uncertainty.",
   "keywords": [
     "mastra",

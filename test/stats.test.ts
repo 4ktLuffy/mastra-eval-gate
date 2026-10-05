@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  bettingPValue,
   bootstrapMeanCI,
   holm,
   mcnemarExactPValue,
@@ -60,5 +61,25 @@ describe('bootstrapMeanCI', () => {
     const m = xs.reduce((a, b) => a + b, 0) / xs.length;
     expect(ci[0]).toBeLessThanOrEqual(m);
     expect(ci[1]).toBeGreaterThanOrEqual(m);
+  });
+});
+
+describe('bettingPValue', () => {
+  it('is 1 when nothing changed and small when every item dropped', () => {
+    expect(bettingPValue(Array(30).fill(0))).toBe(1);
+    expect(bettingPValue(Array(30).fill(-0.5))).toBeLessThan(0.01);
+  });
+  it('respects the tolerance', () => {
+    expect(bettingPValue(Array(30).fill(-0.05), 0.05)).toBe(1);
+  });
+  it('holds its level on a skewed null (simulated)', () => {
+    let rejections = 0;
+    let seed = 12345;
+    const u = () => ((seed = (seed * 1103515245 + 12345) % 2 ** 31) / 2 ** 31);
+    for (let t = 0; t < 400; t++) {
+      const d = Array.from({ length: 30 }, () => (u() < 0.1 ? 0.9 : -0.1));
+      if (bettingPValue(d) < 0.05) rejections++;
+    }
+    expect(rejections / 400).toBeLessThanOrEqual(0.05);
   });
 });

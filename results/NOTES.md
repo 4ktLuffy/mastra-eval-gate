@@ -95,3 +95,17 @@ each with a test (test/compare.test.ts "review fixes", test/load.test.ts, test/m
   12.0/20.0 → declared 2.4/3.7, random-failures strict 64.7/92.6 → statistical 5.8/6.6.
 - SQLITE_BUSY reproduced: default maxConcurrency 5 → 4/5 experiments fail (BUSY_SNAPSHOT in
   updateExperiment); 30 s busy timeout doesn't help.
+
+## 2026-10-05 — 0.3.0: betting test, several runs, run time / tokens
+- Betting (plug-in, cap 0.9): skewed null 0.0/2.5% vs sign-flip 12.2/12.1; 0.1 drop continuous
+  3.1/61.6% vs 63.0/94.4; pass/fail 8.4/9.8 vs 8.9/19.0. Multi-run: betting 9.3→12.8→12.8, sign-flip
+  8.8→24.5→34.2 (1/3/5 runs). aGRAPA mixture tried: no gain, dropped.
+- Real re-gate: betting 0/20 clean no-change fails (removes M2→M3), catches timeouts, effort, support.
+- Run time on real R runs: ×0.91, ×0.85 on identical configs (no false alarm). Token data from saved
+  real runs unusable (adapter used TOKENS.at(-1) under concurrency); adapter fixed, smoke-tested.
+
+## 2026-10-05 — fourth review fixes; betting in random order
+- Betting with seeded random item order: skewed null 0.0/3.3%; drop 0.1 continuous 3.4/60.3, binary
+  8.2/9.5; multi-run 8.3→12.1→12.6. Heterogeneous-order null (review case) 41.3% → 1.8%.
+- Real re-gate: betting now 17 pass / 1 fail (M2→M3) / 2 insufficient on clean pairs — same as
+  sign-flip. The earlier "betting removed the real false alarm" came from sorted order; withdrawn.

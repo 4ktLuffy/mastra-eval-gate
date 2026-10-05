@@ -92,3 +92,29 @@ reproduced by me and fixed with a test (test/compare.test.ts "third review"):
    tool is simulated) → scorer checks order and amount; wording corrected; saved run not repeated.
 10. README numbers were stale against the committed table → regenerated from the rerun.
 Not changed, documented: skewed nulls (~12% false alarms), reversed real-run pairs being dependent.
+
+## Review of the 0.3.0 drafts (2026-10-05) — Codex gpt-6-astra, reasoning effort medium
+
+Ran the code (scratch files only; no tracked file changed); 77 tests across 6 files and all saved
+re-gating artifacts reproduced byte for byte. Verdict: "adds useful capabilities, but I would not
+publish this working tree yet." It confirmed the betting arithmetic (0–4.05% false alarms over eight
+independent null simulations, 20,000 trials each). Found, each reproduced and fixed with a test
+(test/compare.test.ts "fourth review"):
+
+1. Betting with items in sorted order could accumulate evidence from items whose difficulty lines
+   up with the order: same dataset mean, 41.3% false alarms. Items are now taken in a seeded random
+   order chosen without looking at the data (1.8% on the same case), and the docs state the
+   assumption every item-level test makes: items are a sample of tasks.
+2. Tokens read `usage` (Mastra: last step only) before `totalUsage` (all steps); a ×100 rise passed.
+3. A requested run-time / token check with missing, zero or negative measurements disappeared
+   silently. Missing or invalid values now make it insufficient; zero is a valid value.
+4. Merging runs lost which run a score with no attempt number came from, so failed runs' scores came
+   back. Scores are attributed within their own run; any still ambiguous where attempts failed make
+   the verdict insufficient instead of only warning.
+5. Betting could pass with no overlapping run pairs; unequal run counts were only warned about. Both
+   are insufficient now.
+6. Attempt renumbering (run × 1,000,000) could collide; now run × 2^32, attempts validated.
+7. FINDINGS said the betting test passed all 20 clean real comparisons; the table says 18 pass and
+   2 insufficient. Corrected.
+Its one remaining suggestion, betting on complete per-run dataset means, would test a narrower
+null with almost no power at 1-5 runs; the random-order fix was chosen instead and is documented.

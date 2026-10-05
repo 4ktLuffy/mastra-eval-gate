@@ -13,6 +13,7 @@ const HEADLINE = {
 export function formatReport(c: Comparison): string {
   const lines: string[] = [];
   lines.push(`${HEADLINE[c.verdict]}  baseline ${c.baselineId}  →  candidate ${c.candidateId}`);
+  if (c.runs.baseline > 1 || c.runs.candidate > 1) lines.push(`  (${c.runs.baseline} baseline run(s), ${c.runs.candidate} candidate run(s))`);
   for (const r of c.reasons) lines.push(`  ${r.severity === 'fail' ? '✗' : '?'} ${r.message}`);
   for (const w of c.warnings) lines.push(`  ! ${w}`);
   const rel = c.reliability;
@@ -20,7 +21,13 @@ export function formatReport(c: Comparison): string {
   lines.push(
     `Reliability: ${rel.failedA}/${rel.items} items with a failed run in baseline, ${rel.failedB}/${rel.items} in candidate (${rel.newFailures} worse, ${rel.fixedFailures} better${Number.isFinite(rel.pValue) ? `; McNemar p = ${f(rel.pValue)}` : ''})`,
   );
+  for (const [label, r] of [['Run time', c.resources.latency], ['Tokens', c.resources.tokens]] as const) {
+    if (!r) continue;
+    lines.push(`${label}: ×${r.ratio.toFixed(2)} per item (geometric mean, ${r.items} items; p = ${f(r.pValue)}${r.maxIncrease !== null ? `; allowed +${(r.maxIncrease * 100).toFixed(0)}%` : ''})${r.regressed ? ' ✗' : ''}`);
+  }
   lines.push('');
+  const test = Object.values(c.scorers)[0]?.test ?? 'sign-flip';
+  lines.push(`Quality (${test} test):`);
   lines.push(`${'scorer'.padEnd(28)} ${'n'.padStart(4)}  ${'baseline'.padStart(8)}  ${'candidate'.padStart(9)}  ${'change'.padStart(7)}  ${'95% CI'.padEnd(17)}  ${'p(Holm)'.padStart(7)}  ${'detects'.padStart(8)}`);
   for (const s of Object.values(c.scorers)) {
     if (s.status !== 'ok') {

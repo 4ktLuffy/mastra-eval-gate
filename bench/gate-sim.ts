@@ -133,6 +133,12 @@ for (const n of [20, 50]) {
   scenarios.push({ name: 'skewed drop 0.05 (0.1 vs 0/1 at 5%)', drop: 0.05, n, make: one(n, u => ({ a: [0.1], b: [u() < 0.05 ? 1 : 0] })) });
 }
 
+// The betting test on the scenarios where the choice of test matters.
+const BETTING_ON = ['symmetric null, continuous', 'skewed null (0.1 vs 0/1 at 10%)', 'clustered null, clusters declared', 'drop 0.1, continuous', 'drop 0.1, binary', 'skewed drop 0.05 (0.1 vs 0/1 at 5%)'];
+for (const sc of [...scenarios]) {
+  if (BETTING_ON.includes(sc.name)) scenarios.push({ ...sc, name: `${sc.name} [betting]`, options: { ...sc.options, test: 'betting' } });
+}
+
 type Cell = { scenario: string; n: number; drop: number; fail: number; insufficient: number; pass: number; qualityFail: number };
 const cells: Cell[] = [];
 let seed = 777;
@@ -152,6 +158,28 @@ for (const sc of scenarios) {
   }
 }
 
+// Several runs of the same 20 items: per-item difficulty fixed, fresh noise per run. Does adding runs
+// raise detection while false alarms stay at the level? (binary scores; drop 0 and 0.1)
+const multiRun: Array<{ runs: number; drop: number; test: string; fail: number }> = [];
+for (const drop of [0, 0.1])
+  for (const runs of [1, 3, 5])
+    for (const test of ['sign-flip', 'betting'] as const) {
+      const u = rng(seed++);
+      let fails = 0;
+      for (let t = 0; t < TRIALS; t++) {
+        const p = Array.from({ length: 20 }, () => 0.3 + 0.5 * u());
+        const draw = (q: number) => (u() < q ? 1 : 0);
+        const runsA: ExperimentRows[] = [], runsB: ExperimentRows[] = [];
+        for (let k = 0; k < runs; k++) {
+          const tr: Trial = { scorers: ['q'], items: p.map(q => ({ q: { a: [draw(q)], b: [draw(q - drop)] } })) };
+          runsA.push(rows(`A${k}`, tr, 'a'));
+          runsB.push(rows(`B${k}`, tr, 'b'));
+        }
+        if (compareRows(runsA, runsB, { resamples: 2000, seed: t + 1, test }).verdict === 'fail') fails++;
+      }
+      multiRun.push({ runs, drop, test, fail: fails / TRIALS });
+    }
+
 // Resample check: one cell at the production default.
 const check = scenarios.find(s => s.name === 'symmetric null, continuous' && s.n === 50)!;
 const resampleCheck = [20000].map(resamples => {
@@ -164,11 +192,13 @@ const resampleCheck = [20000].map(resamples => {
   return { trials: 400, resamples, failRate: fails / 400 };
 });
 
-writeFileSync('results/gate-sim.json', JSON.stringify({ trials: TRIALS, alpha: 0.05, cells, resampleCheck }, null, 2));
+writeFileSync('results/gate-sim.json', JSON.stringify({ trials: TRIALS, alpha: 0.05, cells, multiRun, resampleCheck }, null, 2));
 const pct = (x: number) => `${(100 * x).toFixed(1)}%`;
 let md = `# The whole gate, simulated\n\n${TRIALS} trials per cell, alpha 0.05, default options (\`allowSubset\` on). "fail" = gate verdict FAIL; "quality fail" = a regression reason (the statistical test); "insufficient" = no verdict.\nWith drop 0 every FAIL is a false alarm. MC s.e. ≤ 1.6 pts.\n\n`;
 md += '| scenario | n | true drop | FAIL | quality FAIL | INSUFFICIENT | PASS |\n|---|---|---|---|---|---|---|\n';
 for (const c of cells) md += `| ${c.scenario} | ${c.n} | ${c.drop} | ${pct(c.fail)} | ${pct(c.qualityFail)} | ${pct(c.insufficient)} | ${pct(c.pass)} |\n`;
+md += '\n## Several runs of the same 20 items (binary scores)\n\n| runs | true drop | test | FAIL |\n|---|---|---|---|\n';
+for (const m of multiRun) md += `| ${m.runs} | ${m.drop} | ${m.test} | ${pct(m.fail)} |\n`;
 md += `\nResample check (symmetric null, n=50, 400 trials, 20000 resamples): ${resampleCheck.map(r => pct(r.failRate)).join(', ')}.\n`;
 writeFileSync('results/gate-sim.md', md);
 console.log(md);

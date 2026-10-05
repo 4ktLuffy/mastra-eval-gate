@@ -1,0 +1,103 @@
+{
+  "resources": [
+    {
+      "pair": "R1->R2",
+      "what": "same config: no change expected",
+      "latency": {
+        "items": 30,
+        "ratio": 0.9105173855753121,
+        "pValue": 0.8285585720713964,
+        "maxIncrease": null,
+        "regressed": false
+      },
+      "tokens": {
+        "items": 30,
+        "ratio": 0.9779732996272981,
+        "pValue": 0.5341732913354332,
+        "maxIncrease": null,
+        "regressed": false
+      },
+      "warnings": []
+    },
+    {
+      "pair": "R2->R3",
+      "what": "same config: no change expected",
+      "latency": {
+        "items": 30,
+        "ratio": 0.8491547218187044,
+        "pValue": 0.9789510524473777,
+        "maxIncrease": null,
+        "regressed": false
+      },
+      "tokens": {
+        "items": 30,
+        "ratio": 0.532426680497499,
+        "pValue": 0.9893505324733763,
+        "maxIncrease": null,
+        "regressed": false
+      },
+      "warnings": []
+    },
+    {
+      "pair": "R1->R5",
+      "what": "20 s item timeout",
+      "latency": {
+        "items": 23,
+        "ratio": 0.6733295835604471,
+        "pValue": 0.999950002499875,
+        "maxIncrease": null,
+        "regressed": false
+      },
+      "tokens": {
+        "items": 23,
+        "ratio": 0.6540722519708586,
+        "pValue": 0.952252387380631,
+        "maxIncrease": null,
+        "regressed": false
+      },
+      "warnings": []
+    },
+    {
+      "pair": "B1->B2",
+      "what": "same config: no change expected",
+      "latency": null,
+      "tokens": {
+        "items": 30,
+        "ratio": 0.7803053554930894,
+        "pValue": 0.8819559022048897,
+        "maxIncrease": null,
+        "regressed": false
+      },
+      "warnings": []
+    },
+    {
+      "pair": "B1->D",
+      "what": "prompt: reply with only the final number",
+      "latency": null,
+      "tokens": {
+        "items": 29,
+        "ratio": 2.0654482165545662,
+        "pValue": 0.00004999750012499375,
+        "maxIncrease": null,
+        "regressed": false
+      },
+      "warnings": [
+        "Token use per item rose 106.545% (p = 5.0e-5); set `tokens: { maxIncrease }` to gate on it."
+      ]
+    }
+  ],
+  "multi": [
+    {
+      "test": "sign-flip",
+      "verdict": "fail",
+      "change": -0.26666666666666666,
+      "p": 0.0012999350032498376
+    },
+    {
+      "test": "betting",
+      "verdict": "fail",
+      "change": -0.26666666666666666,
+      "p": 0.0008625754136982054
+    }
+  ]
+}

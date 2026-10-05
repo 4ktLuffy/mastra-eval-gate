@@ -38,6 +38,8 @@ comes from a script in this repo):
   reported insufficient evidence on 2 (its judge had errored). With a realistic 20 s item timeout
   (7 of 30 items timed out), Mastra showed accuracy *improving* by 0.12 in two comparisons; the
   gate failed all four.
+- **Beyond quality: run time and tokens.** The gate also catches "same answers, but slower" or
+  "same answers, more tokens", which Mastra's comparison doesn't look at.
 - **On a customer-style workload** (a support agent with refund and escalate tools; one policy
   rule deleted as the regression), both catch the regression (29/30 → 21/30, gate p ≈ 0.004) and
   neither false-alarms: that agent was nearly deterministic, so this run shows the gate isn't
@@ -70,7 +72,9 @@ directly):
 npx mastra-eval-gate --mastra src/mastra/index.ts --baseline <id> --candidate <id> --expect faithfulness --threshold faithfulness=0.05
 ```
 
-Exit codes: 0 pass, 1 fail, 3 insufficient evidence, 2 usage error. `--json` prints the full
+Exit codes: 0 pass, 1 fail, 3 insufficient evidence, 2 usage error. Repeat `--baseline` and
+`--candidate` to compare several runs of the same dataset (more runs, more power), and add
+`--max-latency-increase 0.2` / `--max-token-increase 0.2` to gate on run time and tokens. `--json` prints the full
 result. [`examples/ci/eval-gate.yml`](examples/ci/eval-gate.yml) is a GitHub Actions workflow to
 copy, with [`examples/ci/run-candidate.ts`](examples/ci/run-candidate.ts).
 
@@ -100,9 +104,11 @@ A failed gate throws `GateFailedError` with the full report as its message. Afte
 | **Quality** per scorer | Mean change over items scored in both runs (repeated attempts averaged, scores of failed runs excluded and matched to their attempt), one-sided paired sign-flip test against your tolerance, Holm-adjusted across scorers; 95% bootstrap interval (descriptive) |
 | **Reliability** | Per-item failure rate (target errors, timeouts). `'strict'` (default): fail when the gross increase exceeds `maxNewTargetFailures` (default 0); fixed items don't offset broken ones. `'statistical'`: also require the increase to be significant (exact McNemar). |
 | **Missing scorer** | A scorer with scores in the baseline and none in the candidate fails; one in `expectedScorers` that never ran anywhere is insufficient. |
+| **Run time, tokens** | Per item, over successful runs: geometric-mean ratio and a one-sided test on log ratios. Gated with `latency` / `tokens: { maxIncrease }`; otherwise reported, with a warning on a significant rise over 20%. |
 | **Coverage** | Scores the candidate's scorer lost relative to the baseline, per successful attempt (error, skipped, non-finite), beyond `maxCoverageLoss`; or baseline items the candidate didn't run (`allowSubset` to accept): insufficient. |
 
-Options: `thresholds`, `expectedScorers`, `alpha` (0.05), `reliability` (`'strict'` | `'statistical'`), `maxNewTargetFailures` (0), `maxCoverageLoss` (0),
+Options: `thresholds`, `expectedScorers`, `alpha` (0.05), `test` (`'sign-flip'` | `'betting'`),
+`scoreBounds`, `latency`, `tokens`, `reliability` (`'strict'` | `'statistical'`), `maxNewTargetFailures` (0), `maxCoverageLoss` (0),
 `clusters` (item id → cluster id), `allowSubset`, `requireCompleted` (true), `seed`, `resamples`
 (20000), `includeScoresOfFailedRuns`, `midP`, `itemDetail` (10). Invalid values throw.
 
@@ -116,9 +122,20 @@ cell, table in [results/gate-sim.md](results/gate-sim.md)). FAIL rate when nothi
 | Symmetric noise (the test's assumption) | 5.5% | 5.9% | nothing |
 | Unequal repetitions (1 vs 3 attempts, pass/fail) | 3.2% | 3.5% | nothing |
 | Three correlated scorers (Holm) | 2.8% | 2.5% | nothing |
-| **Skewed changes** (constant 0.1 vs 0/1 at 10%, same mean) | **12.2%** | **12.1%** | average repeated attempts; no test option fixes it (see below) |
+| **Skewed changes** (constant 0.1 vs 0/1 at 10%, same mean) | **12.2%** | **12.1%** | `test: 'betting'`: 0.0%, 3.3% |
 | **Correlated items** (5 clusters), undeclared | **12.0%** | **20.0%** | pass `clusters`: 2.4%, 3.7% |
 | **Random target failures, 5% in both runs**, `'strict'` | **64.7%** | **92.6%** | `reliability: 'statistical'`: 5.8%, 6.6% |
+
+**Small datasets: run them more than once.** Pass several runs per side and items are averaged
+across them. With 20 pass/fail items and a true 0.1 drop, 1 / 3 / 5 runs catch it 9% / 25% / 34% of
+the time, false alarms 2.7–3.3%.
+
+**The betting test** (`test: 'betting'`) makes no symmetry assumption, so it fixes the
+skewed-scores row above. Like any item-level test it treats items as a sample of tasks; it takes
+them in a seeded random order. It needs far more data: a 0.1 drop over 20 continuous items is
+caught 3.4% of the time (sign-flip: 63.0%), 60.3% at 50 items (94.4%), and extra runs add little
+(8.3% → 12.6% at 5 runs). On the real Codex runs it gives the same verdicts as sign-flip. Use it
+when a scorer's changes are lopsided (rare large gains, many small losses), not as the default.
 
 The price of `'statistical'`: when failures really rise from 5% to 20%, it catches 19.8% (20 items)
 or 62.4% (50 items) of cases; `'strict'` catches 98.4–100%. Pick by whether a crash is a defect in your
@@ -179,7 +196,7 @@ templates (Apache-2.0, © Mastra).
 | Path | What |
 |---|---|
 | `src/compare.ts` | Verdict, quality/reliability/coverage checks over stored rows (pure) |
-| `src/stats.ts` | Sign-flip (exact, Monte Carlo, mid-p), McNemar, Holm, bootstrap, minimum detectable effect |
+| `src/stats.ts` | Sign-flip (exact, Monte Carlo, mid-p), betting test, McNemar, Holm, bootstrap, minimum detectable effect |
 | `src/load.ts`, `src/cli.ts`, `src/report.ts`, `src/vitest.ts` | Mastra loader, CLI, text report, Vitest helpers |
 | `test/` | Unit tests, real-Mastra integration tests (Mastra's verdict vs the gate's), CLI end-to-end |
 | `bench/` | Simulations, real-model runs, re-gating |

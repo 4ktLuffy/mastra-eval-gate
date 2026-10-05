@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { attemptFromScoreId } from '../src/load.js';
+import { attemptFromScoreId, totalTokens } from '../src/load.js';
 
 describe('attemptFromScoreId', () => {
   it('reads the attempt from a caller-driven score id', () => {
@@ -13,5 +13,14 @@ describe('attemptFromScoreId', () => {
     expect(attemptFromScoreId(undefined, 'item-9', 'quality')).toBeNull();
     expect(attemptFromScoreId('expscore:exp-1:item-9:x:quality', 'item-9', 'quality')).toBeNull();
     expect(attemptFromScoreId('expscore:exp-1:item-9:1:other', 'item-9', 'quality')).toBeNull();
+  });
+});
+
+describe('totalTokens', () => {
+  it('reads usage.totalTokens or totalUsage.totalTokens', () => {
+    expect(totalTokens({ usage: { totalTokens: 12 } })).toBe(12);
+    expect(totalTokens({ totalUsage: { totalTokens: 7 } })).toBe(7);
+    expect(totalTokens({ text: 'x' })).toBeNull();
+    expect(totalTokens(null)).toBeNull();
   });
 });

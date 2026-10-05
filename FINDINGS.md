@@ -349,6 +349,32 @@ rate with nothing worse:
 - Power is set by sample size: a 0.1 drop in pass/fail scores is caught 8.9–19.0% of the time with
   20–50 items; a 0.1 drop in continuous scores 63.0–94.4%.
 
+**0.3.0 additions, measured the same way:**
+
+- **The betting test** (Waudby-Smith & Ramdas; no symmetry assumption, items treated as a sample
+  of tasks and taken in a seeded random order): skewed no-change 0.0% / 3.3% (20 / 50 items) against
+  sign-flip's 12.2% / 12.1%. The cost is power: a 0.1 drop is caught 3.4% / 60.3% of the time on
+  continuous scores (sign-flip 63.0% / 94.4%) and 8.2% / 9.5% on pass/fail scores (8.9% / 19.0%).
+  Its bet size shrinks with each observation, so extra runs add little: 8.3% → 12.1% → 12.6% at
+  1 / 3 / 5 runs; in a direct check (earlier, sorted-order version) its p-value did not change from 3
+  to 5 runs in 238 of 300 trials. Averaging in a growth-adaptive bettor (aGRAPA)
+  did not change that (237 of 300) and was dropped: on a 0.1 drop over pass/fail items the expected
+  log-growth is about 0.005 per observation, so betting needs hundreds of observations.
+- **Repeated runs with the sign-flip test** are what helps small datasets: per-item means across
+  runs, 20 pass/fail items, 0.1 drop: 8.8% → 24.5% → 34.2% at 1 / 3 / 5 runs; false alarms 2.7–3.3%.
+- **On the saved real Codex runs** (`bench/regate.ts`, `results/real/regate.md`), the betting test
+  gives the same verdicts as sign-flip: of the 20 clean no-change comparisons, 17 pass, 1 fails
+  (M2 → M3) and 2 are insufficient; it fails all 4 timeout comparisons and the effort regression;
+  on the support benchmark with both runs per side (SB1+SB2 vs SX1+SX2) it fails at p = 0.0009
+  (sign-flip 0.0013). (A draft that took items in sorted order passed M2 → M3; that order was the
+  flaw a review found, see REVIEWS.md.)
+- **Run time on real runs** (Mastra's own timestamps, `results/real/regate-resources.json`): two
+  identical configurations compare at ×0.91 and ×0.85 per item (p = 0.83, 0.98), no false alarm.
+  **Token counts from the real runs are not usable:** the Codex adapter reported, for each call,
+  the last token count recorded by any call, which under concurrency is often another call's
+  (identical runs compared at ×0.53). The adapter now returns each call's own count; the saved runs
+  were not repeated.
+
 From the earlier test-level simulation (`bench/power.ts`):
 
 - **No power gain from pairing in this simulation.** An unpaired rule given an oracle cut-off

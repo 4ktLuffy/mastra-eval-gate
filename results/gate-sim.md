@@ -37,5 +37,34 @@ With drop 0 every FAIL is a false alarm. MC s.e. ≤ 1.6 pts.
 | drop 0.1, continuous | 50 | 0.1 | 94.4% | 94.4% | 0.0% | 5.6% |
 | drop 0.1, binary | 50 | 0.1 | 19.0% | 19.0% | 0.0% | 81.0% |
 | skewed drop 0.05 (0.1 vs 0/1 at 5%) | 50 | 0.05 | 50.3% | 50.3% | 0.0% | 49.7% |
+| symmetric null, continuous [betting] | 20 | 0 | 0.0% | 0.0% | 0.0% | 100.0% |
+| skewed null (0.1 vs 0/1 at 10%) [betting] | 20 | 0 | 0.0% | 0.0% | 0.0% | 100.0% |
+| clustered null, clusters declared [betting] | 20 | 0 | 0.0% | 0.0% | 0.0% | 100.0% |
+| drop 0.1, continuous [betting] | 20 | 0.1 | 3.4% | 3.4% | 0.0% | 96.6% |
+| drop 0.1, binary [betting] | 20 | 0.1 | 8.2% | 8.2% | 0.0% | 91.8% |
+| skewed drop 0.05 (0.1 vs 0/1 at 5%) [betting] | 20 | 0.05 | 0.0% | 0.0% | 0.0% | 100.0% |
+| symmetric null, continuous [betting] | 50 | 0 | 0.1% | 0.1% | 0.0% | 99.9% |
+| skewed null (0.1 vs 0/1 at 10%) [betting] | 50 | 0 | 3.3% | 3.3% | 0.0% | 96.7% |
+| clustered null, clusters declared [betting] | 50 | 0 | 0.0% | 0.0% | 0.0% | 100.0% |
+| drop 0.1, continuous [betting] | 50 | 0.1 | 60.3% | 60.3% | 0.0% | 39.7% |
+| drop 0.1, binary [betting] | 50 | 0.1 | 9.5% | 9.5% | 0.0% | 90.5% |
+| skewed drop 0.05 (0.1 vs 0/1 at 5%) [betting] | 50 | 0.05 | 17.3% | 17.3% | 0.0% | 82.7% |
+
+## Several runs of the same 20 items (binary scores)
+
+| runs | true drop | test | FAIL |
+|---|---|---|---|
+| 1 | 0 | sign-flip | 2.7% |
+| 1 | 0 | betting | 2.6% |
+| 3 | 0 | sign-flip | 3.3% |
+| 3 | 0 | betting | 2.8% |
+| 5 | 0 | sign-flip | 3.1% |
+| 5 | 0 | betting | 2.4% |
+| 1 | 0.1 | sign-flip | 8.8% |
+| 1 | 0.1 | betting | 8.3% |
+| 3 | 0.1 | sign-flip | 24.5% |
+| 3 | 0.1 | betting | 12.1% |
+| 5 | 0.1 | sign-flip | 34.2% |
+| 5 | 0.1 | betting | 12.6% |
 
 Resample check (symmetric null, n=50, 400 trials, 20000 resamples): 4.3%.

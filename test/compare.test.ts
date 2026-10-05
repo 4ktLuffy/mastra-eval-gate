@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { compareRows, type ExperimentRows, type ResultRow, type ScoreRow } from '../src/compare.js';
+import { totalTokens } from '../src/load.js';
+import { rng } from '../src/stats.js';
 
 const items = (n: number) => Array.from({ length: n }, (_, i) => `q${i + 1}`);
 function exp(id: string, rows: Array<{ item: string; scores?: Record<string, number | undefined>; error?: boolean; attempt?: number }>): ExperimentRows {
@@ -115,14 +117,17 @@ describe('compareRows', () => {
       expect(c.reasons.map(r => r.kind)).toEqual(['reliability']);
     });
 
-    it('bug 1: an unattributable score is kept but flagged', () => {
+    it('bug 1: a score that cannot be matched to an attempt, where some attempts failed, makes the evidence insufficient', () => {
       const a = exp('A', items(3).map(item => ({ item, scores: { quality: 0.9 } })));
       const b: ExperimentRows = {
         id: 'B',
         results: items(3).flatMap(itemId => [{ itemId, attempt: 0, error: null }, { itemId, attempt: 1, error: new Error('x') }]),
         scores: items(3).map(entityId => ({ scorerId: 'quality', entityId, score: 0.9 })),
       };
-      expect(compareRows(a, b).warnings.some(w => w.includes('could not be matched to an attempt'))).toBe(true);
+      const c = compareRows(a, b);
+      // The new failed attempts fail reliability (fail outranks insufficient); the unmatched scores are reported too.
+      expect(c.verdict).toBe('fail');
+      expect(c.reasons.some(r => r.severity === 'insufficient' && r.message.includes('could not be matched to an attempt'))).toBe(true);
     });
 
     it('bug 2: disjoint item sets fail', () => {
@@ -357,6 +362,144 @@ describe('compareRows', () => {
       extra.results.push({ itemId: 'extra', attempt: 0, error: 'crash' });
       const c = compareRows(a, extra);
       expect(c.warnings.some(w => w.includes('only in the candidate had failed runs'))).toBe(true);
+    });
+  });
+
+  describe('0.3.0: betting test, several runs, run time and tokens', () => {
+    const make = (id: string, values: number[], extra: (i: number) => Partial<ResultRow> = () => ({})): ExperimentRows => ({
+      id,
+      status: 'completed',
+      results: values.map((_, i) => ({ itemId: `i${i}`, attempt: 0, error: null, ...extra(i) })),
+      scores: values.map((score, i) => ({ entityId: `i${i}`, scorerId: 'q', attempt: 0, score })),
+    });
+
+    it('betting: a skewed no-change comparison that sign-flip fails, betting passes', () => {
+      // Baseline 0.1 everywhere; the candidate scores 1 with probability 0.1 and 0 otherwise (the
+      // same mean). In 12% of 20-item runs it never draws a 1: every item drops by 0.1.
+      const a = make('A', Array(20).fill(0.1));
+      const b = make('B', Array(20).fill(0));
+      expect(compareRows(a, b).verdict).toBe('fail'); // sign-flip: 20 of 20 dropped, p = 5e-5
+      const bet = compareRows(a, b, { test: 'betting' });
+      expect(bet.scorers.q!.test).toBe('betting');
+      expect(bet.verdict).toBe('pass');
+    });
+
+    it('betting: catches a clear regression', () => {
+      const a = make('A', Array(40).fill(0.9));
+      const b = make('B', Array.from({ length: 40 }, (_, i) => (i % 4 === 0 ? 0.9 : 0.3)));
+      expect(compareRows(a, b, { test: 'betting' }).verdict).toBe('fail');
+    });
+
+    it('betting: evidence accumulates across runs', () => {
+      // One run is not enough at this drop; three runs of the same dataset are.
+      const vals = (k: number) => Array.from({ length: 20 }, (_, i) => ((i + k) % 3 === 0 ? 0.4 : 0.8));
+      const a = [0, 1, 2].map(k => make(`A${k}`, Array(20).fill(0.8)));
+      const b = [0, 1, 2].map(k => make(`B${k}`, vals(k)));
+      const one = compareRows(a[0]!, b[0]!, { test: 'betting' });
+      const three = compareRows(a, b, { test: 'betting' });
+      expect(three.runs).toEqual({ baseline: 3, candidate: 3 });
+      expect(three.scorers.q!.pValue).toBeLessThan(one.scorers.q!.pValue);
+      expect(three.verdict).toBe('fail');
+    });
+
+    it('betting: scores outside the declared bounds make the evidence insufficient', () => {
+      const a = make('A', Array(20).fill(3)), b = make('B', Array(20).fill(2));
+      expect(compareRows(a, b, { test: 'betting' }).verdict).toBe('insufficient');
+      expect(compareRows(a, b, { test: 'betting', scoreBounds: { q: { min: 0, max: 5 } } }).verdict).toBe('fail');
+    });
+
+    it('several runs: sign-flip compares per-item means across runs', () => {
+      const a = [make('A1', Array(10).fill(0.5)), make('A2', Array(10).fill(0.7))];
+      const b = [make('B1', Array(10).fill(0.6))];
+      const c = compareRows(a, b);
+      expect(c.scorers.q!.meanA).toBeCloseTo(0.6, 10);
+      expect(c.scorers.q!.change).toBeCloseTo(0, 10);
+      expect(c.verdict).toBe('pass');
+    });
+
+    it('run time: gated only when asked, on a significant increase beyond the allowance', () => {
+      const a = make('A', Array(20).fill(0.8), () => ({ durationMs: 1000 }));
+      const b = make('B', Array(20).fill(0.8), i => ({ durationMs: 1500 + (i % 3) * 50 }));
+      const plain = compareRows(a, b);
+      expect(plain.verdict).toBe('pass');
+      expect(plain.resources.latency!.ratio).toBeGreaterThan(1.5);
+      expect(plain.warnings.some(w => w.includes('Run time per item rose'))).toBe(true);
+      expect(compareRows(a, b, { latency: { maxIncrease: 0.2 } }).reasons.map(r => r.kind)).toEqual(['latency']);
+      expect(compareRows(a, b, { latency: { maxIncrease: 0.8 } }).verdict).toBe('pass');
+    });
+
+    it('tokens: same check on token use; failed runs are left out', () => {
+      const a = make('A', Array(20).fill(0.8), () => ({ tokens: 1000 }));
+      const b = make('B', Array(20).fill(0.8), () => ({ tokens: 1300 }));
+      expect(compareRows(a, b, { tokens: { maxIncrease: 0.2 } }).reasons.map(r => r.kind)).toEqual(['cost']);
+      expect(compareRows(a, a, { tokens: { maxIncrease: 0 } }).verdict).toBe('pass');
+    });
+
+    it('validates the new options', () => {
+      const a = make('A', Array(10).fill(1));
+      expect(() => compareRows(a, a, { test: 'bayes' as never })).toThrow('test must be');
+      expect(() => compareRows(a, a, { scoreBounds: { q: { min: 1, max: 0 } } })).toThrow('scoreBounds');
+      expect(() => compareRows(a, a, { latency: { maxIncrease: -1 } })).toThrow('latency');
+      expect(() => compareRows([], a)).toThrow('at least one');
+    });
+  });
+
+  describe('fourth review (gpt-6-astra on 0.3.0)', () => {
+    const run = (id: string, q: number | number[] = 0.5, v: number | null = 100, attempt = 0, error: unknown = null): ExperimentRows => {
+      const qs = Array.isArray(q) ? q : Array(10).fill(q);
+      return {
+        id,
+        status: 'completed',
+        results: qs.map((_, i) => ({ itemId: `i${String(i).padStart(3, '0')}`, attempt, error, durationMs: v, tokens: v })),
+        scores: qs.map((score, i) => ({ entityId: `i${String(i).padStart(3, '0')}`, scorerId: 'q', score, attempt })),
+      };
+    };
+
+    it('a requested run-time / token check without valid measurements is insufficient', () => {
+      for (const v of [null, -1, Number.NaN]) {
+        expect(compareRows(run('a'), run('b', 0.5, v), { tokens: { maxIncrease: 0 }, latency: { maxIncrease: 0 } }).verdict).toBe('insufficient');
+      }
+      // Zero is a valid measurement: going from 0 to 100 tokens is a rise.
+      expect(compareRows(run('a', 0.5, 0), run('b', 0.5, 100), { tokens: { maxIncrease: 0 } }).reasons.map(r => r.kind)).toEqual(['cost']);
+    });
+
+    it('attempt numbers from different runs cannot collide', () => {
+      const c = compareRows([run('a0', 0.5, 100, 1_000_000), run('a1')], [run('b0', 0.5, 100, 1_000_000, 'boom'), run('b1')]);
+      expect(c.reliability.newFailures).toBe(10);
+      expect(c.verdict).toBe('fail');
+      expect(() => compareRows(run('a', 0.5, 100, 2 ** 32), run('b'))).toThrow('attempt numbers');
+    });
+
+    it("merging runs does not bring back a failed run's scores", () => {
+      const failedUnknown = (id: string, withScores: boolean): ExperimentRows => {
+        const x = run(id, 1, 100, 0, 'boom'), y = run(id, 1, 100, 1, 'boom');
+        return { ...x, results: [...x.results, ...y.results], scores: withScores ? [...x.scores, ...y.scores].map(sc => ({ ...sc, attempt: null })) : [] };
+      };
+      const c = compareRows([failedUnknown('a0', false), run('a1', 0.5)], [failedUnknown('b0', true), run('b1', 0)]);
+      expect(c.scorers.q!.meanB).toBe(0);
+      expect(c.verdict).toBe('fail');
+    });
+
+    it('betting with no overlapping run pairs, or unequal run counts, is insufficient', () => {
+      const subset = (x: ExperimentRows, start: number, end: number) => ({ ...x, results: x.results.slice(start, end), scores: x.scores.slice(start, end) });
+      expect(compareRows([subset(run('a0', 1), 0, 5), subset(run('a1', 1), 5, 10)], [subset(run('b0', 0), 5, 10), subset(run('b1', 0), 0, 5)], { test: 'betting' }).verdict).toBe('insufficient');
+      expect(compareRows([run('a0', 1), run('a1', 1)], [run('b0', 1), run('b1', 1), run('b2', 0)], { test: 'betting' }).verdict).toBe('insufficient');
+    });
+
+    it('betting holds its level when item difficulty lines up with item order', () => {
+      // Same expected dataset mean (0.25 both); the first 20 items drop, the last 20 can gain.
+      let fails = 0;
+      const u = rng(4242);
+      for (let t = 0; t < 300; t++) {
+        const a = run('a', [...Array(20).fill(0.5), ...Array(20).fill(0)]);
+        const b = run('b', [...Array(20).fill(0), ...Array.from({ length: 20 }, () => (u() < 0.5 ? 1 : 0))]);
+        if (compareRows(a, b, { test: 'betting', seed: t + 1 }).verdict === 'fail') fails++;
+      }
+      expect(fails / 300).toBeLessThanOrEqual(0.05);
+    });
+
+    it('tokens: totalUsage (all steps) is read before usage (last step)', () => {
+      expect(totalTokens({ usage: { totalTokens: 100 }, totalUsage: { totalTokens: 10000 } })).toBe(10000);
     });
   });
 });

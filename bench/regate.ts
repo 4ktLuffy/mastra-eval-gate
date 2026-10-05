@@ -8,9 +8,21 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { compareRows, type CompareOptions, type ExperimentRows } from '../src/index.js';
 
+/** A saved run, with per-item run time and tokens restored from its saved outputs when present. */
 const load = (name: string): ExperimentRows => {
   const saved = JSON.parse(readFileSync(`results/real/${name}.json`, 'utf8'));
-  return { ...saved.rows, id: name, status: 'completed' };
+  const outputs = new Map<string, { seconds?: number | null; output?: { usage?: { totalTokens?: number } } | null }>(
+    (saved.outputs ?? []).map((o: { itemId: string }) => [o.itemId, o]),
+  );
+  const results = saved.rows.results.map((r: { itemId: string }) => {
+    const o = outputs.get(r.itemId);
+    return {
+      ...r,
+      durationMs: typeof o?.seconds === 'number' ? o.seconds * 1000 : null,
+      tokens: typeof o?.output?.usage?.totalTokens === 'number' ? o.output.usage.totalTokens : null,
+    };
+  });
+  return { ...saved.rows, results, id: name, status: 'completed' };
 };
 const groups: Array<{ group: string; noChange: boolean; pairs: Array<[string, string]> }> = [
   { group: 'R: same config (R1-R3)', noChange: true, pairs: [['R1', 'R2'], ['R2', 'R1'], ['R1', 'R3'], ['R3', 'R1'], ['R2', 'R3'], ['R3', 'R2']] },
@@ -21,7 +33,7 @@ const groups: Array<{ group: string; noChange: boolean; pairs: Array<[string, st
   { group: 'toolMocks M1-M3', noChange: true, pairs: [['M1', 'M2'], ['M2', 'M1'], ['M1', 'M3'], ['M3', 'M1'], ['M2', 'M3'], ['M3', 'M2']] },
   { group: 'effort medium -> none (30/30 -> 13/30)', noChange: false, pairs: [['MED', 'NONE']] },
 ];
-const modes: Record<string, CompareOptions> = { strict: {}, statistical: { reliability: 'statistical' } };
+const modes: Record<string, CompareOptions> = { strict: {}, statistical: { reliability: 'statistical' }, betting: { test: 'betting' } };
 const out: Array<Record<string, unknown>> = [];
 for (const g of groups)
   for (const [a, b] of g.pairs)
@@ -29,6 +41,25 @@ for (const g of groups)
       const c = compareRows(load(a), load(b), opts);
       out.push({ group: g.group, noChange: g.noChange, pair: `${a}->${b}`, mode, verdict: c.verdict, reasons: c.reasons.map(r => `${r.severity}:${r.kind}`), newFailures: c.reliability.newFailures, reliabilityP: c.reliability.pValue });
     }
+// Run time and tokens on real runs (saved per item where the run recorded them).
+const resources = [
+  ['R1', 'R2', 'same config: no change expected'],
+  ['R2', 'R3', 'same config: no change expected'],
+  ['R1', 'R5', '20 s item timeout'],
+  ['B1', 'B2', 'same config: no change expected'],
+  ['B1', 'D', 'prompt: reply with only the final number'],
+].map(([a, b, what]) => {
+  const c = compareRows(load(a!), load(b!));
+  return { pair: `${a}->${b}`, what, latency: c.resources.latency ?? null, tokens: c.resources.tokens ?? null, warnings: c.warnings.filter(w => /Run time|Token use/.test(w)) };
+});
+// Several runs at once: both support baselines against both regressed runs (betting pairs them in order).
+const multi = (['sign-flip', 'betting'] as const).map(test => {
+  const c = compareRows([load('SB1'), load('SB2')], [load('SX1'), load('SX2')], { test });
+  return { test, verdict: c.verdict, change: c.scorers.action?.change, p: c.scorers.action?.pAdjusted };
+});
+writeFileSync('results/real/regate-resources.json', JSON.stringify({ resources, multi }, null, 2));
+console.log(JSON.stringify({ resources: resources.map(r => ({ pair: r.pair, what: r.what, latency: r.latency && { ratio: +r.latency.ratio.toFixed(3), p: +r.latency.pValue.toFixed(4) }, tokens: r.tokens && { ratio: +r.tokens.ratio.toFixed(3), p: +r.tokens.pValue.toFixed(4) } })), multi }, null, 1));
+
 writeFileSync('results/real/regate.json', JSON.stringify(out, null, 2));
 let md = '# Saved real runs, re-gated with the current gate\n\n| group | mode | pairs | pass | fail | insufficient |\n|---|---|---|---|---|---|\n';
 for (const g of groups)
