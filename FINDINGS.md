@@ -234,6 +234,80 @@ escalate tickets can feel. 377 Codex calls, 480,386 tokens.
   one action was taken, and saves full tool calls; a dry run on 4 tickets scored as expected. The
   saved run was not repeated.
 
+## Field test: as a Mastra user, on a fresh project
+
+A new project from Mastra's official starter (`npx create-mastra`, default "Agent Harness"
+template, @mastra/core 1.74.0, LibSQL file storage and DuckDB observability as generated), with
+`mastra-eval-gate@0.3.0` installed from npm. Added the way a team would: a store-policy agent with a
+`lookupPolicy` tool, 20 customer questions with the policy's key fact as ground truth, an answer
+check plus Mastra's prebuilt `createToolCallAccuracyScorerCode`, and two CI scripts (create the
+dataset, run an experiment and print its id). Model: Codex through the adapter (no API key). Three
+"changes" run as experiments: the same agent again, a "friendlier" prompt rewrite that drops the
+lookup instruction, and a cheaper reasoning setting. 7 experiments, all 20/20 completed.
+
+What it found:
+
+- **Using the CLI as documented failed.** `--mastra src/mastra/index.ts` loads the whole app, and
+  the template's DuckDB observability store holds an exclusive file lock: with an experiment
+  running, the CLI died with `Could not set lock on file "mastra.duckdb"`. 0.3.1 adds `--storage
+  file:./mastra.db`, which opens only the experiment storage: it ran in 0.5 s alongside the
+  running experiment.
+- **A false alarm from a brittle scorer, and how each tool handled it.** Mastra's
+  `compareExperiments` reported a regression for the friendlier prompt in all three runs (−0.10,
+  −0.10, −0.15). The gate passed it each time with "looks worse but not significant", and with
+  three runs per side (new in 0.3.1) it named the 2 questions that scored lower in every run.
+  Reading them took a minute: the answers were right ("7–14 business days", "Gift cards can’t be
+  refunded"), and the answer check only accepted "7 to 14" and a straight apostrophe. With the
+  check fixed to normalise dashes and quotes, every run of every variant scores 20/20
+  (`scripts/rescore.ts` in the field project, no model calls). So there was no regression;
+  Mastra's three flags were false alarms, and the gate's item list is what found the cause.
+- **The limit this exposed is real anyway.** A regression on only 2–3 of 20 items can never be
+  significant for an item-level test (3 changed items: p ≥ 1/8, however many runs). Had those 2
+  items been genuinely broken, the gate would also have passed. 0.3.1 therefore names items that
+  are lower in every candidate run than in every baseline run (with ≥ 2 runs per side), as a
+  warning; it does not change the verdict. By chance alone, an item that passes half the time
+  shows this pattern about once in 64 with 3 runs per side.
+- **Nothing else misfired.** Same config vs itself: pass, run time ×0.98 / ×1.02. Cheaper setting:
+  pass, quality unchanged, no run-time or token rise. Codex's per-call token counts vary a lot
+  between identical runs (×0.48 and ×2.09); the token check did not fire (p = 0.98, 0.11).
+- **`SQLITE_BUSY` did not occur** in these 7 experiments at Mastra's default concurrency with a
+  real model (10–20 s per call); the failure reproduced earlier used instant mock models, so it
+  mainly threatens fast agents.
+
+### In Mastra Studio: a workflow, a human-review step, and a prebuilt LLM judge
+
+The same project, used through Studio (`mastra dev`) the way its docs describe: a dataset made in
+the UI, experiments started with Studio's Run and Rerun buttons and its HTTP API, then a support
+workflow (the agent drafts, a later version adds a human-review step that suspends damage claims)
+and Mastra's prebuilt `createAnswerRelevancyScorer` with Codex as the judge. 8 experiments, every
+one completed. Ids and numbers: results/real/studio.md.
+
+- **Studio's experiments read correctly.** The gate opened Studio's database with `--storage`
+  (Studio keeps it under `src/mastra/public/`, not where scripts put `file:./mastra.db`, so a
+  project ends up with two databases) and gated UI-made runs, several per side, without changes.
+- **Studio's compare shows no verdict (unintended, as far as the code says).** The `/compare` route
+  is described as "Compares two experiments to detect score regressions". It calls
+  `mastra.datasets.compareExperiments`, which runs the internal comparison and then returns only
+  `baselineId` and per-item rows: `hasRegression`, per-scorer deltas, `versionMismatch` and the
+  warnings are computed and dropped, and so is each result's `error`. Studio's bundle never reads a
+  regression flag. Same on main today (`packages/core/src/datasets/manager.ts`).
+- **A prebuilt LLM judge on a workflow scores 0 everywhere, silently (unintended).** The judge is
+  declared `type: 'agent'` and reads agent-shaped input and output; given a workflow's
+  `{ question }` / `{ answer }` it received empty strings, said so in its reason ("both the input and
+  output are empty"), and stored 0 for all 20 correct answers. No error, no warning; Studio offers it
+  for workflow targets and the runner doesn't check the type. The same judge on the agent averaged
+  0.87. Mastra's comparison and the gate both pass 0 vs 0; 0.3.1 warns when a higher-is-better
+  scorer is at its floor on every item in both runs.
+- **A suspended workflow counts as a failure, and the gate now says why.** The human-review version
+  suspended the 2 damage-claim questions. Mastra reported "workflow-fact regressed, 1.00 → 0.90":
+  it scored the suspend payloads as wrong answers. The gate failed with 2 new failures, and 0.3.1
+  prints each one's error, here Mastra's own "Workflow suspended — provide resume data via
+  item.resumeData …". Doing what it says (approval as `resumeData` on those 2 items) and rerunning:
+  20/20, the gate passes and warns that the dataset version changed (1 → 3).
+- **A judge's own noise trips Mastra's comparison.** Two identical agent runs with the relevancy
+  judge: 0.869 and 0.888. Mastra flags a regression in one direction (0.888 → 0.869) and not the
+  other; the gate passes both and says a drop of about 0.06 would be caught 80% of the time.
+
 ## Judge-side finding: empty verdict lists score silently (simplification)
 
 `evidence/phase0/g6.mjs`.

@@ -502,4 +502,63 @@ describe('compareRows', () => {
       expect(totalTokens({ usage: { totalTokens: 100 }, totalUsage: { totalTokens: 10000 } })).toBe(10000);
     });
   });
+
+  describe('field test: a regression concentrated on a few items', () => {
+    const run = (id: string, values: number[]): ExperimentRows => ({
+      id,
+      status: 'completed',
+      results: values.map((_, i) => ({ itemId: `i${i}`, attempt: 0, error: null })),
+      scores: values.map((score, i) => ({ entityId: `i${i}`, scorerId: 'q', attempt: 0, score })),
+    });
+    it('names items that are lower in every candidate run than in every baseline run', () => {
+      // As in the field test: 2 of 20 items fail in all 3 candidate runs; one more fails once.
+      const base = [0, 1, 2].map(k => run(`B${k}`, Array(20).fill(1)));
+      const cand = [0, 1, 2].map(k => run(`C${k}`, Array.from({ length: 20 }, (_, i) => (i < 2 ? 0 : i === 2 && k === 0 ? 0 : 1))));
+      const c = compareRows(base, cand);
+      expect(c.verdict).toBe('pass'); // 3 changed items can't make the average significant
+      expect(c.warnings.some(w => w.includes('2 item(s) scored lower in every one of 3 candidate runs'))).toBe(true);
+      expect(c.items.filter(d => d.kind === 'consistent-drop').map(d => d.itemId)).toEqual(['i0', 'i1']);
+    });
+    it('says nothing with a single run per side', () => {
+      const c = compareRows(run('B', Array(20).fill(1)), run('C', Array.from({ length: 20 }, (_, i) => (i < 2 ? 0 : 1))));
+      expect(c.items.some(d => d.kind === 'consistent-drop')).toBe(false);
+    });
+  });
+
+  describe('field test: a workflow target in Studio', () => {
+    const run = (id: string, scorers: Record<string, number[]>, errors: Record<number, unknown> = {}): ExperimentRows => ({
+      id,
+      status: 'completed',
+      results: Array.from({ length: 20 }, (_, i) => ({ itemId: `i${i}`, attempt: 0, error: errors[i] ?? null })),
+      scores: Object.entries(scorers).flatMap(([scorerId, v]) =>
+        v.flatMap((score, i) => (errors[i] ? [] : [{ entityId: `i${i}`, scorerId, attempt: 0, score }])),
+      ),
+    });
+    it('warns when a higher-is-better scorer is at its floor on every item', () => {
+      // Mastra's answer-relevancy judge on a workflow target: 0 everywhere, no error.
+      const s = { judge: Array(20).fill(0), fact: Array(20).fill(1) };
+      const c = compareRows(run('B', s), run('C', s));
+      expect(c.verdict).toBe('pass');
+      expect(c.warnings.filter(w => w.includes('cannot show a change'))).toEqual([
+        expect.stringContaining('"judge" scored 0 on every item in both experiments'),
+      ]);
+    });
+    it('does not warn for a lower-is-better scorer at 0, or when some item scores above the floor', () => {
+      const tox = { tox: Array(20).fill(0) };
+      expect(compareRows(run('B', tox), run('C', tox), { thresholds: { tox: { value: 0, direction: 'lower-is-better' } } }).warnings.join()).not.toContain('cannot show a change');
+      const some = { judge: Array.from({ length: 20 }, (_, i) => (i === 3 ? 0.5 : 0)) };
+      expect(compareRows(run('B', some), run('C', some)).warnings.join()).not.toContain('cannot show a change');
+    });
+    it("shows the candidate's error on each new failure, as Mastra stores it", () => {
+      const s = { fact: Array(20).fill(1) };
+      const suspended = { message: 'Workflow suspended — provide resume data via item.resumeSteps/item.resumeData', stack: 'x' };
+      const c = compareRows(run('B', s), run('C', s, { 4: suspended, 9: 'timeout after 20000ms' }));
+      expect(c.verdict).toBe('fail');
+      const failures = c.items.filter(d => d.kind === 'new-failure');
+      expect(failures.map(d => [d.itemId, d.error])).toEqual([
+        ['i4', suspended.message],
+        ['i9', 'timeout after 20000ms'],
+      ]);
+    });
+  });
 });

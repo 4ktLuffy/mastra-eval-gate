@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * mastra-eval-gate --mastra <module> --baseline <experimentId>... --candidate <experimentId>...
+ * mastra-eval-gate (--mastra <module> | --storage <libsql url>) --baseline <experimentId>... --candidate <experimentId>...
  *   [--threshold scorer=0.05[:lower]] [--expect scorer] [--alpha 0.05] [--reliability strict|statistical]
  *   [--test sign-flip|betting] [--max-latency-increase 0.2] [--max-token-increase 0.2]
  *   [--max-new-failures 0] [--max-coverage-loss 0] [--allow-subset] [--mid-p] [--json]
@@ -9,10 +9,14 @@
  * <module> must export a configured `mastra` instance (default export or named `mastra`). A
  * TypeScript module (.ts/.mts/.cts/.tsx), such as a Mastra project's src/mastra/index.ts, is
  * loaded through tsx, so no build step or wrapper is needed.
+ * --storage opens only the experiment storage (LibSQL: `file:./mastra.db`, or a Turso URL with
+ * TURSO_AUTH_TOKEN), without loading the app: no agents, schedulers or observability start, and no
+ * lock conflicts with a running app. @mastra/core and @mastra/libsql are resolved from the project.
  * Exit code: 0 pass, 1 fail, 2 usage or load error, 3 insufficient evidence.
  */
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { createRequire } from 'node:module';
 import { parseArgs } from 'node:util';
 import type { Mastra } from '@mastra/core';
 import type { ScorerThreshold } from './compare.js';
@@ -29,10 +33,30 @@ async function loadModule(path: string): Promise<unknown> {
   return import(url);
 }
 
+/** A Mastra instance with only LibSQL storage, built from the project's own @mastra packages. */
+async function storageOnly(url: string): Promise<Mastra> {
+  const fromProject = createRequire(resolve('package.json'));
+  const load = async (name: string) => {
+    try {
+      return await import(pathToFileURL(fromProject.resolve(name)).href);
+    } catch {
+      throw new UsageError(`--storage needs ${name} installed in this project (npm i ${name}).`);
+    }
+  };
+  const [{ Mastra }, { LibSQLStore }] = await Promise.all([load('@mastra/core'), load('@mastra/libsql')]);
+  return new Mastra({
+    storage: new LibSQLStore({ id: 'eval-gate', url, ...(process.env.TURSO_AUTH_TOKEN ? { authToken: process.env.TURSO_AUTH_TOKEN } : {}) }),
+    logger: false,
+  }) as Mastra;
+}
+
+class UsageError extends Error {}
+
 async function main(): Promise<number> {
   const { values } = parseArgs({
     options: {
       mastra: { type: 'string' },
+      storage: { type: 'string' },
       baseline: { type: 'string', multiple: true },
       candidate: { type: 'string', multiple: true },
       test: { type: 'string' },
@@ -50,18 +74,23 @@ async function main(): Promise<number> {
       help: { type: 'boolean' },
     },
   });
-  if (values.help || !values.mastra || !values.baseline?.length || !values.candidate?.length) {
+  if (values.help || !(values.mastra || values.storage) || !values.baseline?.length || !values.candidate?.length) {
     console.error(
-      'usage: mastra-eval-gate --mastra <module> --baseline <id>... --candidate <id>... [--threshold scorer=0.05[:lower]] [--expect scorer] [--test sign-flip|betting] [--reliability strict|statistical] [--max-latency-increase 0.2] [--max-token-increase 0.2] [--json]',
+      'usage: mastra-eval-gate (--mastra <module> | --storage <libsql url>) --baseline <id>... --candidate <id>... [--threshold scorer=0.05[:lower]] [--expect scorer] [--test sign-flip|betting] [--reliability strict|statistical] [--max-latency-increase 0.2] [--max-token-increase 0.2] [--json]',
     );
     return 2;
   }
 
-  const mod = (await loadModule(values.mastra)) as { mastra?: Mastra; default?: Mastra };
-  const mastra = mod.mastra ?? mod.default;
-  if (!mastra || typeof (mastra as Mastra).getStorage !== 'function') {
-    console.error(`${values.mastra} does not export a Mastra instance (as default or "mastra").`);
-    return 2;
+  let mastra: Mastra | undefined;
+  if (values.storage) {
+    mastra = await storageOnly(values.storage);
+  } else {
+    const mod = (await loadModule(values.mastra!)) as { mastra?: Mastra; default?: Mastra };
+    mastra = mod.mastra ?? mod.default;
+    if (!mastra || typeof (mastra as Mastra).getStorage !== 'function') {
+      console.error(`${values.mastra} does not export a Mastra instance (as default or "mastra").`);
+      return 2;
+    }
   }
 
   const thresholds: Record<string, ScorerThreshold> = {};
@@ -114,4 +143,5 @@ main().then(
     console.error(err instanceof Error ? err.message : err);
     process.exit(2);
   },
+  // UsageError is reported the same way (exit 2).
 );

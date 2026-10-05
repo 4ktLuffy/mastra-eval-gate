@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.3.1
+
+From using the package as a Mastra user, on a fresh project from `npx create-mastra` (FINDINGS.md,
+"Field test"):
+
+- **`--storage <libsql url>`**: the CLI reads experiments straight from Mastra's LibSQL storage
+  (`file:./mastra.db`, or a Turso URL with `TURSO_AUTH_TOKEN`) without loading the app. With
+  `--mastra src/mastra/index.ts`, the default template's DuckDB observability store failed with a
+  file-lock error while an experiment was running; storage-only mode ran in 0.5 s.
+- The report's scorer column fits long scorer names (Mastra's `code-tool-call-accuracy-scorer`).
+- **Items that change consistently across runs are named.** With ≥ 2 runs per side, items that
+  score lower in every candidate run than in every baseline run get a warning and a
+  `consistent-drop` entry in `items`. An item-level test can't make a change on 2–3 of 20 items
+  significant; in the field test this listing found that a "regression" Mastra flagged three times
+  was the scorer rejecting correct answers written with an en dash and a curly apostrophe.
+
+- **Each new failure shows the target's error** (`items[].error`, and an `error:` line in the
+  report), so a suspended workflow, a timeout and a crash read differently. In Studio, a
+  human-review step that suspends 2 items now reports Mastra's own "Workflow suspended — provide
+  resume data …" next to each.
+- **Warning for a scorer at its floor everywhere.** A higher-is-better scorer that scores its
+  minimum on every item in both experiments cannot show a change. Mastra's prebuilt answer-relevancy
+  judge did this on a workflow target: it received empty input and output and scored 0 on 20
+  correct answers, without an error.
+
 ## 0.3.0
 
 - **Run time and token checks.** `latency: { maxIncrease }` and `tokens: { maxIncrease }` (CLI

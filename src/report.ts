@@ -28,24 +28,33 @@ export function formatReport(c: Comparison): string {
   lines.push('');
   const test = Object.values(c.scorers)[0]?.test ?? 'sign-flip';
   lines.push(`Quality (${test} test):`);
-  lines.push(`${'scorer'.padEnd(28)} ${'n'.padStart(4)}  ${'baseline'.padStart(8)}  ${'candidate'.padStart(9)}  ${'change'.padStart(7)}  ${'95% CI'.padEnd(17)}  ${'p(Holm)'.padStart(7)}  ${'detects'.padStart(8)}`);
+  const w = Math.max(28, ...Object.keys(c.scorers).map(k => k.length + 1));
+  lines.push(`${'scorer'.padEnd(w)} ${'n'.padStart(4)}  ${'baseline'.padStart(8)}  ${'candidate'.padStart(9)}  ${'change'.padStart(7)}  ${'95% CI'.padEnd(17)}  ${'p(Holm)'.padStart(7)}  ${'detects'.padStart(8)}`);
   for (const s of Object.values(c.scorers)) {
     if (s.status !== 'ok') {
-      lines.push(`${s.scorerId.padEnd(28)} ${s.status}`);
+      lines.push(`${s.scorerId.padEnd(w)} ${s.status}`);
       continue;
     }
     const flag = s.regressed ? ' ✗' : s.inconclusive ? ' ?' : '';
     const ci = `[${f(s.changeCI[0])}, ${f(s.changeCI[1])}]`;
     lines.push(
-      `${s.scorerId.padEnd(28)} ${String(s.pairedN).padStart(4)}  ${f(s.meanA).padStart(8)}  ${f(s.meanB).padStart(9)}  ${f(s.change).padStart(7)}  ${ci.padEnd(17)}  ${f(s.pAdjusted).padStart(7)}  ${f(s.minimumDetectable).padStart(8)}${flag}`,
+      `${s.scorerId.padEnd(w)} ${String(s.pairedN).padStart(4)}  ${f(s.meanA).padStart(8)}  ${f(s.meanB).padStart(9)}  ${f(s.change).padStart(7)}  ${ci.padEnd(17)}  ${f(s.pAdjusted).padStart(7)}  ${f(s.minimumDetectable).padStart(8)}${flag}`,
     );
   }
   if (c.items.length) {
     lines.push('');
     lines.push('Items:');
     for (const d of c.items) {
-      const what = d.kind === 'new-failure' ? 'run failure rate' : d.kind === 'lost-score' ? `${d.scorerId} score lost` : `${d.scorerId}`;
-      lines.push(`  ${d.kind.padEnd(11)} ${d.itemId}  ${what}: ${v(d.baseline)} → ${v(d.candidate)}`);
+      const what =
+        d.kind === 'new-failure'
+          ? 'run failure rate'
+          : d.kind === 'lost-score'
+            ? `${d.scorerId} score lost`
+            : d.kind === 'consistent-drop'
+              ? `${d.scorerId}, lower in every run`
+              : `${d.scorerId}`;
+      lines.push(`  ${d.kind.padEnd(15)} ${d.itemId}  ${what}: ${v(d.baseline)} → ${v(d.candidate)}`);
+      if (d.error) lines.push(`  ${''.padEnd(15)} error: ${d.error}`);
     }
   }
   lines.push('');

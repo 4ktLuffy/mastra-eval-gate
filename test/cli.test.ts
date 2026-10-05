@@ -66,6 +66,12 @@ describe('CLI', () => {
     expect(missing.code).toBe(3);
     expect(missing.out).toContain('INSUFFICIENT EVIDENCE');
 
+    // --storage reads the same experiments without loading any app module.
+    const storageOnly = run(['--storage', url, '--baseline', A.experimentId, '--candidate', B.experimentId]);
+    expect(storageOnly.code).toBe(1);
+    expect(storageOnly.out).toContain('3 item(s) fail in the candidate');
+    expect(run(['--storage', url, '--baseline', A.experimentId, '--candidate', S.experimentId]).code).toBe(0);
+
     const json = JSON.parse(run(['--mastra', local, '--baseline', A.experimentId, '--candidate', B.experimentId, '--json']).out);
     expect(json.reliability.newFailures).toBe(3);
     rmSync(local);

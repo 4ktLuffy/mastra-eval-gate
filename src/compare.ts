@@ -218,9 +218,11 @@ export interface GateReason {
 export interface ItemDetail {
   itemId: string;
   scorerId?: string;
-  kind: 'new-failure' | 'drop' | 'lost-score';
+  kind: 'new-failure' | 'consistent-drop' | 'drop' | 'lost-score';
   baseline: number | null;
   candidate: number | null;
+  /** new-failure: the candidate's error message, so a suspension or timeout reads differently from a crash. */
+  error?: string;
 }
 
 export interface ResourceReport {
@@ -358,6 +360,19 @@ function scorerSide(rows: ScoreRow[], scorerId: string, run: RunIndex, dropFaile
     acc.set(r.entityId, list);
   }
   return { byItem: new Map([...acc].map(([item, xs]) => [item, mean(xs)])), validCount, ran, invalid, unattributed };
+}
+
+/** A short, readable form of a result row's error (Mastra stores { message, stack } or a string). */
+export function errorMessage(e: unknown): string | undefined {
+  if (e === null || e === undefined) return undefined;
+  const raw =
+    typeof e === 'string'
+      ? e
+      : typeof e === 'object' && typeof (e as { message?: unknown }).message === 'string'
+        ? (e as { message: string }).message
+        : JSON.stringify(e);
+  const one = (raw ?? '').replace(/\s+/g, ' ').trim();
+  return one.length > 200 ? `${one.slice(0, 199)}…` : one;
 }
 
 const failureRate = (byAttempt: Map<number, boolean>) => [...byAttempt.values()].filter(Boolean).length / byAttempt.size;
@@ -512,7 +527,9 @@ export function compareRows(
     if (fb > fa) {
       newFailures++;
       excess += fb - fa;
-      items.push({ itemId: item, kind: 'new-failure', baseline: fa, candidate: fb });
+      const failed = candidate.results.find(r => r.itemId === item && isFailed(r));
+      const error = errorMessage(failed?.error);
+      items.push({ itemId: item, kind: 'new-failure', baseline: fa, candidate: fb, ...(error ? { error } : {}) });
     }
     if (fa > fb) fixedFailures++;
     if (attemptsA.size !== 1 || attemptsB.size !== 1) singleAttempts = false;
@@ -732,6 +749,17 @@ export function compareRows(
         r.scorerId,
       );
     }
+    // A higher-is-better scorer at its floor on every item in both experiments cannot show a change.
+    // Seen in the field: Mastra's prebuilt agent judges, put on a workflow target, receive empty
+    // input and output and score 0 everywhere, without an error.
+    const { a: floorA, b: floorB } = sideOf[r.scorerId]!;
+    const floor = ((Object.hasOwn(scoreBounds, r.scorerId) ? scoreBounds[r.scorerId] : undefined) ?? { min: 0, max: 1 }).min;
+    const allScores = [...floorA.values(), ...floorB.values()];
+    if (r.direction === 'higher-is-better' && r.pairedN >= 5 && allScores.every(x => x === floor)) {
+      warnings.push(
+        `"${r.scorerId}" scored ${floor} on every item in both experiments, so it cannot show a change. Check that it can read this target's output (Mastra's prebuilt agent judges score a workflow's output as empty).`,
+      );
+    }
     if (r.lostInB['target-error'] > 0) {
       warnings.push(`"${r.scorerId}": ${r.lostInB['target-error']} item(s) scored in the baseline have no score in the candidate because the target failed; they are excluded from the paired mean and counted under reliability.`);
     }
@@ -747,6 +775,29 @@ export function compareRows(
       }
     }
   });
+
+  // Items that scored lower in every candidate run than in every baseline run. The average can miss
+  // a regression concentrated on a few items (3 changed items can never reach p < 1/8), so these are
+  // named even when the quality test is not significant.
+  if (baselineRuns.length >= 2 && candidateRuns.length >= 2) {
+    for (const r of reports) {
+      if (r.status !== 'ok') continue;
+      const sign = r.direction === 'higher-is-better' ? 1 : -1;
+      const perRun = (runs: ExperimentRows[]) =>
+        runs.map(run => scorerSide(run.scores, r.scorerId, indexRun(run.results), !includeScoresOfFailedRuns).byItem);
+      const a = perRun(baselineRuns), b = perRun(candidateRuns);
+      const shared = [...a[0]!.keys()].filter(i => a.every(m => m.has(i)) && b.every(m => m.has(i))).sort();
+      const consistent = shared.filter(i => Math.max(...b.map(m => sign * m.get(i)!)) < Math.min(...a.map(m => sign * m.get(i)!)));
+      if (consistent.length > 0) {
+        warnings.push(
+          `"${r.scorerId}": ${consistent.length} item(s) scored lower in every one of ${candidateRuns.length} candidate runs than in every one of ${baselineRuns.length} baseline runs, a consistent change the average can't show; review them (listed under Items).`,
+        );
+        for (const i of consistent) {
+          items.push({ itemId: i, scorerId: r.scorerId, kind: 'consistent-drop', baseline: mean(a.map(m => m.get(i)!)), candidate: mean(b.map(m => m.get(i)!)) });
+        }
+      }
+    }
+  }
 
   // Run time and token use
   const resources: Comparison['resources'] = {};
@@ -786,9 +837,16 @@ export function compareRows(
     insufficient('no-evidence', 'No scorer has valid scores in both experiments on shared items, so nothing was compared.');
   }
 
-  const kindOrder = { 'new-failure': 0, 'lost-score': 1, drop: 2 } as const;
+  const kindOrder = { 'new-failure': 0, 'consistent-drop': 1, 'lost-score': 2, drop: 3 } as const;
   const size = (d: ItemDetail) => (d.kind === 'drop' ? Math.abs((d.candidate ?? 0) - (d.baseline ?? 0)) : 1);
   items.sort((x, y) => kindOrder[x.kind] - kindOrder[y.kind] || size(y) - size(x) || x.itemId.localeCompare(y.itemId));
+  const seen = new Set<string>();
+  const unique = items.filter(d => {
+    const key = `${d.itemId} ${d.scorerId ?? ''}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 
   const verdict: Verdict = reasons.some(r => r.severity === 'fail') ? 'fail' : reasons.length > 0 ? 'insufficient' : 'pass';
   return {
@@ -802,7 +860,7 @@ export function compareRows(
     warnings,
     reliability,
     scorers: Object.fromEntries(reports.map(r => [r.scorerId, r])),
-    items: items.slice(0, itemDetail),
+    items: unique.slice(0, itemDetail),
   };
 }
 

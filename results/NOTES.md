@@ -109,3 +109,11 @@ each with a test (test/compare.test.ts "review fixes", test/load.test.ts, test/m
   8.2/9.5; multi-run 8.3→12.1→12.6. Heterogeneous-order null (review case) 41.3% → 1.8%.
 - Real re-gate: betting now 17 pass / 1 fail (M2→M3) / 2 insufficient on clean pairs — same as
   sign-flip. The earlier "betting removed the real false alarm" came from sorted order; withdrawn.
+
+## 2026-10-05 — field test on a fresh create-mastra project (0.3.0 from npm)
+- --mastra src/mastra/index.ts failed: DuckDB observability lock held by a running experiment →
+  --storage added (0.5 s).
+- Friendlier prompt: Mastra flagged −0.10/−0.10/−0.15 (3/3); gate pass (p 0.50, 0.50, 0.25),
+  3-vs-3 pass p 0.251 and (new) named 2 consistently lower items → scorer rejected "7–14" and
+  "can’t". Fixed scorer: all 7 runs 20/20. Mastra's flags were false alarms.
+- No SQLITE_BUSY in 7 real-model runs at default concurrency.

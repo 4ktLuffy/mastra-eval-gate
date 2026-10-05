@@ -40,6 +40,15 @@ comes from a script in this repo):
   gate failed all four.
 - **Beyond quality: run time and tokens.** The gate also catches "same answers, but slower" or
   "same answers, more tokens", which Mastra's comparison doesn't look at.
+- **Used on a fresh `create-mastra` project**, Mastra reported a "regression" three times for a
+  prompt rewrite; the gate passed it and named the 2 questions that changed in every run. Reading
+  them showed the agent was right and the answer check was rejecting "7–14" and "can’t". Fixed,
+  every run scores 20/20 (FINDINGS.md, "Field test").
+- **In Mastra Studio**, with a workflow and a prebuilt LLM judge: Studio's compare endpoint
+  computes a regression verdict and drops it before returning; the prebuilt answer-relevancy judge
+  scored 0 on 20 correct workflow answers without an error (the gate now warns); and a
+  human-review step that suspends 2 items is reported with Mastra's own "Workflow suspended" message
+  (FINDINGS.md, "In Mastra Studio").
 - **On a customer-style workload** (a support agent with refund and escalate tools; one policy
   rule deleted as the regression), both catch the regression (29/30 → 21/30, gate p ≈ 0.004) and
   neither false-alarms: that agent was nearly deterministic, so this run shows the gate isn't
@@ -65,12 +74,15 @@ console.log(formatReport(result));
 if (result.verdict !== 'pass') process.exit(1);
 ```
 
-From a shell or CI, against the module that exports your configured `mastra` (TypeScript is loaded
-directly):
+From a shell or CI, straight from your project's storage (no app code is loaded, so it is fast and
+doesn't fight a running app for file locks):
 
 ```bash
-npx mastra-eval-gate --mastra src/mastra/index.ts --baseline <id> --candidate <id> --expect faithfulness --threshold faithfulness=0.05
+npx mastra-eval-gate --storage file:./mastra.db --baseline <id> --candidate <id> --expect faithfulness --threshold faithfulness=0.05
 ```
+
+or against the module that exports your configured `mastra` (TypeScript is loaded directly):
+`--mastra src/mastra/index.ts`.
 
 Exit codes: 0 pass, 1 fail, 3 insufficient evidence, 2 usage error. Repeat `--baseline` and
 `--candidate` to compare several runs of the same dataset (more runs, more power), and add
@@ -140,6 +152,11 @@ when a scorer's changes are lopsided (rare large gains, many small losses), not 
 The price of `'statistical'`: when failures really rise from 5% to 20%, it catches 19.8% (20 items)
 or 62.4% (50 items) of cases; `'strict'` catches 98.4–100%. Pick by whether a crash is a defect in your
 product or background noise from your provider.
+
+**A regression on a few items can't be significant.** If only 2–3 of 20 items change, no
+item-level test can reach p < 0.05 (3 items: p ≥ 1/8). With several runs per side the gate names
+items that are lower in every candidate run than in every baseline run, so they get reviewed even
+when the verdict is PASS.
 
 Power is limited by dataset size, not by the test: a 0.1 drop in pass/fail scores is caught 8.9–19.0%
 of the time with 20–50 items (63.0–94.4% for continuous scores). From the earlier simulation ([results/power.md](results/power.md)), an
