@@ -1,0 +1,1 @@
+{"name":"phase0","private":true,"type":"module","dependencies":{"@mastra/core":"1.74.0","@mastra/evals":"1.10.5","@mastra/libsql":"1.25.0","ai":"^5.0.271","zod":"^4.6.5","tsx":"^4.23.15"}}

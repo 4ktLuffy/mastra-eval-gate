@@ -1,0 +1,1446 @@
+{
+  "trials": 2000,
+  "alpha": 0.05,
+  "rows": [
+    {
+      "model": "continuous σ=0.1",
+      "n": 10,
+      "tolerance": 0,
+      "effect": 0,
+      "oldRate": 0.516,
+      "gateRate": 0.052,
+      "calibratedRate": 0.05,
+      "gateMidPRate": 0.052
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 10,
+      "tolerance": 0,
+      "effect": 0.05,
+      "oldRate": 0.8635,
+      "gateRate": 0.2725,
+      "calibratedRate": 0.288,
+      "gateMidPRate": 0.2725
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 10,
+      "tolerance": 0,
+      "effect": 0.1,
+      "oldRate": 0.987,
+      "gateRate": 0.658,
+      "calibratedRate": 0.7145,
+      "gateMidPRate": 0.658
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 10,
+      "tolerance": 0,
+      "effect": 0.2,
+      "oldRate": 1,
+      "gateRate": 0.995,
+      "calibratedRate": 0.999,
+      "gateMidPRate": 0.995
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 10,
+      "tolerance": 0.05,
+      "effect": 0,
+      "oldRate": 0.129,
+      "gateRate": 0.003,
+      "calibratedRate": 0.005,
+      "gateMidPRate": 0.003
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 10,
+      "tolerance": 0.05,
+      "effect": 0.05,
+      "oldRate": 0.491,
+      "gateRate": 0.048,
+      "calibratedRate": 0.05,
+      "gateMidPRate": 0.048
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 10,
+      "tolerance": 0.05,
+      "effect": 0.1,
+      "oldRate": 0.8655,
+      "gateRate": 0.277,
+      "calibratedRate": 0.3095,
+      "gateMidPRate": 0.277
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 10,
+      "tolerance": 0.05,
+      "effect": 0.2,
+      "oldRate": 1,
+      "gateRate": 0.9255,
+      "calibratedRate": 0.9585,
+      "gateMidPRate": 0.9255
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 10,
+      "tolerance": 0.1,
+      "effect": 0,
+      "oldRate": 0.009,
+      "gateRate": 0,
+      "calibratedRate": 0,
+      "gateMidPRate": 0
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 10,
+      "tolerance": 0.1,
+      "effect": 0.05,
+      "oldRate": 0.1325,
+      "gateRate": 0.0035,
+      "calibratedRate": 0.002,
+      "gateMidPRate": 0.0035
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 10,
+      "tolerance": 0.1,
+      "effect": 0.1,
+      "oldRate": 0.501,
+      "gateRate": 0.0485,
+      "calibratedRate": 0.05,
+      "gateMidPRate": 0.0485
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 10,
+      "tolerance": 0.1,
+      "effect": 0.2,
+      "oldRate": 0.9845,
+      "gateRate": 0.658,
+      "calibratedRate": 0.7105,
+      "gateMidPRate": 0.658
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 20,
+      "tolerance": 0,
+      "effect": 0,
+      "oldRate": 0.5175,
+      "gateRate": 0.0505,
+      "calibratedRate": 0.05,
+      "gateMidPRate": 0.0505
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 20,
+      "tolerance": 0,
+      "effect": 0.05,
+      "oldRate": 0.937,
+      "gateRate": 0.456,
+      "calibratedRate": 0.4725,
+      "gateMidPRate": 0.456
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 20,
+      "tolerance": 0,
+      "effect": 0.1,
+      "oldRate": 0.999,
+      "gateRate": 0.918,
+      "calibratedRate": 0.939,
+      "gateMidPRate": 0.918
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 20,
+      "tolerance": 0,
+      "effect": 0.2,
+      "oldRate": 1,
+      "gateRate": 1,
+      "calibratedRate": 1,
+      "gateMidPRate": 1
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 20,
+      "tolerance": 0.05,
+      "effect": 0,
+      "oldRate": 0.0555,
+      "gateRate": 0,
+      "calibratedRate": 0,
+      "gateMidPRate": 0
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 20,
+      "tolerance": 0.05,
+      "effect": 0.05,
+      "oldRate": 0.4945,
+      "gateRate": 0.0495,
+      "calibratedRate": 0.05,
+      "gateMidPRate": 0.0495
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 20,
+      "tolerance": 0.05,
+      "effect": 0.1,
+      "oldRate": 0.944,
+      "gateRate": 0.451,
+      "calibratedRate": 0.4735,
+      "gateMidPRate": 0.451
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 20,
+      "tolerance": 0.05,
+      "effect": 0.2,
+      "oldRate": 1,
+      "gateRate": 0.9985,
+      "calibratedRate": 0.999,
+      "gateMidPRate": 0.9985
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 20,
+      "tolerance": 0.1,
+      "effect": 0,
+      "oldRate": 0,
+      "gateRate": 0,
+      "calibratedRate": 0,
+      "gateMidPRate": 0
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 20,
+      "tolerance": 0.1,
+      "effect": 0.05,
+      "oldRate": 0.0495,
+      "gateRate": 0.0005,
+      "calibratedRate": 0.0005,
+      "gateMidPRate": 0.0005
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 20,
+      "tolerance": 0.1,
+      "effect": 0.1,
+      "oldRate": 0.503,
+      "gateRate": 0.053,
+      "calibratedRate": 0.05,
+      "gateMidPRate": 0.053
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 20,
+      "tolerance": 0.1,
+      "effect": 0.2,
+      "oldRate": 0.9995,
+      "gateRate": 0.922,
+      "calibratedRate": 0.9355,
+      "gateMidPRate": 0.922
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 50,
+      "tolerance": 0,
+      "effect": 0,
+      "oldRate": 0.512,
+      "gateRate": 0.052,
+      "calibratedRate": 0.05,
+      "gateMidPRate": 0.052
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 50,
+      "tolerance": 0,
+      "effect": 0.05,
+      "oldRate": 0.989,
+      "gateRate": 0.7875,
+      "calibratedRate": 0.7985,
+      "gateMidPRate": 0.7875
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 50,
+      "tolerance": 0,
+      "effect": 0.1,
+      "oldRate": 1,
+      "gateRate": 1,
+      "calibratedRate": 1,
+      "gateMidPRate": 1
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 50,
+      "tolerance": 0,
+      "effect": 0.2,
+      "oldRate": 1,
+      "gateRate": 1,
+      "calibratedRate": 1,
+      "gateMidPRate": 1
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 50,
+      "tolerance": 0.05,
+      "effect": 0,
+      "oldRate": 0.007,
+      "gateRate": 0,
+      "calibratedRate": 0,
+      "gateMidPRate": 0
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 50,
+      "tolerance": 0.05,
+      "effect": 0.05,
+      "oldRate": 0.505,
+      "gateRate": 0.0535,
+      "calibratedRate": 0.05,
+      "gateMidPRate": 0.0535
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 50,
+      "tolerance": 0.05,
+      "effect": 0.1,
+      "oldRate": 0.9915,
+      "gateRate": 0.785,
+      "calibratedRate": 0.7875,
+      "gateMidPRate": 0.785
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 50,
+      "tolerance": 0.05,
+      "effect": 0.2,
+      "oldRate": 1,
+      "gateRate": 1,
+      "calibratedRate": 1,
+      "gateMidPRate": 1
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 50,
+      "tolerance": 0.1,
+      "effect": 0,
+      "oldRate": 0,
+      "gateRate": 0,
+      "calibratedRate": 0,
+      "gateMidPRate": 0
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 50,
+      "tolerance": 0.1,
+      "effect": 0.05,
+      "oldRate": 0.0055,
+      "gateRate": 0,
+      "calibratedRate": 0,
+      "gateMidPRate": 0
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 50,
+      "tolerance": 0.1,
+      "effect": 0.1,
+      "oldRate": 0.491,
+      "gateRate": 0.0475,
+      "calibratedRate": 0.05,
+      "gateMidPRate": 0.0475
+    },
+    {
+      "model": "continuous σ=0.1",
+      "n": 50,
+      "tolerance": 0.1,
+      "effect": 0.2,
+      "oldRate": 1,
+      "gateRate": 0.9985,
+      "calibratedRate": 0.999,
+      "gateMidPRate": 0.9985
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 10,
+      "tolerance": 0,
+      "effect": 0,
+      "oldRate": 0.465,
+      "gateRate": 0.0485,
+      "calibratedRate": 0.05,
+      "gateMidPRate": 0.049
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 10,
+      "tolerance": 0,
+      "effect": 0.05,
+      "oldRate": 0.715,
+      "gateRate": 0.1245,
+      "calibratedRate": 0.125,
+      "gateMidPRate": 0.1255
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 10,
+      "tolerance": 0,
+      "effect": 0.1,
+      "oldRate": 0.861,
+      "gateRate": 0.2595,
+      "calibratedRate": 0.285,
+      "gateMidPRate": 0.2595
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 10,
+      "tolerance": 0,
+      "effect": 0.2,
+      "oldRate": 0.987,
+      "gateRate": 0.657,
+      "calibratedRate": 0.6995,
+      "gateMidPRate": 0.658
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 10,
+      "tolerance": 0.05,
+      "effect": 0,
+      "oldRate": 0.278,
+      "gateRate": 0.0145,
+      "calibratedRate": 0.0085,
+      "gateMidPRate": 0.0145
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 10,
+      "tolerance": 0.05,
+      "effect": 0.05,
+      "oldRate": 0.506,
+      "gateRate": 0.057,
+      "calibratedRate": 0.05,
+      "gateMidPRate": 0.057
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 10,
+      "tolerance": 0.05,
+      "effect": 0.1,
+      "oldRate": 0.703,
+      "gateRate": 0.1235,
+      "calibratedRate": 0.121,
+      "gateMidPRate": 0.1235
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 10,
+      "tolerance": 0.05,
+      "effect": 0.2,
+      "oldRate": 0.9395,
+      "gateRate": 0.4315,
+      "calibratedRate": 0.4585,
+      "gateMidPRate": 0.4315
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 10,
+      "tolerance": 0.1,
+      "effect": 0,
+      "oldRate": 0.115,
+      "gateRate": 0.003,
+      "calibratedRate": 0.002,
+      "gateMidPRate": 0.003
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 10,
+      "tolerance": 0.1,
+      "effect": 0.05,
+      "oldRate": 0.2555,
+      "gateRate": 0.0105,
+      "calibratedRate": 0.013,
+      "gateMidPRate": 0.0105
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 10,
+      "tolerance": 0.1,
+      "effect": 0.1,
+      "oldRate": 0.4815,
+      "gateRate": 0.04,
+      "calibratedRate": 0.05,
+      "gateMidPRate": 0.04
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 10,
+      "tolerance": 0.1,
+      "effect": 0.2,
+      "oldRate": 0.846,
+      "gateRate": 0.251,
+      "calibratedRate": 0.2885,
+      "gateMidPRate": 0.251
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 20,
+      "tolerance": 0,
+      "effect": 0,
+      "oldRate": 0.4805,
+      "gateRate": 0.0465,
+      "calibratedRate": 0.05,
+      "gateMidPRate": 0.0465
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 20,
+      "tolerance": 0,
+      "effect": 0.05,
+      "oldRate": 0.7785,
+      "gateRate": 0.177,
+      "calibratedRate": 0.199,
+      "gateMidPRate": 0.177
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 20,
+      "tolerance": 0,
+      "effect": 0.1,
+      "oldRate": 0.9505,
+      "gateRate": 0.4495,
+      "calibratedRate": 0.493,
+      "gateMidPRate": 0.4495
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 20,
+      "tolerance": 0,
+      "effect": 0.2,
+      "oldRate": 0.9975,
+      "gateRate": 0.9045,
+      "calibratedRate": 0.931,
+      "gateMidPRate": 0.9045
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 20,
+      "tolerance": 0.05,
+      "effect": 0,
+      "oldRate": 0.2095,
+      "gateRate": 0.0055,
+      "calibratedRate": 0.0055,
+      "gateMidPRate": 0.0055
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 20,
+      "tolerance": 0.05,
+      "effect": 0.05,
+      "oldRate": 0.4735,
+      "gateRate": 0.048,
+      "calibratedRate": 0.05,
+      "gateMidPRate": 0.048
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 20,
+      "tolerance": 0.05,
+      "effect": 0.1,
+      "oldRate": 0.764,
+      "gateRate": 0.174,
+      "calibratedRate": 0.205,
+      "gateMidPRate": 0.174
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 20,
+      "tolerance": 0.05,
+      "effect": 0.2,
+      "oldRate": 0.99,
+      "gateRate": 0.7035,
+      "calibratedRate": 0.7655,
+      "gateMidPRate": 0.7035
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 20,
+      "tolerance": 0.1,
+      "effect": 0,
+      "oldRate": 0.051,
+      "gateRate": 0,
+      "calibratedRate": 0,
+      "gateMidPRate": 0
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 20,
+      "tolerance": 0.1,
+      "effect": 0.05,
+      "oldRate": 0.173,
+      "gateRate": 0.0055,
+      "calibratedRate": 0.008,
+      "gateMidPRate": 0.0055
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 20,
+      "tolerance": 0.1,
+      "effect": 0.1,
+      "oldRate": 0.4345,
+      "gateRate": 0.032,
+      "calibratedRate": 0.05,
+      "gateMidPRate": 0.032
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 20,
+      "tolerance": 0.1,
+      "effect": 0.2,
+      "oldRate": 0.9345,
+      "gateRate": 0.407,
+      "calibratedRate": 0.4845,
+      "gateMidPRate": 0.407
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 50,
+      "tolerance": 0,
+      "effect": 0,
+      "oldRate": 0.502,
+      "gateRate": 0.046,
+      "calibratedRate": 0.05,
+      "gateMidPRate": 0.046
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 50,
+      "tolerance": 0,
+      "effect": 0.05,
+      "oldRate": 0.8875,
+      "gateRate": 0.3345,
+      "calibratedRate": 0.368,
+      "gateMidPRate": 0.3345
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 50,
+      "tolerance": 0,
+      "effect": 0.1,
+      "oldRate": 0.987,
+      "gateRate": 0.779,
+      "calibratedRate": 0.803,
+      "gateMidPRate": 0.779
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 50,
+      "tolerance": 0,
+      "effect": 0.2,
+      "oldRate": 1,
+      "gateRate": 0.999,
+      "calibratedRate": 0.999,
+      "gateMidPRate": 0.999
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 50,
+      "tolerance": 0.05,
+      "effect": 0,
+      "oldRate": 0.0895,
+      "gateRate": 0.002,
+      "calibratedRate": 0.002,
+      "gateMidPRate": 0.002
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 50,
+      "tolerance": 0.05,
+      "effect": 0.05,
+      "oldRate": 0.449,
+      "gateRate": 0.037,
+      "calibratedRate": 0.05,
+      "gateMidPRate": 0.037
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 50,
+      "tolerance": 0.05,
+      "effect": 0.1,
+      "oldRate": 0.861,
+      "gateRate": 0.287,
+      "calibratedRate": 0.3445,
+      "gateMidPRate": 0.287
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 50,
+      "tolerance": 0.05,
+      "effect": 0.2,
+      "oldRate": 1,
+      "gateRate": 0.9655,
+      "calibratedRate": 0.9765,
+      "gateMidPRate": 0.9655
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 50,
+      "tolerance": 0.1,
+      "effect": 0,
+      "oldRate": 0.003,
+      "gateRate": 0,
+      "calibratedRate": 0,
+      "gateMidPRate": 0
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 50,
+      "tolerance": 0.1,
+      "effect": 0.05,
+      "oldRate": 0.0735,
+      "gateRate": 0.0015,
+      "calibratedRate": 0.002,
+      "gateMidPRate": 0.0015
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 50,
+      "tolerance": 0.1,
+      "effect": 0.1,
+      "oldRate": 0.4065,
+      "gateRate": 0.0315,
+      "calibratedRate": 0.05,
+      "gateMidPRate": 0.0315
+    },
+    {
+      "model": "continuous σ=0.2",
+      "n": 50,
+      "tolerance": 0.1,
+      "effect": 0.2,
+      "oldRate": 0.987,
+      "gateRate": 0.73,
+      "calibratedRate": 0.802,
+      "gateMidPRate": 0.73
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 10,
+      "tolerance": 0,
+      "effect": 0,
+      "oldRate": 0.4075,
+      "gateRate": 0.015,
+      "calibratedRate": 0.042,
+      "gateMidPRate": 0.035
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 10,
+      "tolerance": 0,
+      "effect": 0.05,
+      "oldRate": 0.569,
+      "gateRate": 0.03,
+      "calibratedRate": 0.078,
+      "gateMidPRate": 0.0675
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 10,
+      "tolerance": 0,
+      "effect": 0.1,
+      "oldRate": 0.7595,
+      "gateRate": 0.071,
+      "calibratedRate": 0.1815,
+      "gateMidPRate": 0.1455
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 10,
+      "tolerance": 0,
+      "effect": 0.2,
+      "oldRate": 0.9455,
+      "gateRate": 0.285,
+      "calibratedRate": 0.5455,
+      "gateMidPRate": 0.437
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 10,
+      "tolerance": 0.05,
+      "effect": 0,
+      "oldRate": 0.3145,
+      "gateRate": 0.0095,
+      "calibratedRate": 0.013,
+      "gateMidPRate": 0.0095
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 10,
+      "tolerance": 0.05,
+      "effect": 0.05,
+      "oldRate": 0.4795,
+      "gateRate": 0.0305,
+      "calibratedRate": 0.0455,
+      "gateMidPRate": 0.0305
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 10,
+      "tolerance": 0.05,
+      "effect": 0.1,
+      "oldRate": 0.635,
+      "gateRate": 0.08,
+      "calibratedRate": 0.1125,
+      "gateMidPRate": 0.08
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 10,
+      "tolerance": 0.05,
+      "effect": 0.2,
+      "oldRate": 0.893,
+      "gateRate": 0.276,
+      "calibratedRate": 0.377,
+      "gateMidPRate": 0.276
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 10,
+      "tolerance": 0.1,
+      "effect": 0,
+      "oldRate": 0.158,
+      "gateRate": 0.002,
+      "calibratedRate": 0.0055,
+      "gateMidPRate": 0.012
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 10,
+      "tolerance": 0.1,
+      "effect": 0.05,
+      "oldRate": 0.3035,
+      "gateRate": 0.01,
+      "calibratedRate": 0.02,
+      "gateMidPRate": 0.0325
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 10,
+      "tolerance": 0.1,
+      "effect": 0.1,
+      "oldRate": 0.487,
+      "gateRate": 0.031,
+      "calibratedRate": 0.0455,
+      "gateMidPRate": 0.0665
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 10,
+      "tolerance": 0.1,
+      "effect": 0.2,
+      "oldRate": 0.829,
+      "gateRate": 0.1435,
+      "calibratedRate": 0.2215,
+      "gateMidPRate": 0.2795
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 20,
+      "tolerance": 0,
+      "effect": 0,
+      "oldRate": 0.4295,
+      "gateRate": 0.0235,
+      "calibratedRate": 0.0405,
+      "gateMidPRate": 0.041
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 20,
+      "tolerance": 0,
+      "effect": 0.05,
+      "oldRate": 0.6895,
+      "gateRate": 0.092,
+      "calibratedRate": 0.1515,
+      "gateMidPRate": 0.1395
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 20,
+      "tolerance": 0,
+      "effect": 0.1,
+      "oldRate": 0.871,
+      "gateRate": 0.219,
+      "calibratedRate": 0.317,
+      "gateMidPRate": 0.2995
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 20,
+      "tolerance": 0,
+      "effect": 0.2,
+      "oldRate": 0.9935,
+      "gateRate": 0.662,
+      "calibratedRate": 0.7715,
+      "gateMidPRate": 0.753
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 20,
+      "tolerance": 0.05,
+      "effect": 0,
+      "oldRate": 0.2675,
+      "gateRate": 0.0125,
+      "calibratedRate": 0.008,
+      "gateMidPRate": 0.014
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 20,
+      "tolerance": 0.05,
+      "effect": 0.05,
+      "oldRate": 0.4765,
+      "gateRate": 0.0545,
+      "calibratedRate": 0.045,
+      "gateMidPRate": 0.0595
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 20,
+      "tolerance": 0.05,
+      "effect": 0.1,
+      "oldRate": 0.7395,
+      "gateRate": 0.159,
+      "calibratedRate": 0.1335,
+      "gateMidPRate": 0.169
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 20,
+      "tolerance": 0.05,
+      "effect": 0.2,
+      "oldRate": 0.969,
+      "gateRate": 0.5725,
+      "calibratedRate": 0.534,
+      "gateMidPRate": 0.581
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 20,
+      "tolerance": 0.1,
+      "effect": 0,
+      "oldRate": 0.087,
+      "gateRate": 0.002,
+      "calibratedRate": 0.0005,
+      "gateMidPRate": 0.002
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 20,
+      "tolerance": 0.1,
+      "effect": 0.05,
+      "oldRate": 0.249,
+      "gateRate": 0.012,
+      "calibratedRate": 0.0065,
+      "gateMidPRate": 0.012
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 20,
+      "tolerance": 0.1,
+      "effect": 0.1,
+      "oldRate": 0.475,
+      "gateRate": 0.052,
+      "calibratedRate": 0.0375,
+      "gateMidPRate": 0.059
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 20,
+      "tolerance": 0.1,
+      "effect": 0.2,
+      "oldRate": 0.8875,
+      "gateRate": 0.3055,
+      "calibratedRate": 0.285,
+      "gateMidPRate": 0.3305
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 50,
+      "tolerance": 0,
+      "effect": 0,
+      "oldRate": 0.4555,
+      "gateRate": 0.035,
+      "calibratedRate": 0.0455,
+      "gateMidPRate": 0.051
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 50,
+      "tolerance": 0,
+      "effect": 0.05,
+      "oldRate": 0.816,
+      "gateRate": 0.214,
+      "calibratedRate": 0.2475,
+      "gateMidPRate": 0.2565
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 50,
+      "tolerance": 0,
+      "effect": 0.1,
+      "oldRate": 0.9695,
+      "gateRate": 0.554,
+      "calibratedRate": 0.6085,
+      "gateMidPRate": 0.6205
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 50,
+      "tolerance": 0,
+      "effect": 0.2,
+      "oldRate": 1,
+      "gateRate": 0.984,
+      "calibratedRate": 0.99,
+      "gateMidPRate": 0.989
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 50,
+      "tolerance": 0.05,
+      "effect": 0,
+      "oldRate": 0.1605,
+      "gateRate": 0.0015,
+      "calibratedRate": 0.001,
+      "gateMidPRate": 0.0015
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 50,
+      "tolerance": 0.05,
+      "effect": 0.05,
+      "oldRate": 0.4965,
+      "gateRate": 0.0485,
+      "calibratedRate": 0.0475,
+      "gateMidPRate": 0.0505
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 50,
+      "tolerance": 0.05,
+      "effect": 0.1,
+      "oldRate": 0.837,
+      "gateRate": 0.2515,
+      "calibratedRate": 0.254,
+      "gateMidPRate": 0.2595
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 50,
+      "tolerance": 0.05,
+      "effect": 0.2,
+      "oldRate": 0.9985,
+      "gateRate": 0.8885,
+      "calibratedRate": 0.898,
+      "gateMidPRate": 0.894
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 50,
+      "tolerance": 0.1,
+      "effect": 0,
+      "oldRate": 0.019,
+      "gateRate": 0,
+      "calibratedRate": 0,
+      "gateMidPRate": 0
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 50,
+      "tolerance": 0.1,
+      "effect": 0.05,
+      "oldRate": 0.129,
+      "gateRate": 0.0025,
+      "calibratedRate": 0.0025,
+      "gateMidPRate": 0.003
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 50,
+      "tolerance": 0.1,
+      "effect": 0.1,
+      "oldRate": 0.497,
+      "gateRate": 0.038,
+      "calibratedRate": 0.044,
+      "gateMidPRate": 0.0395
+    },
+    {
+      "model": "3-level σ=0.2",
+      "n": 50,
+      "tolerance": 0.1,
+      "effect": 0.2,
+      "oldRate": 0.972,
+      "gateRate": 0.58,
+      "calibratedRate": 0.6335,
+      "gateMidPRate": 0.5975
+    },
+    {
+      "model": "binary",
+      "n": 10,
+      "tolerance": 0,
+      "effect": 0,
+      "oldRate": 0.3865,
+      "gateRate": 0.0095,
+      "calibratedRate": 0.045,
+      "gateMidPRate": 0.029
+    },
+    {
+      "model": "binary",
+      "n": 10,
+      "tolerance": 0,
+      "effect": 0.05,
+      "oldRate": 0.499,
+      "gateRate": 0.02,
+      "calibratedRate": 0.064,
+      "gateMidPRate": 0.0465
+    },
+    {
+      "model": "binary",
+      "n": 10,
+      "tolerance": 0,
+      "effect": 0.1,
+      "oldRate": 0.5945,
+      "gateRate": 0.034,
+      "calibratedRate": 0.1135,
+      "gateMidPRate": 0.081
+    },
+    {
+      "model": "binary",
+      "n": 10,
+      "tolerance": 0,
+      "effect": 0.2,
+      "oldRate": 0.7805,
+      "gateRate": 0.082,
+      "calibratedRate": 0.2365,
+      "gateMidPRate": 0.175
+    },
+    {
+      "model": "binary",
+      "n": 10,
+      "tolerance": 0.05,
+      "effect": 0,
+      "oldRate": 0.403,
+      "gateRate": 0.007,
+      "calibratedRate": 0.0225,
+      "gateMidPRate": 0.007
+    },
+    {
+      "model": "binary",
+      "n": 10,
+      "tolerance": 0.05,
+      "effect": 0.05,
+      "oldRate": 0.5045,
+      "gateRate": 0.02,
+      "calibratedRate": 0.046,
+      "gateMidPRate": 0.02
+    },
+    {
+      "model": "binary",
+      "n": 10,
+      "tolerance": 0.05,
+      "effect": 0.1,
+      "oldRate": 0.588,
+      "gateRate": 0.0275,
+      "calibratedRate": 0.0605,
+      "gateMidPRate": 0.0275
+    },
+    {
+      "model": "binary",
+      "n": 10,
+      "tolerance": 0.05,
+      "effect": 0.2,
+      "oldRate": 0.768,
+      "gateRate": 0.084,
+      "calibratedRate": 0.144,
+      "gateMidPRate": 0.084
+    },
+    {
+      "model": "binary",
+      "n": 10,
+      "tolerance": 0.1,
+      "effect": 0,
+      "oldRate": 0.2495,
+      "gateRate": 0.0085,
+      "calibratedRate": 0.011,
+      "gateMidPRate": 0.0085
+    },
+    {
+      "model": "binary",
+      "n": 10,
+      "tolerance": 0.1,
+      "effect": 0.05,
+      "oldRate": 0.3295,
+      "gateRate": 0.0185,
+      "calibratedRate": 0.022,
+      "gateMidPRate": 0.0185
+    },
+    {
+      "model": "binary",
+      "n": 10,
+      "tolerance": 0.1,
+      "effect": 0.1,
+      "oldRate": 0.4425,
+      "gateRate": 0.03,
+      "calibratedRate": 0.037,
+      "gateMidPRate": 0.03
+    },
+    {
+      "model": "binary",
+      "n": 10,
+      "tolerance": 0.1,
+      "effect": 0.2,
+      "oldRate": 0.6425,
+      "gateRate": 0.075,
+      "calibratedRate": 0.093,
+      "gateMidPRate": 0.075
+    },
+    {
+      "model": "binary",
+      "n": 20,
+      "tolerance": 0,
+      "effect": 0,
+      "oldRate": 0.4225,
+      "gateRate": 0.0225,
+      "calibratedRate": 0.0315,
+      "gateMidPRate": 0.0435
+    },
+    {
+      "model": "binary",
+      "n": 20,
+      "tolerance": 0,
+      "effect": 0.05,
+      "oldRate": 0.5855,
+      "gateRate": 0.0475,
+      "calibratedRate": 0.0625,
+      "gateMidPRate": 0.0845
+    },
+    {
+      "model": "binary",
+      "n": 20,
+      "tolerance": 0,
+      "effect": 0.1,
+      "oldRate": 0.7,
+      "gateRate": 0.0895,
+      "calibratedRate": 0.1175,
+      "gateMidPRate": 0.1425
+    },
+    {
+      "model": "binary",
+      "n": 20,
+      "tolerance": 0,
+      "effect": 0.2,
+      "oldRate": 0.903,
+      "gateRate": 0.2575,
+      "calibratedRate": 0.321,
+      "gateMidPRate": 0.36
+    },
+    {
+      "model": "binary",
+      "n": 20,
+      "tolerance": 0.05,
+      "effect": 0,
+      "oldRate": 0.347,
+      "gateRate": 0.0205,
+      "calibratedRate": 0.013,
+      "gateMidPRate": 0.0205
+    },
+    {
+      "model": "binary",
+      "n": 20,
+      "tolerance": 0.05,
+      "effect": 0.05,
+      "oldRate": 0.4935,
+      "gateRate": 0.052,
+      "calibratedRate": 0.047,
+      "gateMidPRate": 0.052
+    },
+    {
+      "model": "binary",
+      "n": 20,
+      "tolerance": 0.05,
+      "effect": 0.1,
+      "oldRate": 0.6125,
+      "gateRate": 0.0925,
+      "calibratedRate": 0.0815,
+      "gateMidPRate": 0.0925
+    },
+    {
+      "model": "binary",
+      "n": 20,
+      "tolerance": 0.05,
+      "effect": 0.2,
+      "oldRate": 0.844,
+      "gateRate": 0.252,
+      "calibratedRate": 0.233,
+      "gateMidPRate": 0.252
+    },
+    {
+      "model": "binary",
+      "n": 20,
+      "tolerance": 0.1,
+      "effect": 0,
+      "oldRate": 0.2265,
+      "gateRate": 0.011,
+      "calibratedRate": 0.0075,
+      "gateMidPRate": 0.0115
+    },
+    {
+      "model": "binary",
+      "n": 20,
+      "tolerance": 0.1,
+      "effect": 0.05,
+      "oldRate": 0.3285,
+      "gateRate": 0.026,
+      "calibratedRate": 0.0175,
+      "gateMidPRate": 0.0285
+    },
+    {
+      "model": "binary",
+      "n": 20,
+      "tolerance": 0.1,
+      "effect": 0.1,
+      "oldRate": 0.4955,
+      "gateRate": 0.0535,
+      "calibratedRate": 0.041,
+      "gateMidPRate": 0.056
+    },
+    {
+      "model": "binary",
+      "n": 20,
+      "tolerance": 0.1,
+      "effect": 0.2,
+      "oldRate": 0.781,
+      "gateRate": 0.161,
+      "calibratedRate": 0.1335,
+      "gateMidPRate": 0.1705
+    },
+    {
+      "model": "binary",
+      "n": 50,
+      "tolerance": 0,
+      "effect": 0,
+      "oldRate": 0.474,
+      "gateRate": 0.0335,
+      "calibratedRate": 0.048,
+      "gateMidPRate": 0.0425
+    },
+    {
+      "model": "binary",
+      "n": 50,
+      "tolerance": 0,
+      "effect": 0.05,
+      "oldRate": 0.661,
+      "gateRate": 0.0905,
+      "calibratedRate": 0.144,
+      "gateMidPRate": 0.1275
+    },
+    {
+      "model": "binary",
+      "n": 50,
+      "tolerance": 0,
+      "effect": 0.1,
+      "oldRate": 0.8325,
+      "gateRate": 0.2285,
+      "calibratedRate": 0.318,
+      "gateMidPRate": 0.281
+    },
+    {
+      "model": "binary",
+      "n": 50,
+      "tolerance": 0,
+      "effect": 0.2,
+      "oldRate": 0.9845,
+      "gateRate": 0.642,
+      "calibratedRate": 0.73,
+      "gateMidPRate": 0.712
+    },
+    {
+      "model": "binary",
+      "n": 50,
+      "tolerance": 0.05,
+      "effect": 0,
+      "oldRate": 0.308,
+      "gateRate": 0.01,
+      "calibratedRate": 0.011,
+      "gateMidPRate": 0.011
+    },
+    {
+      "model": "binary",
+      "n": 50,
+      "tolerance": 0.05,
+      "effect": 0.05,
+      "oldRate": 0.5025,
+      "gateRate": 0.041,
+      "calibratedRate": 0.0445,
+      "gateMidPRate": 0.0425
+    },
+    {
+      "model": "binary",
+      "n": 50,
+      "tolerance": 0.05,
+      "effect": 0.1,
+      "oldRate": 0.707,
+      "gateRate": 0.1235,
+      "calibratedRate": 0.123,
+      "gateMidPRate": 0.125
+    },
+    {
+      "model": "binary",
+      "n": 50,
+      "tolerance": 0.05,
+      "effect": 0.2,
+      "oldRate": 0.9465,
+      "gateRate": 0.4455,
+      "calibratedRate": 0.453,
+      "gateMidPRate": 0.4495
+    },
+    {
+      "model": "binary",
+      "n": 50,
+      "tolerance": 0.1,
+      "effect": 0,
+      "oldRate": 0.1195,
+      "gateRate": 0.001,
+      "calibratedRate": 0.0025,
+      "gateMidPRate": 0.001
+    },
+    {
+      "model": "binary",
+      "n": 50,
+      "tolerance": 0.1,
+      "effect": 0.05,
+      "oldRate": 0.2805,
+      "gateRate": 0.0185,
+      "calibratedRate": 0.0165,
+      "gateMidPRate": 0.0185
+    },
+    {
+      "model": "binary",
+      "n": 50,
+      "tolerance": 0.1,
+      "effect": 0.1,
+      "oldRate": 0.4735,
+      "gateRate": 0.046,
+      "calibratedRate": 0.0455,
+      "gateMidPRate": 0.0485
+    },
+    {
+      "model": "binary",
+      "n": 50,
+      "tolerance": 0.1,
+      "effect": 0.2,
+      "oldRate": 0.866,
+      "gateRate": 0.3025,
+      "calibratedRate": 0.2975,
+      "gateMidPRate": 0.309
+    }
+  ]
+}

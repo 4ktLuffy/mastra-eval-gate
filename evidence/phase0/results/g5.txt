@@ -1,0 +1,36 @@
+
+=== G5a: B throws on q8-q10; scorer THROWS when output is null ===
+{"summaryA":{"status":"completed","total":10,"succeeded":10,"failed":0},"summaryB":{"status":"completed","total":10,"succeeded":7,"failed":3}}
+{"B_resultRows":10,"B_scoreRows":7,"B_scoreRowItems":["q1","q2","q3","q4","q5","q6","q7"]}
+{"B_failedRowErrors":[{"item":"q8","error":"503 upstream failure on q8"},{"item":"q9","error":"503 upstream failure on q9"},{"item":"q10","error":"503 upstream failure on q10"}]}
+{"B_inMemorySummaryScores_for_failed":[{"item":"q8","scores":[{"score":null,"error":"Scorer Run Failed: no output to score"}]},{"item":"q9","scores":[{"score":null,"error":"Scorer Run Failed: no output to score"}]},{"item":"q10","scores":[{"score":null,"error":"Scorer Run Failed: no output to score"}]}]}
+{"experimentRowCounts":{"succeeded":7,"failed":3,"total":10,"status":"completed"}}
+{"hasRegression":false,"warnings":[],"delta":0.18000000000000016,"regressed":false,"statsA":{"errorRate":0,"errorCount":0,"passRate":0.7,"passCount":7,"avgScore":0.72,"scoreCount":10,"totalItems":10},"statsB":{"errorRate":0,"errorCount":0,"passRate":1,"passCount":7,"avgScore":0.9000000000000001,"scoreCount":7,"totalItems":7}}
+{"itemsNotInBoth":0,"itemsInBothWithNullB":["q8","q9","q10"]}
+
+=== G5b: B throws on q8-q10; scorer returns 0 when output is null ===
+{"summaryA":{"status":"completed","total":10,"succeeded":10,"failed":0},"summaryB":{"status":"completed","total":10,"succeeded":7,"failed":3}}
+{"B_resultRows":10,"B_scoreRows":10,"B_scoreRowItems":["q1","q10","q2","q3","q4","q5","q6","q7","q8","q9"]}
+{"B_failedRowErrors":[{"item":"q10","error":"503 upstream failure on q10"},{"item":"q9","error":"503 upstream failure on q9"},{"item":"q8","error":"503 upstream failure on q8"}]}
+{"B_inMemorySummaryScores_for_failed":[{"item":"q10","scores":[{"score":0,"error":null}]},{"item":"q9","scores":[{"score":0,"error":null}]},{"item":"q8","scores":[{"score":0,"error":null}]}]}
+{"experimentRowCounts":{"succeeded":7,"failed":3,"total":10,"status":"completed"}}
+{"hasRegression":true,"warnings":[],"delta":-0.08999999999999986,"regressed":true,"statsA":{"errorRate":0,"errorCount":0,"passRate":0.7,"passCount":7,"avgScore":0.72,"scoreCount":10,"totalItems":10},"statsB":{"errorRate":0,"errorCount":0,"passRate":0.7,"passCount":7,"avgScore":0.6300000000000001,"scoreCount":10,"totalItems":10}}
+{"itemsNotInBoth":0,"itemsInBothWithNullB":[]}
+
+=== G5c: B HANGS on q8-q10 with itemTimeout (scorer throws on null) ===
+{"summaryA":{"status":"completed","total":10,"succeeded":10,"failed":0},"summaryB":{"status":"completed","total":10,"succeeded":7,"failed":3}}
+{"B_resultRows":10,"B_scoreRows":7,"B_scoreRowItems":["q1","q2","q3","q4","q5","q6","q7"]}
+{"B_failedRowErrors":[{"item":"q9","error":"The operation was aborted due to timeout"},{"item":"q8","error":"The operation was aborted due to timeout"},{"item":"q10","error":"The operation was aborted due to timeout"}]}
+{"B_inMemorySummaryScores_for_failed":[{"item":"q9","scores":[{"score":null,"error":"Scorer Run Failed: no output to score"}]},{"item":"q8","scores":[{"score":null,"error":"Scorer Run Failed: no output to score"}]},{"item":"q10","scores":[{"score":null,"error":"Scorer Run Failed: no output to score"}]}]}
+{"experimentRowCounts":{"succeeded":7,"failed":3,"total":10,"status":"completed"}}
+{"hasRegression":false,"warnings":[],"delta":0.18000000000000005,"regressed":false,"statsA":{"errorRate":0,"errorCount":0,"passRate":0.7,"passCount":7,"avgScore":0.7200000000000001,"scoreCount":10,"totalItems":10},"statsB":{"errorRate":0,"errorCount":0,"passRate":1,"passCount":7,"avgScore":0.9000000000000001,"scoreCount":7,"totalItems":7}}
+{"itemsNotInBoth":0,"itemsInBothWithNullB":["q8","q9","q10"]}
+
+=== NEG CONTROL: B identical to A ===
+{"summaryA":{"status":"completed","total":10,"succeeded":10,"failed":0},"summaryB":{"status":"completed","total":10,"succeeded":10,"failed":0}}
+{"B_resultRows":10,"B_scoreRows":10,"B_scoreRowItems":["q1","q10","q2","q3","q4","q5","q6","q7","q8","q9"]}
+{"B_failedRowErrors":[]}
+{"B_inMemorySummaryScores_for_failed":[]}
+{"experimentRowCounts":{"succeeded":10,"failed":0,"total":10,"status":"completed"}}
+{"hasRegression":false,"warnings":[],"delta":0,"regressed":false,"statsA":{"errorRate":0,"errorCount":0,"passRate":0.7,"passCount":7,"avgScore":0.7200000000000001,"scoreCount":10,"totalItems":10},"statsB":{"errorRate":0,"errorCount":0,"passRate":0.7,"passCount":7,"avgScore":0.7200000000000001,"scoreCount":10,"totalItems":10}}
+{"itemsNotInBoth":0,"itemsInBothWithNullB":[]}

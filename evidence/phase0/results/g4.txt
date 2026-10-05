@@ -1,0 +1,4 @@
+{"resultRows":12,"attempts":[0,1,2],"scoreRows":12,"scoreRowsPerItem":{"q1":[0.9,0.1,0.2],"q2":[0.9,0.1,0.2],"q3":[0.9,0.1,0.2],"q4":[0.9,0.1,0.2]}}
+{"allRowsMean":0.4000000000000001,"compare_statsB":{"errorRate":0,"errorCount":0,"passRate":0,"passCount":0,"avgScore":0.2,"scoreCount":4,"totalItems":4},"compare_statsA":{"errorRate":0,"errorCount":0,"passRate":0,"passCount":0,"avgScore":0.4,"scoreCount":4,"totalItems":4},"hasRegression":true,"delta":-0.2}
+{"storedOrderForQ1":[{"score":0.9,"createdAt":"Mon Oct 05 2026 12:43:24 GMT+0300 (East Africa Time)"},{"score":0.1,"createdAt":"Mon Oct 05 2026 12:43:24 GMT+0300 (East Africa Time)"},{"score":0.2,"createdAt":"Mon Oct 05 2026 12:43:24 GMT+0300 (East Africa Time)"}]}
+{"NEG_CONTROL_single_attempt":{"hasRegression":false,"delta":0,"totalItems":4}}

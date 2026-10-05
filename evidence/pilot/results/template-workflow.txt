@@ -1,0 +1,12 @@
+Visit the Louvre
+{"scenario":"wf_control: model ok","primaryCalls":1,"fallbackCalls":0,"status":"ok","value":{"status":"success","activities":"Visit the Louvre"},"ms":40}
+
+{"scenario":"wf_planActivities: in-band rate-limit error, single model","primaryCalls":1,"fallbackCalls":0,"status":"ok","value":{"status":"success","activities":""},"ms":6}
+
+{"scenario":"wf_planActivities: in-band rate-limit error, WITH fallback","primaryCalls":1,"fallbackCalls":0,"status":"ok","value":{"status":"success","activities":""},"ms":5}
+
+{"scenario":"wf_planActivities: thrown 503, single model","primaryCalls":1,"fallbackCalls":0,"status":"ok","value":{"status":"success","activities":""},"ms":2}
+FALLBACK PLAN: museums
+{"scenario":"wf_planActivities: thrown 503, WITH fallback","primaryCalls":1,"fallbackCalls":1,"status":"ok","value":{"status":"success","activities":"FALLBACK PLAN: museums"},"ms":9}
+
+{"scenario":"wf_planActivities: empty response","primaryCalls":1,"fallbackCalls":0,"status":"ok","value":{"status":"success","activities":""},"ms":4}

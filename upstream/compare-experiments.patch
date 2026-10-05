@@ -1,0 +1,389 @@
+diff --git a/packages/core/src/datasets/experiment/analytics/__tests__/compare.test.ts b/packages/core/src/datasets/experiment/analytics/__tests__/compare.test.ts
+new file mode 100644
+index 0000000..b4dd8f6
+--- /dev/null
++++ b/packages/core/src/datasets/experiment/analytics/__tests__/compare.test.ts
+@@ -0,0 +1,152 @@
++/**
++ * compareExperiments over stored rows: paired deltas, missing scorers, repeated attempts,
++ * and failed items.
++ */
++import { describe, expect, it } from 'vitest';
++import type { Mastra } from '../../../../mastra';
++import { compareExperiments } from '../compare';
++
++type Row = { itemId: string; attempt?: number; error?: { message: string } | null; scores?: Record<string, number | null> };
++
++/** A Mastra stand-in whose storage holds two experiments, A and B. */
++function mastraWith(a: Row[], b: Row[]): Mastra {
++  const rows: Record<string, Row[]> = { A: a, B: b };
++  const experiments = {
++    getExperimentById: async ({ id }: { id: string }) => ({ id, datasetVersion: 1 }),
++    listExperimentResults: async ({ experimentId }: { experimentId: string }) => ({
++      results: rows[experimentId]!.map(r => ({ itemId: r.itemId, attempt: r.attempt ?? 0, error: r.error ?? null })),
++    }),
++  };
++  const scores = {
++    listScoresByRunId: async ({ runId }: { runId: string }) => ({
++      scores: rows[runId]!.flatMap(r =>
++        Object.entries(r.scores ?? {}).map(([scorerId, score]) => ({ scorerId, entityId: r.itemId, score })),
++      ),
++    }),
++  };
++  const storage = { getStore: async (name: string) => (name === 'experiments' ? experiments : name === 'scores' ? scores : undefined) };
++  return { getStorage: () => storage } as unknown as Mastra;
++}
++
++const ids = (n: number) => Array.from({ length: n }, (_, i) => `item-${i + 1}`);
++const quality = (i: number) => (i >= 7 ? 0.3 : 0.9); // last three items are hard
++const compare = (mastra: Mastra, extra: Record<string, unknown> = {}) =>
++  compareExperiments(mastra, { experimentIdA: 'A', experimentIdB: 'B', ...extra });
++
++describe('compareExperiments', () => {
++  it('identical experiments: no regression, no warnings', async () => {
++    const rows = ids(10).map((itemId, i) => ({ itemId, scores: { quality: quality(i) } }));
++    const result = await compare(mastraWith(rows, rows));
++    expect(result.hasRegression).toBe(false);
++    expect(result.scorers.quality!.delta).toBe(0);
++    expect(result.scorers.quality!.pairedCount).toBe(10);
++    expect(result.failedItems).toEqual({ a: 0, b: 0 });
++    expect(result.warnings).toEqual([]);
++  });
++
++  it('compares items scored in both experiments when B ran a subset', async () => {
++    const a = ids(10).map((itemId, i) => ({ itemId, scores: { quality: quality(i) } }));
++    // B ran only the hard items, each 0.05 better than A.
++    const b = ids(10).slice(7).map(itemId => ({ itemId, scores: { quality: 0.35 } }));
++    const result = await compare(mastraWith(a, b));
++    expect(result.scorers.quality!.pairedCount).toBe(3);
++    expect(result.scorers.quality!.delta).toBeCloseTo(0.05, 10);
++    expect(result.hasRegression).toBe(false);
++    expect(result.warnings[0]).toContain('Experiments ran different items');
++  });
++
++  it('does not treat a scorer missing from one experiment as a score of 0', async () => {
++    const a = ids(5).map(itemId => ({ itemId, scores: { quality: 0.7, harm: 0.4 } }));
++    const b = ids(5).map(itemId => ({ itemId, scores: { quality: 0.7 } }));
++    const result = await compare(mastraWith(a, b), { thresholds: { harm: { value: 0.05, direction: 'lower-is-better' } } });
++    expect(result.scorers.harm!.missingIn).toBe('B');
++    expect(result.scorers.harm!.delta).toBe(0);
++    expect(result.scorers.harm!.regressed).toBe(false);
++    expect(result.hasRegression).toBe(true); // a scorer the candidate dropped fails the quick check
++    expect(result.warnings).toContain('Scorer "harm" has no scores in experiment B; it is not compared.');
++
++    const reversed = await compare(mastraWith(b, a), { thresholds: { harm: { value: 0.05, direction: 'lower-is-better' } } });
++    expect(reversed.scorers.harm!.missingIn).toBe('A');
++    expect(reversed.hasRegression).toBe(false);
++  });
++
++  it('treats a scorer whose rows are all null as missing', async () => {
++    const a = ids(3).map(itemId => ({ itemId, scores: { quality: 0.7, harm: null } }));
++    const b = ids(3).map(itemId => ({ itemId, scores: { quality: 0.7, harm: 0.2 } }));
++    const result = await compare(mastraWith(a, b));
++    expect(result.scorers.harm!.missingIn).toBe('A');
++    expect(result.warnings).toContain('Scorer "harm" has no scores in experiment A; it is not compared.');
++  });
++
++  it('averages repeated attempts of an item instead of keeping the last one', async () => {
++    const a = ids(4).map(itemId => ({ itemId, scores: { quality: 0.4 } }));
++    const b = ids(4).flatMap(itemId => [0.9, 0.1, 0.2].map((score, attempt) => ({ itemId, attempt, scores: { quality: score } })));
++    const result = await compare(mastraWith(a, b));
++    expect(result.scorers.quality!.statsB.avgScore).toBeCloseTo(0.4, 10);
++    expect(result.scorers.quality!.statsB.totalItems).toBe(4);
++    expect(result.scorers.quality!.delta).toBeCloseTo(0, 10);
++    expect(result.hasRegression).toBe(false);
++  });
++
++  it('reports failed items, leaves them out of deltas, and can gate on them', async () => {
++    const a: Row[] = ids(10).map((itemId, i) => ({ itemId, scores: { quality: quality(i), keywords: 0 } }));
++    // B fails on the hard items. One scorer errors on them (no row); another still scores the
++    // empty output, here a perfect 1, as some prebuilt scorers do.
++    const b = ids(10).map((itemId, i): Row =>
++      i >= 7
++        ? { itemId, error: { message: '503 upstream failure' }, scores: { keywords: 1 } }
++        : { itemId, scores: { quality: quality(i), keywords: 0 } },
++    );
++    const result = await compare(mastraWith(a, b));
++    expect(result.failedItems).toEqual({ a: 0, b: 3 });
++    expect(result.scorers.quality!.delta).toBe(0);
++    expect(result.scorers.keywords!.delta).toBe(0); // the 1s on failed runs are not compared
++    expect(result.scorers.keywords!.pairedCount).toBe(7);
++    expect(result.hasRegression).toBe(false); // not gated unless asked
++    expect(result.warnings).toContain(
++      '3 item(s) failed in experiment B that did not fail in A. Failed items are left out of score deltas, so the deltas alone can hide this.',
++    );
++
++    const gated = await compare(mastraWith(a, b), { maxFailedItemIncrease: 0 });
++    expect(gated.hasRegression).toBe(true);
++  });
++
++  it('counts newly failed items, not the difference in totals', async () => {
++    // 3 items fail only in A, 3 other items fail only in B: same totals, 3 new failures.
++    const row = (itemId: string, failed: boolean) =>
++      failed ? { itemId, error: { message: 'x' } } : { itemId, scores: { quality: 0.5 } };
++    const a = ids(6).map((itemId, i) => row(itemId, i < 3));
++    const b = ids(6).map((itemId, i) => row(itemId, i >= 3));
++    const result = await compare(mastraWith(a, b), { maxFailedItemIncrease: 0 });
++    expect(result.failedItems).toEqual({ a: 3, b: 3 });
++    expect(result.hasRegression).toBe(true);
++  });
++
++  it('includes failedItems when both experiments are empty', async () => {
++    const result = await compare(mastraWith([], []));
++    expect(result.failedItems).toEqual({ a: 0, b: 0 });
++  });
++
++  it('ignores float noise relative to the score scale', async () => {
++    // A large-scale scorer (e.g. throughput). The three attempts average to A's value exactly in
++    // real numbers, but to A - 1.9e-9 in floating point, which an absolute 1e-9 guard would flag.
++    const a = ids(3).map(itemId => ({ itemId, scores: { throughput: 12345678.9 } }));
++    const b = ids(3).flatMap(itemId =>
++      [12345678.90504, 12345678.90336, 12345678.8916].map((v, attempt) => ({ itemId, attempt, scores: { throughput: v } })),
++    );
++    const result = await compare(mastraWith(a, b));
++    expect(result.scorers.throughput!.delta).toBe(0);
++    expect(result.hasRegression).toBe(false);
++  });
++
++  it('an item with one successful attempt is not a failed item', async () => {
++    const a = ids(2).map(itemId => ({ itemId, scores: { quality: 0.5 } }));
++    const b = [
++      { itemId: 'item-1', attempt: 0, error: { message: 'timeout' } },
++      { itemId: 'item-1', attempt: 1, scores: { quality: 0.5 } },
++      { itemId: 'item-2', attempt: 0, scores: { quality: 0.5 } },
++    ];
++    const result = await compare(mastraWith(a, b));
++    expect(result.failedItems).toEqual({ a: 0, b: 0 });
++  });
++});
+diff --git a/packages/core/src/datasets/experiment/analytics/compare.ts b/packages/core/src/datasets/experiment/analytics/compare.ts
+index daea834..869fb1d 100644
+--- a/packages/core/src/datasets/experiment/analytics/compare.ts
++++ b/packages/core/src/datasets/experiment/analytics/compare.ts
+@@ -7,7 +7,7 @@
+ 
+ import type { ScoreRowData } from '../../../evals/types';
+ import type { Mastra } from '../../../mastra';
+-import { computeScorerStats, isRegression } from './aggregate';
++import { computeMean, computeScorerStats, isRegression } from './aggregate';
+ import type {
+   CompareExperimentsConfig,
+   ComparisonResult,
+@@ -24,6 +24,11 @@ const DEFAULT_THRESHOLD: ScorerThreshold = {
+   direction: 'higher-is-better',
+ };
+ 
++/**
++ * Deltas smaller than this, relative to the scores' magnitude, are treated as 0 (floating-point noise).
++ */
++const DELTA_EPSILON = 1e-9;
++
+ /**
+  * Default pass threshold for computing pass rate.
+  */
+@@ -53,7 +58,7 @@ const DEFAULT_PASS_THRESHOLD = 0.5;
+  * ```
+  */
+ export async function compareExperiments(mastra: Mastra, config: CompareExperimentsConfig): Promise<ComparisonResult> {
+-  const { experimentIdA, experimentIdB, thresholds = {} } = config;
++  const { experimentIdA, experimentIdB, thresholds = {}, maxFailedItemIncrease } = config;
+   const warnings: string[] = [];
+ 
+   // 1. Get storage
+@@ -124,6 +129,20 @@ export async function compareExperiments(mastra: Mastra, config: CompareExperime
+ 
+   if (overlappingItemIds.length === 0) {
+     warnings.push('No overlapping items between experiments.');
++  } else if (overlappingItemIds.length < itemIdsA.size || overlappingItemIds.length < itemIdsB.size) {
++    warnings.push(
++      `Experiments ran different items (${itemIdsA.size} in A, ${itemIdsB.size} in B, ${overlappingItemIds.length} in both). Deltas use items scored in both.`,
++    );
++  }
++
++  // Items whose target run failed in every attempt
++  const failedA = failedItemIds(resultsA.results);
++  const failedB = failedItemIds(resultsB.results);
++  const newlyFailed = [...failedB].filter(itemId => itemIdsA.has(itemId) && !failedA.has(itemId)).length;
++  if (newlyFailed > 0) {
++    warnings.push(
++      `${newlyFailed} item(s) failed in experiment B that did not fail in A. Failed items are left out of score deltas, so the deltas alone can hide this.`,
++    );
+   }
+ 
+   // 8. Group scores by scorer and item
+@@ -154,11 +173,33 @@ export async function compareExperiments(mastra: Mastra, config: CompareExperime
+     const statsA = computeScorerStats(scoresArrayA, DEFAULT_PASS_THRESHOLD);
+     const statsB = computeScorerStats(scoresArrayB, DEFAULT_PASS_THRESHOLD);
+ 
+-    // Compute delta and check regression
+-    const delta = statsB.avgScore - statsA.avgScore;
+-    const regressed = isRegression(delta, threshold, direction);
++    // A scorer with no scores in one experiment has nothing to compare against
++    const hasScores = (rows: ScoreRowData[]) => rows.some(row => row.score != null);
++    const missingIn = !hasScores(scoresArrayA) ? 'A' : !hasScores(scoresArrayB) ? 'B' : undefined;
++    if (missingIn) {
++      warnings.push(`Scorer "${scorerId}" has no scores in experiment ${missingIn}; it is not compared.`);
++    }
+ 
+-    if (regressed) {
++    // Compute delta over items scored in both experiments whose target run succeeded in both,
++    // and check regression. A failed run can still be scored (on empty output), and such scores
++    // are not comparable with scores of real output.
++    const pairedItemIds = Object.keys(scorerScoresA).filter(
++      itemId =>
++        scorerScoresA[itemId]?.score != null &&
++        scorerScoresB[itemId]?.score != null &&
++        !failedA.has(itemId) &&
++        !failedB.has(itemId),
++    );
++    const meanA = computeMean(pairedItemIds.map(itemId => scorerScoresA[itemId]!.score as number));
++    const meanB = computeMean(pairedItemIds.map(itemId => scorerScoresB[itemId]!.score as number));
++    const rawDelta = missingIn ? 0 : meanB - meanA;
++    // Floating-point noise from averaging must not trip the default zero threshold
++    const epsilon = DELTA_EPSILON * Math.max(1, Math.abs(meanA), Math.abs(meanB));
++    const delta = Math.abs(rawDelta) < epsilon ? 0 : rawDelta;
++    const regressed = !missingIn && pairedItemIds.length > 0 && isRegression(delta, threshold, direction);
++
++    // A scorer that disappeared from the candidate can no longer show a regression, so it fails the quick check
++    if (regressed || missingIn === 'B') {
+       hasRegression = true;
+     }
+ 
+@@ -166,6 +207,8 @@ export async function compareExperiments(mastra: Mastra, config: CompareExperime
+       statsA,
+       statsB,
+       delta,
++      pairedCount: missingIn ? 0 : pairedItemIds.length,
++      ...(missingIn ? { missingIn } : {}),
+       regressed,
+       threshold,
+     };
+@@ -198,6 +241,10 @@ export async function compareExperiments(mastra: Mastra, config: CompareExperime
+     });
+   }
+ 
++  if (maxFailedItemIncrease !== undefined && newlyFailed > maxFailedItemIncrease) {
++    hasRegression = true;
++  }
++
+   return {
+     experimentA: {
+       id: experimentA.id,
+@@ -209,6 +256,7 @@ export async function compareExperiments(mastra: Mastra, config: CompareExperime
+     },
+     versionMismatch,
+     hasRegression,
++    failedItems: { a: failedA.size, b: failedB.size },
+     scorers,
+     items,
+     warnings,
+@@ -216,19 +264,39 @@ export async function compareExperiments(mastra: Mastra, config: CompareExperime
+ }
+ 
+ /**
+- * Group scores by scorer ID, then by item ID.
++ * Items whose target run failed in every attempt (the same rule `finalizeExperiment` uses).
++ */
++function failedItemIds(results: Array<{ itemId: string; error?: unknown }>): Set<string> {
++  const failedByItem = new Map<string, boolean>();
++  for (const result of results) {
++    const failed = result.error != null;
++    failedByItem.set(result.itemId, (failedByItem.get(result.itemId) ?? true) && failed);
++  }
++  return new Set([...failedByItem].filter(([, failed]) => failed).map(([itemId]) => itemId));
++}
++
++/**
++ * Group scores by scorer ID, then by item ID. Repeated attempts of an item (several score rows
++ * for one scorer and item) are averaged into one row, so no trial is silently dropped.
+  */
+ function groupScoresByScorerAndItem(scores: ScoreRowData[]): Record<string, Record<string, ScoreRowData>> {
+-  const result: Record<string, Record<string, ScoreRowData>> = {};
++  const grouped: Record<string, Record<string, ScoreRowData[]>> = {};
+ 
+   for (const score of scores) {
+     const scorerId = score.scorerId;
+     const itemId = score.entityId; // entityId is the item ID for experiment scores
+ 
+-    if (!result[scorerId]) {
+-      result[scorerId] = {};
++    grouped[scorerId] ??= {};
++    (grouped[scorerId][itemId] ??= []).push(score);
++  }
++
++  const result: Record<string, Record<string, ScoreRowData>> = {};
++  for (const [scorerId, byItem] of Object.entries(grouped)) {
++    result[scorerId] = {};
++    for (const [itemId, rows] of Object.entries(byItem)) {
++      const valid = rows.map(row => row.score).filter((score): score is number => score != null);
++      result[scorerId][itemId] = { ...rows[rows.length - 1]!, score: valid.length > 0 ? computeMean(valid) : null } as ScoreRowData;
+     }
+-    result[scorerId][itemId] = score;
+   }
+ 
+   return result;
+@@ -254,6 +322,7 @@ function buildEmptyResult(
+     },
+     versionMismatch,
+     hasRegression: false,
++    failedItems: { a: 0, b: 0 },
+     scorers: {},
+     items: [],
+     warnings,
+diff --git a/packages/core/src/datasets/experiment/analytics/types.ts b/packages/core/src/datasets/experiment/analytics/types.ts
+index d9d2d97..9f7177c 100644
+--- a/packages/core/src/datasets/experiment/analytics/types.ts
++++ b/packages/core/src/datasets/experiment/analytics/types.ts
+@@ -41,8 +41,20 @@ export interface ScorerComparison {
+   statsA: ScorerStats;
+   /** Stats from experiment B (candidate) */
+   statsB: ScorerStats;
+-  /** avgScore difference: statsB.avgScore - statsA.avgScore */
++  /**
++   * Mean score difference (B - A) over the items this scorer scored in both experiments and
++   * whose target run did not fail in either. `statsA`/`statsB` still describe each whole
++   * experiment, so `statsB.avgScore - statsA.avgScore` can differ from `delta` when the item
++   * sets differ. 0 when `missingIn` is set.
++   */
+   delta: number;
++  /** Items `delta` is computed over */
++  pairedCount: number;
++  /**
++   * Set when this scorer has no non-null scores in one experiment. Such a scorer is never marked
++   * `regressed`; when it is missing in B, `hasRegression` is true.
++   */
++  missingIn?: 'A' | 'B';
+   /** Whether this scorer regressed (delta below threshold) */
+   regressed: boolean;
+   /** Threshold used for regression detection */
+@@ -79,8 +91,19 @@ export interface ComparisonResult {
+   };
+   /** True if experiments used different dataset versions */
+   versionMismatch: boolean;
+-  /** True if any scorer regressed (for CI quick check) */
++  /**
++   * True if any scorer regressed, a scorer has no scores in B, or more than `maxFailedItemIncrease`
++   * items newly failed in B (for CI quick check)
++   */
+   hasRegression: boolean;
++  /**
++   * Items whose target run failed in every attempt, per experiment. Their scores (if a scorer
++   * produced any) are not comparable with successful runs.
++   */
++  failedItems: {
++    a: number;
++    b: number;
++  };
+   /** Per-scorer comparison results */
+   scorers: Record<string, ScorerComparison>;
+   /** Per-item comparison details */
+@@ -117,4 +140,9 @@ export interface CompareExperimentsConfig {
+    * Default when not specified: { value: 0, direction: 'higher-is-better' }
+    */
+   thresholds?: Record<string, ScorerThreshold>;
++  /**
++   * When set, `hasRegression` is also true if more than this many items failed in experiment B
++   * that did not fail in A. Default: not checked (newly failed items are still warned about).
++   */
++  maxFailedItemIncrease?: number;
+ }

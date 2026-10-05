@@ -1,0 +1,4 @@
+{"B_scoreRows":7,"B_inMemoryScorerResultsForQ8":[{"scorerId":"quality","scorerName":"quality","score":null,"reason":null,"error":"Scorer Run Failed: scorer boom on q8","failedStep":"generateScore","completedSteps":[],"targetScope":"span"}],"summaryFailedCount":0}
+{"hasRegression":false,"delta":0.18000000000000005,"statsA":{"errorRate":0,"errorCount":0,"passRate":0.7,"passCount":7,"avgScore":0.7200000000000001,"scoreCount":10,"totalItems":10},"statsB":{"errorRate":0,"errorCount":0,"passRate":1,"passCount":7,"avgScore":0.9000000000000001,"scoreCount":7,"totalItems":7}}
+{"directNullSave":"accepted"}
+{"after_null_row":{"errorRate":0.125,"errorCount":1,"avg":0.9000000000000001}}

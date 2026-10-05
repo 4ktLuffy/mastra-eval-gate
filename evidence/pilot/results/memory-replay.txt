@@ -1,0 +1,4 @@
+{"fault":"control ok","nextTurnPrompt":["system:x","user:first question","assistant:hello","user:second question"]}
+{"fault":"in-band error","nextTurnPrompt":["system:x","user:second question"]}
+{"fault":"thrown 503","nextTurnPrompt":["system:x","user:second question"]}
+{"scenario":"generate() thrown 503 + memory (#19887 path)","err":"503 Service Unavailable","persisted":["user:\"my name is Zed\"","assistant:\"\""]}

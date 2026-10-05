@@ -1,0 +1,50 @@
+{"scenario":"control_nofault","fallbackCfg":false,"primaryCalls":2,"fallbackCalls":0,"weatherFetches":1,"onError":[],"ms":43,"status":"ok","value":{"text":"It is 20C in Paris","finish":"stop","outError":null,"toolErrs":[],"hasErrorChunk":false}}
+{"scenario":"control_nofault","fallbackCfg":true,"primaryCalls":2,"fallbackCalls":0,"weatherFetches":1,"onError":[],"ms":14,"status":"ok","value":{"text":"It is 20C in Paris","finish":"stop","outError":null,"toolErrs":[],"hasErrorChunk":false}}
+Error in agent stream {
+  error: [Error: rate limited] {
+    type: 'too_many_requests',
+    code: 'rate_limit_exceeded'
+  },
+  runId: 'cf88e262-34d3-40c6-9b53-625177f47b3d',
+  provider: 'mock-provider',
+  modelId: 'primary'
+}
+{"scenario":"inband_rate_limit","fallbackCfg":false,"primaryCalls":1,"fallbackCalls":0,"weatherFetches":0,"onError":["rate limited"],"ms":6,"status":"ok","value":{"text":"","finish":"error","outError":"rate limited","toolErrs":[],"hasErrorChunk":true}}
+Error in agent stream {
+  error: [Error: rate limited] {
+    type: 'too_many_requests',
+    code: 'rate_limit_exceeded'
+  },
+  runId: 'b7d8b749-5145-4a66-94c4-dd85b3a147d0',
+  provider: 'mock-provider',
+  modelId: 'primary'
+}
+{"scenario":"inband_rate_limit","fallbackCfg":true,"primaryCalls":1,"fallbackCalls":0,"weatherFetches":0,"onError":["rate limited"],"ms":5,"status":"ok","value":{"text":"","finish":"error","outError":"rate limited","toolErrs":[],"hasErrorChunk":true}}
+Error in agent stream {
+  error: Error: 503 Service Unavailable
+      at throw (<pilot>/lib.mjs:12:24)
+      at doStream (<pilot>/lib.mjs:23:22)
+      at MockLanguageModelV2.MockLanguageModelV2.doStream (<pilot>/node_modules/ai/src/test/mock-language-model-v2.ts:56:16)
+      at AISDKV5LanguageModel.doStream (<pilot>/node_modules/@mastra/core/src/llm/model/aisdk/v5/model.ts:111:30)
+      at retryResult.default.retries (<pilot>/node_modules/@mastra/core/dist/agent-CnrRF71P.js:26838:110)
+      at Module.pRetry (<pilot>/node_modules/p-retry/index.js:197:25)
+      at createStream (<pilot>/node_modules/@mastra/core/dist/agent-CnrRF71P.js:26829:64)
+      at async Object.start (<pilot>/node_modules/@mastra/core/src/stream/base/input.ts:67:26),
+  runId: 'd57ba761-7913-4481-bc98-a3bf27fc5df7',
+  provider: 'mock-provider',
+  modelId: 'primary'
+}
+{"scenario":"thrown_503","fallbackCfg":false,"primaryCalls":1,"fallbackCalls":0,"weatherFetches":0,"onError":["503 Service Unavailable"],"ms":53,"status":"ok","value":{"text":"","finish":"error","outError":"503 Service Unavailable","toolErrs":[],"hasErrorChunk":true}}
+{"scenario":"thrown_503","fallbackCfg":true,"primaryCalls":1,"fallbackCalls":2,"weatherFetches":1,"onError":[],"ms":12,"status":"ok","value":{"text":"It is 20C in Paris","finish":"stop","outError":null,"toolErrs":[],"hasErrorChunk":false}}
+{"scenario":"hang_noTimeout","fallbackCfg":false,"primaryCalls":1,"fallbackCalls":0,"weatherFetches":0,"onError":[],"ms":7001,"status":"HUNG_PAST_GUARD(7000ms)"}
+{"scenario":"hang_noTimeout","fallbackCfg":true,"primaryCalls":1,"fallbackCalls":0,"weatherFetches":0,"onError":[],"ms":7000,"status":"HUNG_PAST_GUARD(7000ms)"}
+{"scenario":"hang_withAbort2s","fallbackCfg":false,"primaryCalls":1,"fallbackCalls":0,"weatherFetches":0,"onError":[],"ms":2004,"status":"ok","value":{"text":"","finish":"aborted","outError":null,"toolErrs":[],"hasErrorChunk":false}}
+{"scenario":"hang_withAbort2s","fallbackCfg":true,"primaryCalls":1,"fallbackCalls":0,"weatherFetches":0,"onError":[],"ms":2004,"status":"ok","value":{"text":"","finish":"aborted","outError":null,"toolErrs":[],"hasErrorChunk":false}}
+Error converting tool call input to JSON { toolCallId: 'c1', toolName: 'weatherTool', inputLength: 17 }
+{"scenario":"malformed_json_args","fallbackCfg":false,"primaryCalls":2,"fallbackCalls":0,"weatherFetches":0,"onError":[],"ms":24,"status":"ok","value":{"text":"recovered","finish":"stop","outError":null,"toolErrs":["Tool \"weatherTool\" received invalid arguments — the provided JSON could not be parsed. Please provid"],"hasErrorChunk":false}}
+Error converting tool call input to JSON { toolCallId: 'c1', toolName: 'weatherTool', inputLength: 17 }
+{"scenario":"malformed_json_args","fallbackCfg":true,"primaryCalls":2,"fallbackCalls":0,"weatherFetches":0,"onError":[],"ms":18,"status":"ok","value":{"text":"recovered","finish":"stop","outError":null,"toolErrs":["Tool \"weatherTool\" received invalid arguments — the provided JSON could not be parsed. Please provid"],"hasErrorChunk":false}}
+{"scenario":"schema_violating_args","fallbackCfg":false,"primaryCalls":2,"fallbackCalls":0,"weatherFetches":0,"onError":[],"ms":15,"status":"ok","value":{"text":"recovered","finish":"stop","outError":null,"toolErrs":[],"hasErrorChunk":false}}
+{"scenario":"schema_violating_args","fallbackCfg":true,"primaryCalls":2,"fallbackCalls":0,"weatherFetches":0,"onError":[],"ms":13,"status":"ok","value":{"text":"recovered","finish":"stop","outError":null,"toolErrs":[],"hasErrorChunk":false}}
+{"scenario":"empty_response","fallbackCfg":false,"primaryCalls":1,"fallbackCalls":0,"weatherFetches":0,"onError":[],"ms":4,"status":"ok","value":{"text":"","finish":"stop","outError":null,"toolErrs":[],"hasErrorChunk":false}}
+{"scenario":"empty_response","fallbackCfg":true,"primaryCalls":1,"fallbackCalls":0,"weatherFetches":0,"onError":[],"ms":4,"status":"ok","value":{"text":"","finish":"stop","outError":null,"toolErrs":[],"hasErrorChunk":false}}

@@ -1,0 +1,11 @@
+templates/weather-agent/src
+templates/weather-agent/src/mastra
+templates/weather-agent/src/mastra/agents
+templates/weather-agent/src/mastra/agents/weather-agent.ts
+templates/weather-agent/src/mastra/index.ts
+templates/weather-agent/src/mastra/scorers
+templates/weather-agent/src/mastra/scorers/weather-scorer.ts
+templates/weather-agent/src/mastra/tools
+templates/weather-agent/src/mastra/tools/weather-tool.ts
+templates/weather-agent/src/mastra/workflows
+templates/weather-agent/src/mastra/workflows/weather-workflow.ts

@@ -1,0 +1,8 @@
+{"scorer":"toxicity","score":1,"notScorable":null,"error":null,"preprocessStepResult":null,"analyzeStepResult":{"verdicts":[]}}
+{"scorer":"toxicity scale=100","score":1,"notScorable":null,"error":null,"preprocessStepResult":null,"analyzeStepResult":{"verdicts":[]}}
+{"scorer":"bias","score":0,"notScorable":null,"error":null,"preprocessStepResult":{"opinions":["Women are bad drivers","You idiot"]},"analyzeStepResult":{"results":[]}}
+{"scorer":"hallucination","score":0,"notScorable":null,"error":null,"preprocessStepResult":{"claims":["The moon is cheese","X"]},"analyzeStepResult":{"verdicts":[]}}
+{"scorer":"faithfulness","score":0,"notScorable":null,"error":null,"preprocessStepResult":{"claims":["The moon is cheese","X"]},"analyzeStepResult":{"verdicts":[]}}
+{"scorer":"answer-relevancy","score":0,"notScorable":null,"error":null,"preprocessStepResult":{"statements":["The moon is cheese","X"]},"analyzeStepResult":{"results":[]}}
+{"NEG_CONTROL":"toxicity","score":0.5}
+{"NEG_CONTROL":"faithfulness","score":0.5}

@@ -1,0 +1,6 @@
+{"hasRegression":true,"regressed":true,"delta":-0.37000000000000016,"meanA":0.7200000000000001,"meanB":0.3499999999999999,"nA":10,"nB":3,"warnings":["Experiments have different dataset versions: 1 vs null"]}
+{"overlapN":3,"perItem":[{"item":"q9","A":0.3,"B":0.35},{"item":"q10","A":0.3,"B":0.35},{"item":"q8","A":0.3,"B":0.35}]}
+{"pairedMeanDelta":0.04999999999999999,"everyItemBgeA":true}
+{"itemsOnlyInA":7}
+{"NEG_CONTROL_fullset":{"hasRegression":false,"delta":0.050000000000000044,"nB":10}}
+{"VARIANT_dataset_version_bump":{"hasRegression":true,"delta":-0.37000000000000016,"nA":10,"nB":3,"warnings":["Experiments have different dataset versions: 1 vs 2"]}}

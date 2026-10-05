@@ -1,0 +1,4 @@
+node_modules/
+dist/
+upstream/mastra/
+evidence/**/node_modules/

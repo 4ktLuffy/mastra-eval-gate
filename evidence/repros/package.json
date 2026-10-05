@@ -1,0 +1,19 @@
+{
+  "name": "repro6751",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@mastra/core": "^1.74.0",
+    "ai": "^5.0.271",
+    "typescript": "^7.0.2",
+    "zod": "^4.6.5"
+  }
+}

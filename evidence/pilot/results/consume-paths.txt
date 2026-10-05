@@ -1,0 +1,8 @@
+{"fault":"in-band error","consume":"await out.text","status":"threw","error":"rate limited","ms":72}
+{"fault":"in-band error","consume":"for await textStream","status":"ok","value":{"v":""},"ms":12}
+{"fault":"in-band error","consume":"for await fullStream","status":"ok","value":{"v":"start,step-start,error,step-finish,finish"},"ms":4}
+{"fault":"in-band error","consume":"await out.getFullOutput()","status":"threw","error":"rate limited","ms":5}
+{"fault":"thrown 503","consume":"await out.text","status":"threw","error":"503 Service Unavailable","ms":1}
+{"fault":"thrown 503","consume":"for await textStream","status":"ok","value":{"v":""},"ms":2}
+{"fault":"thrown 503","consume":"for await fullStream","status":"ok","value":{"v":"start,step-start,error,step-finish,finish"},"ms":2}
+{"fault":"thrown 503","consume":"await out.getFullOutput()","status":"threw","error":"503 Service Unavailable","ms":1}

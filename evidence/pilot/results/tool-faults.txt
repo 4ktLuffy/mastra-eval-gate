@@ -1,0 +1,6 @@
+{"scenario":"control_tool_ok","modelCalls":2,"geoFetch":1,"weatherFetch":1,"chunks":["tool-result:{\"temperature\":20,\"feelsLike\":19,\"humidity\":50,\"windSpeed\":3,\"windGust\":5,\"conditions\":\"Mainly clear\",\"locatio"],"status":"ok","value":{"text":"final answer","finish":"stop"},"ms":43}
+{"scenario":"tool_throws (ECONNRESET)","modelCalls":2,"geoFetch":1,"weatherFetch":0,"chunks":["tool-error:\"ECONNRESET\""],"status":"ok","value":{"text":"final answer","finish":"stop"},"ms":70}
+{"scenario":"tool_hangs_no_timeout","modelCalls":1,"geoFetch":1,"weatherFetch":0,"chunks":[],"status":"HUNG_PAST_GUARD(7000ms)","ms":7000}
+{"scenario":"tool_hangs_abort2s","modelCalls":1,"geoFetch":1,"weatherFetch":0,"chunks":[],"status":"HUNG_PAST_GUARD(7000ms)","ms":7000}
+{"scenario":"tool_output_schema_invalid","modelCalls":2,"geoFetch":1,"weatherFetch":1,"chunks":["tool-result:{\"error\":true,\"message\":\"Tool output validation failed for get-weather. The tool returned invalid output:\\n- t"],"status":"ok","value":{"text":"final answer","finish":"stop"},"ms":21}
+{"scenario":"slow3s_alongside_fast","modelCalls":2,"fast_finished":307,"slow_finished":3008,"streamed_fast":3009,"streamed_slow":3009}

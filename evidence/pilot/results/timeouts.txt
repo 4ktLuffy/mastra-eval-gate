@@ -1,0 +1,7 @@
+{"scenario":"model_hang + stepMs:1500, single","primaryCalls":1,"fallbackCalls":0,"weatherFetch":0,"status":"ok","value":{"text":"","finish":"error","err":"Model call timed out after 1500ms (modelSettings.timeout.stepMs)"},"ms":1626}
+{"scenario":"model_hang + stepMs:1500, WITH fallback","primaryCalls":1,"fallbackCalls":2,"weatherFetch":1,"status":"ok","value":{"text":"It is 20C in Paris","finish":"stop","err":null},"ms":1525}
+{"scenario":"model_hang + firstChunkMs:1500, WITH fallback","primaryCalls":1,"fallbackCalls":2,"weatherFetch":1,"status":"ok","value":{"text":"It is 20C in Paris","finish":"stop","err":null},"ms":1519}
+{"scenario":"model_hang + totalMs:1500, WITH fallback","primaryCalls":1,"fallbackCalls":0,"weatherFetch":0,"status":"threw","error":"Agent execution timed out after 1500ms (modelSettings.timeout.totalMs)","ms":1504}
+{"scenario":"tool_hang + totalMs:1500","primaryCalls":1,"fallbackCalls":0,"weatherFetch":0,"status":"threw","error":"Agent execution timed out after 1500ms (modelSettings.timeout.totalMs)","ms":1504}
+{"scenario":"tool_hang + stepMs:1500","primaryCalls":1,"fallbackCalls":0,"weatherFetch":0,"status":"HUNG_PAST_GUARD(7000ms)","ms":7001}
+{"scenario":"tool_hang + abortSignal 1500 (re-run)","primaryCalls":1,"fallbackCalls":0,"weatherFetch":0,"status":"HUNG_PAST_GUARD(7000ms)","ms":7001}

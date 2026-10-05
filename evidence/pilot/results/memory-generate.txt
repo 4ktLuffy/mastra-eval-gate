@@ -1,0 +1,11 @@
+  error: Error: 503 Service Unavailable
+{"scenario":"generate(): thrown503","fallbackCfg":false,"primaryCalls":1,"fallbackCalls":0,"status":"threw","error":"503 Service Unavailable","ms":77}
+{"scenario":"generate(): thrown503","fallbackCfg":true,"primaryCalls":1,"fallbackCalls":1,"status":"ok","value":{"text":"FALLBACK OK","finish":"stop","err":null},"ms":4}
+{"scenario":"generate(): empty","fallbackCfg":false,"primaryCalls":1,"fallbackCalls":0,"status":"ok","value":{"text":"","finish":"stop","err":null},"ms":2}
+{"scenario":"generate(): empty","fallbackCfg":true,"primaryCalls":1,"fallbackCalls":0,"status":"ok","value":{"text":"","finish":"stop","err":null},"ms":1}
+{"scenario":"memory after: control ok","runStatus":"ok","persisted":["user:\"my name is Zed\"","assistant:\"hello\""]}
+  err: rate limited
+{"scenario":"memory after: in-band error","runStatus":"threw","persisted":["user:\"my name is Zed\"","assistant:\"\""]}
+  err: 503 Service Unavailable
+{"scenario":"memory after: thrown 503","runStatus":"threw","persisted":["user:\"my name is Zed\"","assistant:\"\""]}
+{"scenario":"memory after: abort mid-hang","runStatus":"ok","persisted":["user:\"my name is Zed\""]}
