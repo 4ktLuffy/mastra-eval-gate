@@ -1,59 +1,66 @@
 # mastra-eval-gate
 
-**A CI gate for Mastra experiments that won't approve an agent just because it crashed.**
+**Tells you whether a change made your Mastra agent worse, before you ship it.**
 
-Mastra's `compareExperiments` answers "did my change make the agent worse?" by comparing average
-scores. Run it on real Mastra experiments and an agent that crashes on its three hardest items
-comes out *better* (0.72 → 0.90, no regression, no warning), because failed runs leave the average
-and nothing counts them. This package compares the same stored experiments item by item, counts
-failures as failures, refuses to pass when there is nothing to compare, and decides quality on a
-test whose false-alarm rate is measured, including where it breaks.
+You run your agent on a test set before and after a change (Mastra calls these experiments). Mastra
+can compare the two, but I found that comparison is easy to fool: it can say an agent that
+**crashed** got *better*, and it raises false alarms on changes that did nothing. This package
+reads the same experiments and gives one honest answer:
+
+- **PASS**: no sign it got worse.
+- **FAIL**: it got worse, and here is what broke.
+- **INSUFFICIENT**: there isn't enough to tell, so it won't pretend to pass.
 
 ```
-$ npx tsx examples/crash-demo.ts
-Mastra compareExperiments: hasRegression=false, quality 0.72 → 0.90 (delta +0.18), errorRate 0, warnings []
-(the candidate failed 3 of 10 items)
+$ npx mastra-eval-gate --storage file:./src/mastra/public/mastra.db --baseline 3e569aaf… --candidate b23571fc…
 
-FAIL  baseline <id>  →  candidate <id>
-  ✗ 3 item(s) fail in the candidate that passed in the baseline; allowed 0 (0 fixed, which do not offset). …
-  ! "quality": 3 item(s) scored in the baseline have no score in the candidate because the target failed; …
+FAIL  baseline 3e569aaf…  →  candidate b23571fc…
+  ✗ 2 item(s) fail in the candidate that passed in the baseline; allowed 0 …
 
 Items:
-  new-failure <item id>  run failure rate: 0.00 → 1.00
-  …
+  new-failure     45a4ab72…  run failure rate: 0.00 → 1.00
+                  error: Workflow suspended — provide resume data via item.resumeSteps/item.resumeData …
+  new-failure     f573ac9f…  run failure rate: 0.00 → 1.00
+                  error: Workflow suspended — provide resume data via item.resumeSteps/item.resumeData …
 ```
 
-**What it found in Mastra** (details and intent labels in [FINDINGS.md](FINDINGS.md); every number
-comes from a script in this repo):
+(A real run from Mastra Studio: a new human-review step paused two questions. Mastra's own comparison
+reported it as a score regression, 1.00 → 0.90, as if the answers were wrong.)
 
-- **Crashes raise scores.** Failed runs are still scored, with empty input and output. Three of
-  Mastra's prebuilt code scorers (keyword-coverage, textual-difference, tone) give them a perfect
-  1.0, and two drop them. `compareExperiments` then reports keyword coverage *improving* from 0
-  to 0.3 because the agent crashed.
-- **Different item sets, missing scorers, repeated trials.** A candidate that is better on every
-  item it ran is flagged as a regression when it ran fewer items. A scorer missing from one run
-  counts as a mean of 0. Only the last of several attempts is kept.
-- **On a real model, half of all no-change comparisons are flagged.** Across 20 comparisons of a
-  Codex-backed Mastra agent against itself, Mastra flagged 10; this gate failed 1, passed 17, and
-  reported insufficient evidence on 2 (its judge had errored). With a realistic 20 s item timeout
-  (7 of 30 items timed out), Mastra showed accuracy *improving* by 0.12 in two comparisons; the
-  gate failed all four.
-- **Beyond quality: run time and tokens.** The gate also catches "same answers, but slower" or
-  "same answers, more tokens", which Mastra's comparison doesn't look at.
-- **Used on a fresh `create-mastra` project**, Mastra reported a "regression" three times for a
-  prompt rewrite; the gate passed it and named the 2 questions that changed in every run. Reading
-  them showed the agent was right and the answer check was rejecting "7–14" and "can’t". Fixed,
-  every run scores 20/20 (FINDINGS.md, "Field test").
-- **In Mastra Studio**, with a workflow and a prebuilt LLM judge: Studio's compare endpoint
-  computes a regression verdict and drops it before returning; the prebuilt answer-relevancy judge
-  scored 0 on 20 correct workflow answers without an error (the gate now warns); and a
-  human-review step that suspends 2 items is reported with Mastra's own "Workflow suspended" message
-  (FINDINGS.md, "In Mastra Studio").
-- **On a customer-style workload** (a support agent with refund and escalate tools; one policy
-  rule deleted as the regression), both catch the regression (29/30 → 21/30, gate p ≈ 0.004) and
-  neither false-alarms: that agent was nearly deterministic, so this run shows the gate isn't
-  over-cautious, not that it beats Mastra. The regressed agent called the (simulated) refund tool
-  for orders up to $881 that the policy says to escalate.
+## Why I built it
+
+I spent time using Mastra's experiments the way a team would, with a real model (OpenAI's Codex),
+on a fresh `create-mastra` project and in Mastra Studio. What I saw:
+
+- **A crash can look like an improvement.** When the agent crashes on a question, Mastra still
+  scores the empty answer, and some of its own scorers give that a perfect 1.0. An agent that
+  crashed on its 3 hardest questions out of 10 went *up* from 0.72 to 0.90, with no warning.
+- **Timeouts too.** With 7 of 30 questions timing out, Mastra showed accuracy going *up* by 0.12.
+- **Lots of false alarms.** I compared the same agent with itself 20 times. Mastra said "regression"
+  10 times. This gate failed 1.
+- **It finds the real cause.** On a fresh project, Mastra flagged a prompt change as worse three
+  times. The gate passed it and pointed at the 2 questions that changed. The agent was right; my
+  answer check was rejecting "7–14" and "can’t".
+- **Studio hides its own verdict.** Studio's compare works out whether anything regressed, then
+  throws that answer away before showing you the results.
+- **A built-in judge scores workflows 0.** Mastra's answer-relevancy judge can't read a workflow's
+  output, so it gave 20 correct answers a 0 each, without any error. The gate now warns about this.
+- **Paused workflows are treated as wrong answers.** A human-review step that paused 2 questions
+  showed up in Mastra as "answers got worse, 1.00 → 0.90". The gate reports them as paused, with
+  Mastra's own message.
+
+Every number comes from a script in this repo. The details are in [FINDINGS.md](FINDINGS.md), and
+I wrote fixes for Mastra itself too ([below](#the-upstream-fixes)).
+
+## What it checks
+
+- **Quality**: did a score really drop, or is it just the normal wobble between runs?
+- **Crashes and timeouts**: counted as failures, never as good answers.
+- **Speed and tokens**: same answers but slower, or more tokens, gets flagged.
+- **Questions that keep failing**: with a few runs per side, it names the questions that got worse
+  in every run.
+- **Broken setups**: a scorer stuck at 0 on everything, a scorer missing from one run, or a test set
+  that changed between the two runs.
 
 ## Use it
 
@@ -61,70 +68,77 @@ comes from a script in this repo):
 npm install mastra-eval-gate
 ```
 
+From a terminal or CI, straight from your project's database (it doesn't load your app, so it's
+fast and works while Studio is running):
+
+```bash
+npx mastra-eval-gate --storage file:./mastra.db --baseline <id> --candidate <id>
+```
+
+Studio keeps its database at `src/mastra/public/mastra.db`. Exit codes: 0 pass, 1 fail, 3 not
+enough evidence, 2 usage error. Repeat `--baseline` and `--candidate` to compare several runs (more
+runs, smaller drops caught). Add `--max-latency-increase 0.2` or `--max-token-increase 0.2` to fail
+on 20% slower or 20% more tokens, and `--json` for the full result.
+[`examples/ci/eval-gate.yml`](examples/ci/eval-gate.yml) is a GitHub Actions workflow you can copy.
+
+In code:
+
 ```ts
 import { gate, formatReport } from 'mastra-eval-gate';
 
 const result = await gate(mastra, {
   baseline: baselineExperimentId,
   candidate: candidateExperimentId,
-  expectedScorers: ['faithfulness', 'toxicity'],
-  thresholds: { faithfulness: { value: 0.05 }, toxicity: { value: 0.05, direction: 'lower-is-better' } },
+  thresholds: { faithfulness: { value: 0.05 } }, // allow a drop of up to 0.05
 });
 console.log(formatReport(result));
 if (result.verdict !== 'pass') process.exit(1);
 ```
 
-From a shell or CI, straight from your project's storage (no app code is loaded, so it is fast and
-doesn't fight a running app for file locks):
-
-```bash
-npx mastra-eval-gate --storage file:./mastra.db --baseline <id> --candidate <id> --expect faithfulness --threshold faithfulness=0.05
-```
-
-or against the module that exports your configured `mastra` (TypeScript is loaded directly):
-`--mastra src/mastra/index.ts`.
-
-Exit codes: 0 pass, 1 fail, 3 insufficient evidence, 2 usage error. Repeat `--baseline` and
-`--candidate` to compare several runs of the same dataset (more runs, more power), and add
-`--max-latency-increase 0.2` / `--max-token-increase 0.2` to gate on run time and tokens. `--json` prints the full
-result. [`examples/ci/eval-gate.yml`](examples/ci/eval-gate.yml) is a GitHub Actions workflow to
-copy, with [`examples/ci/run-candidate.ts`](examples/ci/run-candidate.ts).
-
-In a Vitest test, next to Mastra's own `expectEvals`:
+In a Vitest test:
 
 ```ts
 import { expectGate } from 'mastra-eval-gate/vitest';
 
-test('no evidence the candidate is worse than the baseline', async () => {
-  await expectGate(mastra, { baseline, candidate, thresholds: { accuracy: { value: 0.05 } } }).toPass();
+test('the new version is not worse', async () => {
+  await expectGate(mastra, { baseline, candidate }).toPass();
 });
 ```
 
-A failed gate throws `GateFailedError` with the full report as its message. After
-`registerGateMatchers()`, `expect(await gate(mastra, { baseline, candidate })).toPassEvalGate()` works too.
+## What it can't do
 
-## What the verdict means
+- **A drop on just 1–2 questions can't be proven** with 20 questions. Instead, it names those
+  questions so you can look at them.
+- **Small test sets miss small drops.** With 20 pass/fail questions, a 10% drop is caught about 1 time in
+  10 from one run each, and 1 in 3 with five runs each. The report tells you the smallest drop it
+  could have caught.
+- **I tested it with one model** (Codex) on test sets of 20–30 questions.
+
+## The details
+
+Everything below is for people who want to check the statistics or the numbers.
 
 | Verdict | Means |
 |---|---|
 | `pass` | **No evidence of a regression** at this sample size. Not proof that quality is fine: the report's `detects` column says how large a drop the comparison could have missed. |
-| `fail` | A quality regression (significant, beyond your tolerance), a reliability regression, or a scorer the candidate lost. |
-| `insufficient` | No verdict is possible: no scorer with valid scores on shared items, an unfinished experiment, a scorer outage, items the candidate didn't run, scores that overflow, or too few paired items for the test to ever be significant. |
+| `fail` | A quality regression (significant, beyond your tolerance), more failures, or a scorer the candidate lost. |
+| `insufficient` | No verdict is possible: nothing scored on shared items, an unfinished experiment, a scorer outage, items the candidate didn't run, or too few items for the test to ever be significant. |
 
 | Check | How |
 |---|---|
-| **Quality** per scorer | Mean change over items scored in both runs (repeated attempts averaged, scores of failed runs excluded and matched to their attempt), one-sided paired sign-flip test against your tolerance, Holm-adjusted across scorers; 95% bootstrap interval (descriptive) |
-| **Reliability** | Per-item failure rate (target errors, timeouts). `'strict'` (default): fail when the gross increase exceeds `maxNewTargetFailures` (default 0); fixed items don't offset broken ones. `'statistical'`: also require the increase to be significant (exact McNemar). |
-| **Missing scorer** | A scorer with scores in the baseline and none in the candidate fails; one in `expectedScorers` that never ran anywhere is insufficient. |
-| **Run time, tokens** | Per item, over successful runs: geometric-mean ratio and a one-sided test on log ratios. Gated with `latency` / `tokens: { maxIncrease }`; otherwise reported, with a warning on a significant rise over 20%. |
-| **Coverage** | Scores the candidate's scorer lost relative to the baseline, per successful attempt (error, skipped, non-finite), beyond `maxCoverageLoss`; or baseline items the candidate didn't run (`allowSubset` to accept): insufficient. |
+| **Quality** per scorer | Mean change over items scored in both runs (repeated attempts averaged, scores of failed runs excluded), one-sided paired sign-flip test against your tolerance, Holm-adjusted across scorers; 95% bootstrap interval |
+| **Reliability** | Per-item failure rate. `'strict'` (default): fail on any extra failures beyond `maxNewTargetFailures` (default 0). `'statistical'`: also require the increase to be significant (exact McNemar). |
+| **Missing scorer** | A scorer with scores in the baseline and none in the candidate fails. |
+| **Run time, tokens** | Per item: geometric-mean ratio and a one-sided test on log ratios. Gated with `latency` / `tokens: { maxIncrease }`; otherwise reported, with a warning on a significant rise over 20%. |
+| **Coverage** | Scores the candidate lost (scorer error, skipped) beyond `maxCoverageLoss`, or items it didn't run (`allowSubset` to accept): insufficient. |
 
 Options: `thresholds`, `expectedScorers`, `alpha` (0.05), `test` (`'sign-flip'` | `'betting'`),
 `scoreBounds`, `latency`, `tokens`, `reliability` (`'strict'` | `'statistical'`), `maxNewTargetFailures` (0), `maxCoverageLoss` (0),
 `clusters` (item id → cluster id), `allowSubset`, `requireCompleted` (true), `seed`, `resamples`
-(20000), `includeScoresOfFailedRuns`, `midP`, `itemDetail` (10). Invalid values throw.
+(20000), `includeScoresOfFailedRuns`, `midP`, `itemDetail` (10). Invalid values throw. The CLI also
+takes `--mastra src/mastra/index.ts` to load your configured app instead of `--storage`.
 
-## Where it breaks (measured)
+### Where it breaks (measured)
 
 The whole gate, simulated end to end in [`bench/gate-sim.ts`](bench/gate-sim.ts) (1000 trials per
 cell, table in [results/gate-sim.md](results/gate-sim.md)). FAIL rate when nothing got worse:
