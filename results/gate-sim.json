@@ -1,0 +1,301 @@
+{
+  "trials": 1000,
+  "alpha": 0.05,
+  "cells": [
+    {
+      "scenario": "symmetric null, continuous",
+      "n": 20,
+      "drop": 0,
+      "fail": 0.055,
+      "insufficient": 0,
+      "pass": 0.945,
+      "qualityFail": 0.055
+    },
+    {
+      "scenario": "skewed null (0.1 vs 0/1 at 10%)",
+      "n": 20,
+      "drop": 0,
+      "fail": 0.122,
+      "insufficient": 0,
+      "pass": 0.878,
+      "qualityFail": 0.122
+    },
+    {
+      "scenario": "clustered null (5 clusters)",
+      "n": 20,
+      "drop": 0,
+      "fail": 0.12,
+      "insufficient": 0,
+      "pass": 0.88,
+      "qualityFail": 0.12
+    },
+    {
+      "scenario": "clustered null, clusters declared",
+      "n": 20,
+      "drop": 0,
+      "fail": 0.024,
+      "insufficient": 0,
+      "pass": 0.976,
+      "qualityFail": 0.024
+    },
+    {
+      "scenario": "unequal repetitions null (1 vs 3, binary)",
+      "n": 20,
+      "drop": 0,
+      "fail": 0.032,
+      "insufficient": 0,
+      "pass": 0.968,
+      "qualityFail": 0.032
+    },
+    {
+      "scenario": "three scorers null (correlated)",
+      "n": 20,
+      "drop": 0,
+      "fail": 0.028,
+      "insufficient": 0,
+      "pass": 0.972,
+      "qualityFail": 0.028
+    },
+    {
+      "scenario": "random failures null (5% both runs)",
+      "n": 20,
+      "drop": 0,
+      "fail": 0.647,
+      "insufficient": 0,
+      "pass": 0.353,
+      "qualityFail": 0.056
+    },
+    {
+      "scenario": "random failures null, budget 2",
+      "n": 20,
+      "drop": 0,
+      "fail": 0.122,
+      "insufficient": 0,
+      "pass": 0.878,
+      "qualityFail": 0.045
+    },
+    {
+      "scenario": "random failures null, reliability 'statistical'",
+      "n": 20,
+      "drop": 0,
+      "fail": 0.058,
+      "insufficient": 0,
+      "pass": 0.942,
+      "qualityFail": 0.056
+    },
+    {
+      "scenario": "failures rise 5% -> 20%, reliability 'strict'",
+      "n": 20,
+      "drop": 0.15,
+      "fail": 0.984,
+      "insufficient": 0,
+      "pass": 0.016,
+      "qualityFail": 0.052
+    },
+    {
+      "scenario": "failures rise 5% -> 20%, reliability 'statistical'",
+      "n": 20,
+      "drop": 0.15,
+      "fail": 0.198,
+      "insufficient": 0,
+      "pass": 0.802,
+      "qualityFail": 0.047
+    },
+    {
+      "scenario": "drop 0.05, continuous",
+      "n": 20,
+      "drop": 0.05,
+      "fail": 0.266,
+      "insufficient": 0,
+      "pass": 0.734,
+      "qualityFail": 0.266
+    },
+    {
+      "scenario": "drop 0.05, binary",
+      "n": 20,
+      "drop": 0.05,
+      "fail": 0.045,
+      "insufficient": 0,
+      "pass": 0.955,
+      "qualityFail": 0.045
+    },
+    {
+      "scenario": "drop 0.1, continuous",
+      "n": 20,
+      "drop": 0.1,
+      "fail": 0.63,
+      "insufficient": 0,
+      "pass": 0.37,
+      "qualityFail": 0.63
+    },
+    {
+      "scenario": "drop 0.1, binary",
+      "n": 20,
+      "drop": 0.1,
+      "fail": 0.089,
+      "insufficient": 0,
+      "pass": 0.911,
+      "qualityFail": 0.089
+    },
+    {
+      "scenario": "skewed drop 0.05 (0.1 vs 0/1 at 5%)",
+      "n": 20,
+      "drop": 0.05,
+      "fail": 0.355,
+      "insufficient": 0,
+      "pass": 0.645,
+      "qualityFail": 0.355
+    },
+    {
+      "scenario": "symmetric null, continuous",
+      "n": 50,
+      "drop": 0,
+      "fail": 0.059,
+      "insufficient": 0,
+      "pass": 0.941,
+      "qualityFail": 0.059
+    },
+    {
+      "scenario": "skewed null (0.1 vs 0/1 at 10%)",
+      "n": 50,
+      "drop": 0,
+      "fail": 0.121,
+      "insufficient": 0,
+      "pass": 0.879,
+      "qualityFail": 0.121
+    },
+    {
+      "scenario": "clustered null (5 clusters)",
+      "n": 50,
+      "drop": 0,
+      "fail": 0.2,
+      "insufficient": 0,
+      "pass": 0.8,
+      "qualityFail": 0.2
+    },
+    {
+      "scenario": "clustered null, clusters declared",
+      "n": 50,
+      "drop": 0,
+      "fail": 0.037,
+      "insufficient": 0,
+      "pass": 0.963,
+      "qualityFail": 0.037
+    },
+    {
+      "scenario": "unequal repetitions null (1 vs 3, binary)",
+      "n": 50,
+      "drop": 0,
+      "fail": 0.035,
+      "insufficient": 0,
+      "pass": 0.965,
+      "qualityFail": 0.035
+    },
+    {
+      "scenario": "three scorers null (correlated)",
+      "n": 50,
+      "drop": 0,
+      "fail": 0.025,
+      "insufficient": 0,
+      "pass": 0.975,
+      "qualityFail": 0.025
+    },
+    {
+      "scenario": "random failures null (5% both runs)",
+      "n": 50,
+      "drop": 0,
+      "fail": 0.926,
+      "insufficient": 0,
+      "pass": 0.074,
+      "qualityFail": 0.056
+    },
+    {
+      "scenario": "random failures null, budget 2",
+      "n": 50,
+      "drop": 0,
+      "fail": 0.451,
+      "insufficient": 0,
+      "pass": 0.549,
+      "qualityFail": 0.062
+    },
+    {
+      "scenario": "random failures null, reliability 'statistical'",
+      "n": 50,
+      "drop": 0,
+      "fail": 0.066,
+      "insufficient": 0,
+      "pass": 0.934,
+      "qualityFail": 0.054
+    },
+    {
+      "scenario": "failures rise 5% -> 20%, reliability 'strict'",
+      "n": 50,
+      "drop": 0.15,
+      "fail": 1,
+      "insufficient": 0,
+      "pass": 0,
+      "qualityFail": 0.053
+    },
+    {
+      "scenario": "failures rise 5% -> 20%, reliability 'statistical'",
+      "n": 50,
+      "drop": 0.15,
+      "fail": 0.624,
+      "insufficient": 0,
+      "pass": 0.376,
+      "qualityFail": 0.054
+    },
+    {
+      "scenario": "drop 0.05, continuous",
+      "n": 50,
+      "drop": 0.05,
+      "fail": 0.5,
+      "insufficient": 0,
+      "pass": 0.5,
+      "qualityFail": 0.5
+    },
+    {
+      "scenario": "drop 0.05, binary",
+      "n": 50,
+      "drop": 0.05,
+      "fail": 0.088,
+      "insufficient": 0,
+      "pass": 0.912,
+      "qualityFail": 0.088
+    },
+    {
+      "scenario": "drop 0.1, continuous",
+      "n": 50,
+      "drop": 0.1,
+      "fail": 0.944,
+      "insufficient": 0,
+      "pass": 0.056,
+      "qualityFail": 0.944
+    },
+    {
+      "scenario": "drop 0.1, binary",
+      "n": 50,
+      "drop": 0.1,
+      "fail": 0.19,
+      "insufficient": 0,
+      "pass": 0.81,
+      "qualityFail": 0.19
+    },
+    {
+      "scenario": "skewed drop 0.05 (0.1 vs 0/1 at 5%)",
+      "n": 50,
+      "drop": 0.05,
+      "fail": 0.503,
+      "insufficient": 0,
+      "pass": 0.497,
+      "qualityFail": 0.503
+    }
+  ],
+  "resampleCheck": [
+    {
+      "trials": 400,
+      "resamples": 20000,
+      "failRate": 0.0425
+    }
+  ]
+}

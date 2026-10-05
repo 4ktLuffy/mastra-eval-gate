@@ -1,0 +1,290 @@
+{
+  "model": "codex gpt-5.6-luna @ effort none",
+  "tickets": 30,
+  "runs": {
+    "SB1": {
+      "id": "b45e0709-c457-4b74-80c5-6a1a25f5c961",
+      "calls": 77,
+      "tokens": 157113,
+      "succeeded": 30,
+      "failed": 0
+    },
+    "SB2": {
+      "id": "e1122c41-f3ed-4e2f-a835-1463e9e4f8c5",
+      "calls": 77,
+      "tokens": 62912,
+      "succeeded": 30,
+      "failed": 0
+    },
+    "SB3": {
+      "id": "2a9bde10-5cea-4771-a5c3-daa8298aa876",
+      "calls": 77,
+      "tokens": 71295,
+      "succeeded": 30,
+      "failed": 0
+    },
+    "SX1": {
+      "id": "3a689bdb-e466-48ab-a839-5bb2a03a0083",
+      "calls": 73,
+      "tokens": 110014,
+      "succeeded": 30,
+      "failed": 0
+    },
+    "SX2": {
+      "id": "d1e47080-a93d-4b0d-b797-c4bab4be59c9",
+      "calls": 73,
+      "tokens": 79052,
+      "succeeded": 30,
+      "failed": 0
+    }
+  },
+  "codex": {
+    "calls": 377,
+    "tokens": 480386,
+    "medianSeconds": 14.821
+  },
+  "noChange": {
+    "pairs": 6,
+    "mastraFlagged": 0,
+    "gateFailed": 0,
+    "gateInsufficient": 0,
+    "gateStatisticalFailed": 0
+  },
+  "regressed": {
+    "pairs": 6,
+    "mastraFlagged": 6,
+    "gateFailed": 6,
+    "gateInsufficient": 0,
+    "gateStatisticalFailed": 6
+  },
+  "results": [
+    {
+      "pair": "SB1->SB2",
+      "truth": "no-change",
+      "mastra": {
+        "hasRegression": false,
+        "delta": 0
+      },
+      "gate": {
+        "verdict": "pass",
+        "reasons": [],
+        "change": 0,
+        "p": 0.7525123743812809,
+        "detects": 0.11921734322549812
+      },
+      "gateStatistical": {
+        "verdict": "pass"
+      }
+    },
+    {
+      "pair": "SB1->SB3",
+      "truth": "no-change",
+      "mastra": {
+        "hasRegression": false,
+        "delta": 0
+      },
+      "gate": {
+        "verdict": "pass",
+        "reasons": [],
+        "change": 0,
+        "p": 0.7479126043697815,
+        "detects": 0.11921734322549812
+      },
+      "gateStatistical": {
+        "verdict": "pass"
+      }
+    },
+    {
+      "pair": "SB2->SB1",
+      "truth": "no-change",
+      "mastra": {
+        "hasRegression": false,
+        "delta": 0
+      },
+      "gate": {
+        "verdict": "pass",
+        "reasons": [],
+        "change": 0,
+        "p": 0.7525123743812809,
+        "detects": 0.11921734322549812
+      },
+      "gateStatistical": {
+        "verdict": "pass"
+      }
+    },
+    {
+      "pair": "SB2->SB3",
+      "truth": "no-change",
+      "mastra": {
+        "hasRegression": false,
+        "delta": 0
+      },
+      "gate": {
+        "verdict": "pass",
+        "reasons": [],
+        "change": 0,
+        "p": 0.7496625168741563,
+        "detects": 0.11921734322549812
+      },
+      "gateStatistical": {
+        "verdict": "pass"
+      }
+    },
+    {
+      "pair": "SB3->SB1",
+      "truth": "no-change",
+      "mastra": {
+        "hasRegression": false,
+        "delta": 0
+      },
+      "gate": {
+        "verdict": "pass",
+        "reasons": [],
+        "change": 0,
+        "p": 0.7479126043697815,
+        "detects": 0.11921734322549812
+      },
+      "gateStatistical": {
+        "verdict": "pass"
+      }
+    },
+    {
+      "pair": "SB3->SB2",
+      "truth": "no-change",
+      "mastra": {
+        "hasRegression": false,
+        "delta": 0
+      },
+      "gate": {
+        "verdict": "pass",
+        "reasons": [],
+        "change": 0,
+        "p": 0.7496625168741563,
+        "detects": 0.11921734322549812
+      },
+      "gateStatistical": {
+        "verdict": "pass"
+      }
+    },
+    {
+      "pair": "SB1->SX1",
+      "truth": "regressed",
+      "mastra": {
+        "hasRegression": true,
+        "delta": -0.2666666666666667
+      },
+      "gate": {
+        "verdict": "fail",
+        "reasons": [
+          "\"action\" is worse by 0.267 on 30 paired items (95% CI of change -0.433 to -0.133; Holm p = 0.005)."
+        ],
+        "change": -0.26666666666666666,
+        "p": 0.004599770011499425,
+        "detects": 0.20418326681894278
+      },
+      "gateStatistical": {
+        "verdict": "fail"
+      }
+    },
+    {
+      "pair": "SB1->SX2",
+      "truth": "regressed",
+      "mastra": {
+        "hasRegression": true,
+        "delta": -0.2666666666666667
+      },
+      "gate": {
+        "verdict": "fail",
+        "reasons": [
+          "\"action\" is worse by 0.267 on 30 paired items (95% CI of change -0.433 to -0.133; Holm p = 0.005)."
+        ],
+        "change": -0.26666666666666666,
+        "p": 0.004849757512124394,
+        "detects": 0.20418326681894278
+      },
+      "gateStatistical": {
+        "verdict": "fail"
+      }
+    },
+    {
+      "pair": "SB2->SX1",
+      "truth": "regressed",
+      "mastra": {
+        "hasRegression": true,
+        "delta": -0.2666666666666667
+      },
+      "gate": {
+        "verdict": "fail",
+        "reasons": [
+          "\"action\" is worse by 0.267 on 30 paired items (95% CI of change -0.433 to -0.133; Holm p = 0.004)."
+        ],
+        "change": -0.26666666666666666,
+        "p": 0.0042997850107494625,
+        "detects": 0.20418326681894272
+      },
+      "gateStatistical": {
+        "verdict": "fail"
+      }
+    },
+    {
+      "pair": "SB2->SX2",
+      "truth": "regressed",
+      "mastra": {
+        "hasRegression": true,
+        "delta": -0.2666666666666667
+      },
+      "gate": {
+        "verdict": "fail",
+        "reasons": [
+          "\"action\" is worse by 0.267 on 30 paired items (95% CI of change -0.433 to -0.133; Holm p = 0.005)."
+        ],
+        "change": -0.26666666666666666,
+        "p": 0.004649767511624419,
+        "detects": 0.20418326681894272
+      },
+      "gateStatistical": {
+        "verdict": "fail"
+      }
+    },
+    {
+      "pair": "SB3->SX1",
+      "truth": "regressed",
+      "mastra": {
+        "hasRegression": true,
+        "delta": -0.2666666666666667
+      },
+      "gate": {
+        "verdict": "fail",
+        "reasons": [
+          "\"action\" is worse by 0.267 on 30 paired items (95% CI of change -0.433 to -0.133; Holm p = 0.004)."
+        ],
+        "change": -0.26666666666666666,
+        "p": 0.003749812509374531,
+        "detects": 0.20418326681894278
+      },
+      "gateStatistical": {
+        "verdict": "fail"
+      }
+    },
+    {
+      "pair": "SB3->SX2",
+      "truth": "regressed",
+      "mastra": {
+        "hasRegression": true,
+        "delta": -0.2666666666666667
+      },
+      "gate": {
+        "verdict": "fail",
+        "reasons": [
+          "\"action\" is worse by 0.267 on 30 paired items (95% CI of change -0.433 to -0.100; Holm p = 0.005)."
+        ],
+        "change": -0.26666666666666666,
+        "p": 0.004549772511374431,
+        "detects": 0.20418326681894278
+      },
+      "gateStatistical": {
+        "verdict": "fail"
+      }
+    }
+  ]
+}

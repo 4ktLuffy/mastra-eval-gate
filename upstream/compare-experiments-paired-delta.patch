@@ -1,0 +1,114 @@
+--- a/packages/core/src/datasets/experiment/analytics/compare.ts
++++ b/packages/core/src/datasets/experiment/analytics/compare.ts
+@@ -130,6 +130,10 @@
+ 
+   if (overlappingItemIds.length === 0) {
+     warnings.push('No overlapping items between experiments.');
++  } else if (overlappingItemIds.length < itemIdsA.size || overlappingItemIds.length < itemIdsB.size) {
++    warnings.push(
++      `Experiments ran different items (${itemIdsA.size} in A, ${itemIdsB.size} in B, ${overlappingItemIds.length} in both). Deltas use items scored in both.`,
++    );
+   }
+ 
+   // Failed runs: items whose every attempt failed, and the score ids of failed attempts
+@@ -176,12 +180,21 @@
+       warnings.push(`Scorer "${scorerId}" has no scores in experiment ${missingIn}; it is not compared.`);
+     }
+ 
+-    // Compute delta and check regression. Floating-point noise from averaging must not trip the
+-    // default zero threshold.
+-    const rawDelta = missingIn ? 0 : statsB.avgScore - statsA.avgScore;
+-    const epsilon = DELTA_EPSILON * Math.max(1, Math.abs(statsA.avgScore), Math.abs(statsB.avgScore));
++    // Compute delta over items scored in both experiments whose target run succeeded in both, and
++    // check regression. Floating-point noise from averaging must not trip the default zero threshold.
++    const pairedItemIds = Object.keys(scorerScoresA).filter(
++      itemId =>
++        scorerScoresA[itemId]?.score != null &&
++        scorerScoresB[itemId]?.score != null &&
++        !failedA.has(itemId) &&
++        !failedB.has(itemId),
++    );
++    const meanA = computeMean(pairedItemIds.map(itemId => scorerScoresA[itemId]!.score));
++    const meanB = computeMean(pairedItemIds.map(itemId => scorerScoresB[itemId]!.score));
++    const rawDelta = missingIn ? 0 : meanB - meanA;
++    const epsilon = DELTA_EPSILON * Math.max(1, Math.abs(meanA), Math.abs(meanB));
+     const delta = Math.abs(rawDelta) < epsilon ? 0 : rawDelta;
+-    const regressed = !missingIn && isRegression(delta, threshold, direction);
++    const regressed = !missingIn && pairedItemIds.length > 0 && isRegression(delta, threshold, direction);
+ 
+     // A scorer that disappeared from the candidate can no longer show a regression, so it fails the quick check
+     if (regressed || missingIn === 'B') {
+@@ -192,6 +205,7 @@
+       statsA,
+       statsB,
+       delta,
++      pairedCount: missingIn ? 0 : pairedItemIds.length,
+       ...(missingIn ? { missingIn } : {}),
+       regressed,
+       threshold,
+--- a/packages/core/src/datasets/experiment/analytics/types.ts
++++ b/packages/core/src/datasets/experiment/analytics/types.ts
+@@ -41,8 +41,15 @@
+   statsA: ScorerStats;
+   /** Stats from experiment B (candidate) */
+   statsB: ScorerStats;
+-  /** avgScore difference: statsB.avgScore - statsA.avgScore (0 when `missingIn` is set) */
++  /**
++   * Mean score difference (B - A) over the items this scorer scored in both experiments and
++   * whose target run did not fail in either. `statsA`/`statsB` still describe each whole
++   * experiment, so `statsB.avgScore - statsA.avgScore` can differ from `delta` when the item
++   * sets differ. 0 when `missingIn` is set.
++   */
+   delta: number;
++  /** Items `delta` is computed over */
++  pairedCount: number;
+   /**
+    * Set when this scorer has no non-null scores in one experiment. Such a scorer is not compared and
+    * never marked `regressed`; when it is missing in B, `hasRegression` is true.
+--- a/packages/core/src/datasets/experiment/analytics/__tests__/compare.test.ts
++++ b/packages/core/src/datasets/experiment/analytics/__tests__/compare.test.ts
+@@ -46,10 +46,24 @@
+     const result = await compare(mastraWith(rows, rows));
+     expect(result.hasRegression).toBe(false);
+     expect(result.scorers.quality!.delta).toBe(0);
++    expect(result.scorers.quality!.pairedCount).toBe(10);
+     expect(result.failedItems).toEqual({ a: 0, b: 0 });
+     expect(result.warnings).toEqual([]);
+   });
+ 
++  it('compares items scored in both experiments when B ran a subset', async () => {
++    const a = ids(10).map((itemId, i) => ({ itemId, scores: { quality: quality(i) } }));
++    // B ran only the hard items, each 0.05 better than A.
++    const b = ids(10)
++      .slice(7)
++      .map(itemId => ({ itemId, scores: { quality: 0.35 } }));
++    const result = await compare(mastraWith(a, b));
++    expect(result.scorers.quality!.pairedCount).toBe(3);
++    expect(result.scorers.quality!.delta).toBeCloseTo(0.05, 10);
++    expect(result.hasRegression).toBe(false);
++    expect(result.warnings[0]).toContain('Experiments ran different items');
++  });
++
+   it('does not treat a scorer missing from one experiment as a score of 0', async () => {
+     const a = ids(5).map(itemId => ({ itemId, scores: { quality: 0.7, harm: 0.4 } }));
+     const b = ids(5).map(itemId => ({ itemId, scores: { quality: 0.7 } }));
+@@ -102,8 +116,9 @@
+     expect(result.failedItems).toEqual({ a: 0, b: 3 });
+     expect(result.scorers.keywords!.statsB.avgScore).toBe(0); // the 1s on failed runs are not counted
+     expect(result.scorers.keywords!.delta).toBe(0);
+-    // Each experiment's own mean: B's is over the 7 easy items it completed, so it looks higher.
+-    expect(result.scorers.quality!.delta).toBeCloseTo(0.18, 10);
++    // Paired over the 7 items both completed, not B's easy-items-only mean against A's full mean.
++    expect(result.scorers.quality!.delta).toBe(0);
++    expect(result.scorers.quality!.pairedCount).toBe(7);
+     expect(result.hasRegression).toBe(false); // not gated unless asked
+     expect(result.warnings).toContain(
+       '3 item(s) failed in experiment B that did not fail in A. A failed run has no comparable score, so score deltas alone can hide this.',
+--- /dev/null
++++ b/.changeset/compare-experiments-paired-delta.md
+@@ -0,0 +1,5 @@
++---
++'@mastra/core': minor
++---
++
++`compareExperiments` computes `delta` over the items scored in both experiments whose target run did not fail in either (new `pairedCount`), instead of subtracting each experiment's own mean. Before, a candidate that ran fewer items, or failed on the hardest ones, was compared on a different set of items and could show a regression or an improvement that came only from the item mix. `statsA` and `statsB` still describe each whole experiment, so `statsB.avgScore - statsA.avgScore` can differ from `delta`. A warning names experiments that ran different items.

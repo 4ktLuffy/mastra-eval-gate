@@ -1,25 +1,30 @@
 # mastra-eval-gate
 
-**A CI gate for Mastra experiments that a crashing agent can't pass.**
+**A CI gate for Mastra experiments that won't approve an agent just because it crashed.**
 
 Mastra's `compareExperiments` answers "did my change make the agent worse?" by comparing average
 scores. Run it on real Mastra experiments and an agent that crashes on its three hardest items
 comes out *better* (0.72 → 0.90, no regression, no warning), because failed runs leave the average
 and nothing counts them. This package compares the same stored experiments item by item, counts
-failures as failures, and decides on a test with a known false-alarm rate.
+failures as failures, refuses to pass when there is nothing to compare, and decides quality on a
+test whose false-alarm rate is measured, including where it breaks.
 
 ```
 $ npx tsx examples/crash-demo.ts
 Mastra compareExperiments: hasRegression=false, quality 0.72 → 0.90 (delta +0.18), errorRate 0, warnings []
 (the candidate failed 3 of 10 items)
 
-FAIL  baseline <experiment id>  →  candidate <experiment id>
-  ✗ 3 item(s) fail in the candidate that passed in the baseline (0 fixed); allowed net 0.
+FAIL  baseline <id>  →  candidate <id>
+  ✗ 3 item(s) fail in the candidate that passed in the baseline; allowed 0 (0 fixed, which do not offset). …
   ! "quality": 3 item(s) scored in the baseline have no score in the candidate because the target failed; …
+
+Items:
+  new-failure <item id>  run failure rate: 0.00 → 1.00
+  …
 ```
 
 **What it found in Mastra** (details and intent labels in [FINDINGS.md](FINDINGS.md); every number
-comes from a script in this repo, run on `@mastra/core` 1.74.0):
+comes from a script in this repo):
 
 - **Crashes raise scores.** Failed runs are still scored, with empty input and output. Three of
   Mastra's prebuilt code scorers (keyword-coverage, textual-difference, tone) give them a perfect
@@ -28,18 +33,22 @@ comes from a script in this repo, run on `@mastra/core` 1.74.0):
 - **Different item sets, missing scorers, repeated trials.** A candidate that is better on every
   item it ran is flagged as a regression when it ran fewer items. A scorer missing from one run
   counts as a mean of 0. Only the last of several attempts is kept.
-- **The default flags half of all no-change comparisons.** With zero tolerance, 38.6–51.7% of
-  simulated comparisons between two runs of the *same* system are flagged; this gate flags
-  0.9–5.2% (at most 5.7% when the true drop equals a non-zero tolerance).
-- **On a real model too.** A Mastra agent and judge on Codex, 30 problems, the same configuration
-  run three times: Mastra flagged 3 of 6 comparisons, the gate none. With a 20 s item timeout
-  (7 of 30 items timed out), Mastra reported no regression in 2 of 4 comparisons and showed
-  accuracy *improving* by 0.12; the gate failed all 4. On a real regression (reasoning effort
-  lowered from medium to none: 30/30 → 13/30 correct) both flag it; the gate with
-  p = 5e-5 and a 95% interval for the drop. Over all 20 real no-change comparisons, the gate
-  failed 1 (5%) and Mastra flagged 10 (50%).
+- **On a real model, half of all no-change comparisons are flagged.** Across 20 comparisons of a
+  Codex-backed Mastra agent against itself, Mastra flagged 10; this gate failed 1, passed 17, and
+  reported insufficient evidence on 2 (its judge had errored). With a realistic 20 s item timeout
+  (7 of 30 items timed out), Mastra showed accuracy *improving* by 0.12 in two comparisons; the
+  gate failed all four.
+- **On a customer-style workload** (a support agent with refund and escalate tools; one policy
+  rule deleted as the regression), both catch the regression (29/30 → 21/30, gate p ≈ 0.004) and
+  neither false-alarms: that agent was nearly deterministic, so this run shows the gate isn't
+  over-cautious, not that it beats Mastra. The regressed agent called the (simulated) refund tool
+  for orders up to $881 that the policy says to escalate.
 
 ## Use it
+
+```bash
+npm install mastra-eval-gate
+```
 
 ```ts
 import { gate, formatReport } from 'mastra-eval-gate';
@@ -47,26 +56,30 @@ import { gate, formatReport } from 'mastra-eval-gate';
 const result = await gate(mastra, {
   baseline: baselineExperimentId,
   candidate: candidateExperimentId,
+  expectedScorers: ['faithfulness', 'toxicity'],
   thresholds: { faithfulness: { value: 0.05 }, toxicity: { value: 0.05, direction: 'lower-is-better' } },
 });
 console.log(formatReport(result));
-if (!result.passed) process.exit(1);
+if (result.verdict !== 'pass') process.exit(1);
 ```
 
-Or in CI, against the module that exports your configured `mastra` (TypeScript is loaded directly):
+From a shell or CI, against the module that exports your configured `mastra` (TypeScript is loaded
+directly):
 
 ```bash
-npx mastra-eval-gate --mastra src/mastra/index.ts --baseline <id> --candidate <id> --threshold faithfulness=0.05
+npx mastra-eval-gate --mastra src/mastra/index.ts --baseline <id> --candidate <id> --expect faithfulness --threshold faithfulness=0.05
 ```
 
-It exits 1 on a failed gate, with one line per reason. `--json` prints the full result.
+Exit codes: 0 pass, 1 fail, 3 insufficient evidence, 2 usage error. `--json` prints the full
+result. [`examples/ci/eval-gate.yml`](examples/ci/eval-gate.yml) is a GitHub Actions workflow to
+copy, with [`examples/ci/run-candidate.ts`](examples/ci/run-candidate.ts).
 
-Or in a Vitest test, next to Mastra's own `expectEvals`:
+In a Vitest test, next to Mastra's own `expectEvals`:
 
 ```ts
 import { expectGate } from 'mastra-eval-gate/vitest';
 
-test('candidate is not worse than the baseline', async () => {
+test('no evidence the candidate is worse than the baseline', async () => {
   await expectGate(mastra, { baseline, candidate, thresholds: { accuracy: { value: 0.05 } } }).toPass();
 });
 ```
@@ -74,90 +87,103 @@ test('candidate is not worse than the baseline', async () => {
 A failed gate throws `GateFailedError` with the full report as its message. After
 `registerGateMatchers()`, `expect(await gate(mastra, { baseline, candidate })).toPassEvalGate()` works too.
 
-## What it checks
+## What the verdict means
 
-The gate fails, with a reason, on any of:
+| Verdict | Means |
+|---|---|
+| `pass` | **No evidence of a regression** at this sample size. Not proof that quality is fine: the report's `detects` column says how large a drop the comparison could have missed. |
+| `fail` | A quality regression (significant, beyond your tolerance), a reliability regression, or a scorer the candidate lost. |
+| `insufficient` | No verdict is possible: no scorer with valid scores on shared items, an unfinished experiment, a scorer outage, items the candidate didn't run, scores that overflow, or too few paired items for the test to ever be significant. |
 
 | Check | How |
 |---|---|
-| **Quality regression** per scorer | Change over items scored in both runs (repeated attempts averaged per item), one-sided paired sign-flip test against your tolerance, Holm-adjusted across scorers, 95% bootstrap interval |
-| **Reliability** | Items that newly fail in the candidate (target errors and timeouts) beyond `maxNewTargetFailures` (default 0); exact McNemar p reported |
-| **Coverage** | Items the baseline scored that the candidate's scorer silently didn't (scorer error, skipped, or a non-finite score); baseline items the candidate never ran (`allowSubset` to accept); no shared items at all |
-| **Missing scorer** | A scorer that ran in the baseline but not the candidate |
+| **Quality** per scorer | Mean change over items scored in both runs (repeated attempts averaged, scores of failed runs excluded and matched to their attempt), one-sided paired sign-flip test against your tolerance, Holm-adjusted across scorers; 95% bootstrap interval (descriptive) |
+| **Reliability** | Per-item failure rate (target errors, timeouts). `'strict'` (default): fail when the gross increase exceeds `maxNewTargetFailures` (default 0); fixed items don't offset broken ones. `'statistical'`: also require the increase to be significant (exact McNemar). |
+| **Missing scorer** | A scorer with scores in the baseline and none in the candidate fails; one in `expectedScorers` that never ran anywhere is insufficient. |
+| **Coverage** | Scores the candidate's scorer lost relative to the baseline, per successful attempt (error, skipped, non-finite), beyond `maxCoverageLoss`; or baseline items the candidate didn't run (`allowSubset` to accept): insufficient. |
 
-Scores that scorers produce for failed runs are excluded from quality (`includeScoresOfFailedRuns`
-to keep them) and counted under reliability instead; each score is matched to its own attempt
-(Mastra encodes it in caller-driven score ids), so a crashed attempt's score is dropped even when a
-retry of the item succeeded. A drop beyond tolerance that is within noise is reported as
-inconclusive, with the smallest drop the dataset could have detected, and with fewer than 6 paired
-items the gate says plainly that the test can never reach p < 0.05.
+Options: `thresholds`, `expectedScorers`, `alpha` (0.05), `reliability` (`'strict'` | `'statistical'`), `maxNewTargetFailures` (0), `maxCoverageLoss` (0),
+`clusters` (item id → cluster id), `allowSubset`, `requireCompleted` (true), `seed`, `resamples`
+(20000), `includeScoresOfFailedRuns`, `midP`, `itemDetail` (10). Invalid values throw.
 
-## What it does not do (measured)
+## Where it breaks (measured)
 
-From `bench/power.ts` (2000 simulated comparisons per cell, table in
-[results/power.md](results/power.md)):
+The whole gate, simulated end to end in [`bench/gate-sim.ts`](bench/gate-sim.ts) (1000 trials per
+cell, table in [results/gate-sim.md](results/gate-sim.md)). FAIL rate when nothing got worse:
 
-- **Pairing gave no extra power here.** An unpaired rule given an oracle cut-off detects real
-  drops slightly more often (pass/fail scores, 20 items, drop 0.2: 32.1% vs 25.8%). That cut-off
-  needs the true noise model, which a user doesn't have; the gate gets 5% false alarms without it.
-- **Small pass/fail datasets can't see small drops.** With 20 items, no calibrated rule here
-  detects a 0.2 drop more than ~36% of the time. The gate warns when a non-zero tolerance is
-  below what the dataset can detect, and when there are too few items to detect anything.
-- The exact test is conservative on discrete scores (0.9–3.5% false alarms with no change).
-- **Mastra's tool mocks did not shrink the noise much** in the real tool-using run (items needed to
-  detect a 0.1 drop: 176 live, 162 mocked); the model's own run-to-run variance dominated. `midP: true` recovers
-  power but reached 6.65% false alarms at the tolerance boundary, so it is opt-in.
+| Situation | 20 items | 50 items | What to do |
+|---|---|---|---|
+| Symmetric noise (the test's assumption) | 5.5% | 5.9% | nothing |
+| Unequal repetitions (1 vs 3 attempts, pass/fail) | 3.2% | 3.5% | nothing |
+| Three correlated scorers (Holm) | 2.8% | 2.5% | nothing |
+| **Skewed changes** (constant 0.1 vs 0/1 at 10%, same mean) | **12.2%** | **12.1%** | average repeated attempts; no test option fixes it (see below) |
+| **Correlated items** (5 clusters), undeclared | **12.0%** | **20.0%** | pass `clusters`: 2.4%, 3.7% |
+| **Random target failures, 5% in both runs**, `'strict'` | **64.7%** | **92.6%** | `reliability: 'statistical'`: 5.8%, 6.6% |
+
+The price of `'statistical'`: when failures really rise from 5% to 20%, it catches 19.8% (20 items)
+or 62.4% (50 items) of cases; `'strict'` catches 98.4–100%. Pick by whether a crash is a defect in your
+product or background noise from your provider.
+
+Power is limited by dataset size, not by the test: a 0.1 drop in pass/fail scores is caught 8.9–19.0%
+of the time with 20–50 items (63.0–94.4% for continuous scores). From the earlier simulation ([results/power.md](results/power.md)), an
+unpaired rule with an oracle cut-off was no less powerful than pairing here; the gate's value is
+calibrated false alarms without knowing the noise, plus failure, coverage and missing-scorer
+handling. Mastra's tool mocks did not reduce noise much in a real tool-using run (items needed for a
+0.1 drop: 176 live, 162 mocked).
 
 ## The upstream fixes
 
-Two patches against Mastra `main` (`b2e9cd46`, 2026-10-05), each verified in a full checkout with
+Three patches against Mastra `main` (`b2e9cd46`, 2026-10-05), each verified in a full checkout with
 Mastra's own tests, type check, Prettier, and a changeset:
 
-- [`upstream/compare-experiments.patch`](upstream/compare-experiments.patch) (`@mastra/core`):
-  deltas over items scored in both runs and not failed in either, `missingIn` for absent scorers
-  (and `hasRegression` when the candidate lost one), averaged attempts, a `failedItems` count with
-  an opt-in gate on newly failed items, and a relative float-noise guard. `delta` changes meaning
-  (see [FINDINGS.md](FINDINGS.md#the-fix)). Its test passes 10/10 and fails 10/10 on the original;
-  all 465 core dataset tests pass.
-- [`upstream/empty-judge-verdicts.patch`](upstream/empty-judge-verdicts.patch) (`@mastra/evals`):
-  LLM scorers error when the judge returns no verdicts for extracted items, instead of scoring;
-  toxicity scores no verdicts 0, not 1. Its test passes 7/7 and fails 6/7 on the original; all 601
-  evals tests pass.
+- [`compare-experiments-failed-runs.patch`](upstream/compare-experiments-failed-runs.patch)
+  (`@mastra/core`, bug fixes, no field changes meaning): scores of failed runs left out (matched to
+  their attempt with Mastra's `experimentScoreId`), attempts averaged, `missingIn` for absent
+  scorers, `failedItems` with a warning and an opt-in gate, a float-noise guard. Tests through the
+  real experiment runner; 11 tests pass, fail 11/11 on the original; all 466 core dataset tests pass.
+- [`compare-experiments-paired-delta.patch`](upstream/compare-experiments-paired-delta.patch)
+  (on top of the first; changes what `delta` means, so it is separate for the maintainers to
+  decide): `delta` over items scored in both runs. All 467 core dataset tests pass.
+- [`empty-judge-verdicts.patch`](upstream/empty-judge-verdicts.patch) (`@mastra/evals`): bias,
+  hallucination, faithfulness and answer-relevancy error when the judge returns no verdicts for
+  extracted items, instead of scoring. Test passes 6/6, fails 5/6 on the original; all 600 evals
+  tests pass. (Toxicity's "no verdicts → 1" is left as an open question: no verdicts can't tell
+  "nothing toxic" from "the judge failed".)
 
-To check them: clone `mastra-ai/mastra`, `git checkout b2e9cd46`, `git apply` the patch,
-`pnpm install`, `pnpm turbo build --filter "@mastra/evals^..."`, then run `pnpm vitest run` and
+To check them: clone `mastra-ai/mastra`, `git checkout b2e9cd46`, `git apply` the patch(es),
+`pnpm install`, `pnpm turbo build --filter "@mastra/evals^..."`, then `pnpm vitest run` and
 `pnpm typecheck` (core) or `pnpm check` (evals) in the package.
 
 ## Reproduce
 
 ```bash
-npm install
-npm run build                 # the CLI test runs dist/cli.js
-npm test                      # 45 tests: unit, real Mastra experiments, CLI over LibSQL
-npx tsx bench/power.ts        # M1 simulation → results/power.{json,md}
-npx tsx bench/real.ts         # real run on Codex (~300 calls; needs the Codex CLI signed in)
-npx tsx bench/real-effort.ts  # real regression: effort medium vs none (60 calls)
-npx tsx bench/real-mocks.ts   # live tool vs Mastra toolMocks, 3 runs each (~390 calls)
+npm install && npm run build
+npm test                        # unit, real Mastra experiments, CLI over LibSQL
+npx tsx bench/gate-sim.ts       # the whole gate, simulated → results/gate-sim.{json,md}
+npx tsx bench/power.ts          # test-level simulation → results/power.{json,md}
+npx tsx bench/regate.ts         # re-gate every saved real run, offline → results/real/regate.*
 npx tsx examples/crash-demo.ts
 cd evidence/phase0 && npm install && node g5_prebuilt.mjs   # each finding has a gN.mjs script
 ```
 
-Apart from `bench/real.ts`, no API keys and no network calls: models are scripted mocks
-(`ai/test`), so every run is deterministic. `bench/real.ts` calls the Codex CLI (no API key) through
-`bench/codex-model.ts`, an AI SDK model adapter, and saves every output so its verdicts can be
-recomputed without calling it again. `evidence/pilot/` holds the fault-injection pilot that came first, including copies
-of three Mastra templates (Apache-2.0, © Mastra) used to test them under faults.
+Real-model runs (Codex CLI signed in, no API key; every output is saved in `results/real/`, so
+their verdicts can be recomputed without calling Codex again): `bench/real.ts` (no-change and
+timeouts, ~300 calls), `bench/real-effort.ts` (a real regression, 60), `bench/real-mocks.ts` (tool
+mocks, ~390), `bench/real-support.ts` (customer-style benchmark, ~375). They run through
+`bench/codex-model.ts`, an AI SDK model adapter for the Codex CLI, with tool calling.
+`evidence/pilot/` holds the fault-injection pilot that came first, including copies of three Mastra
+templates (Apache-2.0, © Mastra).
 
 ## Layout
 
 | Path | What |
 |---|---|
-| `src/compare.ts` | Paired, error-aware comparison over stored rows (pure) |
-| `src/stats.ts` | Sign-flip, McNemar, Holm, bootstrap, minimum detectable effect |
-| `src/load.ts`, `src/cli.ts`, `src/report.ts` | Mastra storage loader, CLI, text report |
-| `test/` | Unit tests, real-Mastra integration tests (old verdict vs gate), CLI end-to-end |
-| `bench/power.ts` | False-alarm and power simulation |
+| `src/compare.ts` | Verdict, quality/reliability/coverage checks over stored rows (pure) |
+| `src/stats.ts` | Sign-flip (exact, Monte Carlo, mid-p), McNemar, Holm, bootstrap, minimum detectable effect |
+| `src/load.ts`, `src/cli.ts`, `src/report.ts`, `src/vitest.ts` | Mastra loader, CLI, text report, Vitest helpers |
+| `test/` | Unit tests, real-Mastra integration tests (Mastra's verdict vs the gate's), CLI end-to-end |
+| `bench/` | Simulations, real-model runs, re-gating |
 | `evidence/` | One script per finding, with raw outputs and negative controls |
-| `FINDINGS.md`, `PLAN.md`, `REVIEWS.md` | Findings with intent labels; the plan and the reviews that changed it |
+| `FINDINGS.md`, `PLAN.md`, `REVIEWS.md`, `CHANGELOG.md` | Findings with intent labels; the plan and the reviews that changed it |
 
 MIT licensed.

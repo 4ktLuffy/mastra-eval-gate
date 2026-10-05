@@ -1,0 +1,48 @@
+# Copy to .github/workflows/eval-gate.yml in a Mastra project.
+#
+# On every pull request: run the candidate experiment against the same dataset as the baseline,
+# then gate it. Assumes a persistent Mastra storage (LibSQL/Turso, Postgres, ...) reachable from CI
+# via secrets, and a baseline experiment id kept in a repository variable (update it when you
+# accept a new baseline, e.g. after merging to main).
+#
+# Exit codes: 0 pass, 1 fail, 3 insufficient evidence (treated as a failure below), 2 usage error.
+name: eval-gate
+
+on:
+  pull_request:
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.MASTRA_DATABASE_URL }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }} # or whichever model provider your agent uses
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      # Runs your agent over the dataset and prints the new experiment id (see run-candidate.ts).
+      - name: Run candidate experiment
+        id: candidate
+        run: echo "id=$(npx tsx scripts/run-candidate.ts)" >> "$GITHUB_OUTPUT"
+
+      - name: Gate against the baseline
+        run: >
+          npx mastra-eval-gate
+          --mastra src/mastra/index.ts
+          --baseline ${{ vars.EVAL_BASELINE_EXPERIMENT_ID }}
+          --candidate ${{ steps.candidate.outputs.id }}
+          --expect answer-relevancy --expect tool-call-accuracy
+          --threshold answer-relevancy=0.05
+          | tee gate-report.txt
+
+      - name: Upload the report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-gate-report
+          path: gate-report.txt

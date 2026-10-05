@@ -80,6 +80,12 @@ export function signFlipPValue(
   return (below + (midP ? 0.5 : 1) * tied + 1) / (resamples + 1);
 }
 
+/** Smallest p-value the exact sign-flip tests can return with n non-zero differences. */
+export const smallestSignFlipP = (n: number) => 2 ** -n;
+
+/** Fewest non-zero paired differences for which a sign-flip test can reach p < alpha. */
+export const minimumItemsForAlpha = (alpha: number) => Math.floor(Math.log2(1 / alpha)) + 1;
+
 /** Percentile bootstrap interval for the mean of `xs`. */
 export function bootstrapMeanCI(
   xs: readonly number[],
@@ -153,11 +159,14 @@ export function normalQuantile(p: number): number {
 }
 
 /**
- * Approximate minimum detectable regression for a one-sided paired test:
- * (z_{1-alpha} + z_{power}) * sd(diffs) / sqrt(n). A normal approximation; the
- * simulation in bench/ measures how close it is for small n and bounded scores.
+ * Approximate smallest true drop the gate would flag with the given power: the tolerance plus
+ * (z_{1-alpha} + z_{power}) * sd(diffs) / sqrt(n), where `alpha` should already be the per-test
+ * level (e.g. alpha / number of scorers, Holm's worst case). A normal approximation that uses the
+ * observed SD; NaN when it can't be estimated (n < 2 or SD 0), Infinity when n is too small for
+ * the exact test to reach `alpha` at all.
  */
-export function minimumDetectableEffect(diffSd: number, n: number, alpha = 0.05, power = 0.8): number {
-  if (n < 2 || !Number.isFinite(diffSd)) return Number.NaN;
-  return ((normalQuantile(1 - alpha) + normalQuantile(power)) * diffSd) / Math.sqrt(n);
+export function minimumDetectableEffect(diffSd: number, n: number, alpha = 0.05, power = 0.8, tolerance = 0): number {
+  if (n > 0 && smallestSignFlipP(n) >= alpha) return Number.POSITIVE_INFINITY;
+  if (n < 2 || !Number.isFinite(diffSd) || diffSd === 0) return Number.NaN;
+  return tolerance + ((normalQuantile(1 - alpha) + normalQuantile(power)) * diffSd) / Math.sqrt(n);
 }

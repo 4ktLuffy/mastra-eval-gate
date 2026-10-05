@@ -22,6 +22,8 @@ export async function loadExperimentRows(mastra: Mastra, experimentId: string): 
 
   return {
     id: experimentId,
+    status: (experiment as { status?: string }).status ?? null,
+    datasetVersion: (experiment as { datasetVersion?: number | null }).datasetVersion ?? null,
     results: results.results.map(r => ({ itemId: r.itemId, attempt: (r as { attempt?: number }).attempt ?? null, error: r.error ?? null })),
     scores: scoreRows.scores.map(s => ({ scorerId: s.scorerId, entityId: s.entityId, score: s.score, attempt: attemptFromScoreId(s.id, s.entityId, s.scorerId) })),
   };

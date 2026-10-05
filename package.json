@@ -1,6 +1,6 @@
 {
   "name": "mastra-eval-gate",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A trustworthy CI gate for Mastra experiments: paired, error-aware comparison with uncertainty.",
   "keywords": [
     "mastra",
@@ -40,7 +40,8 @@
     "dist",
     "README.md",
     "LICENSE",
-    "FINDINGS.md"
+    "FINDINGS.md",
+    "CHANGELOG.md"
   ],
   "engines": {
     "node": ">=20"
@@ -48,7 +49,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "vitest run",
-    "typecheck": "tsc -p tsconfig.json --noEmit && tsc --noEmit --module NodeNext --moduleResolution NodeNext --target ES2022 --strict --skipLibCheck bench/*.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc --noEmit --module NodeNext --moduleResolution NodeNext --target ES2022 --strict --skipLibCheck bench/*.ts test/*.ts",
     "prepublishOnly": "npm run build && npm test"
   },
   "dependencies": {

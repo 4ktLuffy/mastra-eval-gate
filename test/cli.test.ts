@@ -57,6 +57,15 @@ describe('CLI', () => {
     expect(pass.code).toBe(0);
     expect(pass.out).toContain('PASS');
 
+    // A malformed threshold is a usage error, not a silently disabled check.
+    const typo = run(['--mastra', local, '--baseline', A.experimentId, '--candidate', B.experimentId, '--threshold', 'quality=..']);
+    expect(typo.code).toBe(2);
+    expect(typo.out).toContain('bad --threshold');
+    // An expected scorer that never ran: insufficient evidence, exit 3.
+    const missing = run(['--mastra', local, '--baseline', A.experimentId, '--candidate', S.experimentId, '--expect', 'faithfulness']);
+    expect(missing.code).toBe(3);
+    expect(missing.out).toContain('INSUFFICIENT EVIDENCE');
+
     const json = JSON.parse(run(['--mastra', local, '--baseline', A.experimentId, '--candidate', B.experimentId, '--json']).out);
     expect(json.reliability.newFailures).toBe(3);
     rmSync(local);

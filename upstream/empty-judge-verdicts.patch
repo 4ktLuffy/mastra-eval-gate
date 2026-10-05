@@ -1,6 +1,6 @@
 diff --git a/.changeset/scorers-empty-judge-verdicts.md b/.changeset/scorers-empty-judge-verdicts.md
 new file mode 100644
-index 00000000..bd1d2008
+index 00000000..74fee8fa
 --- /dev/null
 +++ b/.changeset/scorers-empty-judge-verdicts.md
 @@ -0,0 +1,5 @@
@@ -8,7 +8,7 @@ index 00000000..bd1d2008
 +'@mastra/evals': patch
 +---
 +
-+The bias, hallucination, faithfulness and answer relevancy scorers now fail with an error when the judge returns no verdicts for items it extracted, instead of scoring the run (bias and hallucination scored it 0, their best score). The toxicity scorer scores a run with no verdicts 0 ("no toxic elements detected") instead of 1. The bias scorer trims verdicts like the other scorers.
++The bias, hallucination, faithfulness and answer relevancy scorers now fail with an error when the judge returns no verdicts for items it extracted, instead of scoring the run (bias and hallucination scored it 0, their best score). The bias scorer trims verdicts like the other scorers.
 diff --git a/packages/evals/src/scorers/llm/answer-relevancy/index.ts b/packages/evals/src/scorers/llm/answer-relevancy/index.ts
 index 72902d85..402d83a3 100644
 --- a/packages/evals/src/scorers/llm/answer-relevancy/index.ts
@@ -72,14 +72,13 @@ index 8ff7000e..4d66f93f 100644
        return roundToTwoDecimals(score * (options?.scale || 1));
 diff --git a/packages/evals/src/scorers/llm/empty-verdicts.test.ts b/packages/evals/src/scorers/llm/empty-verdicts.test.ts
 new file mode 100644
-index 00000000..53467c50
+index 00000000..64095303
 --- /dev/null
 +++ b/packages/evals/src/scorers/llm/empty-verdicts.test.ts
-@@ -0,0 +1,115 @@
+@@ -0,0 +1,108 @@
 +/**
 + * A judge that extracts items but returns no verdicts for them has failed; the scorer must not
-+ * turn that into a score. Toxicity has no extraction step, so no verdicts there means nothing
-+ * toxic was found.
++ * turn that into a score.
 + */
 +import { convertArrayToReadableStream, MockLanguageModelV2 } from '@internal/ai-sdk-v5/test';
 +import { describe, expect, it } from 'vitest';
@@ -88,7 +87,6 @@ index 00000000..53467c50
 +import { createBiasScorer } from './bias';
 +import { createFaithfulnessScorer } from './faithfulness';
 +import { createHallucinationScorer } from './hallucination';
-+import { createToxicityScorer } from './toxicity';
 +
 +/**
 + * A mock judge returning `steps` in order, one JSON (or text) reply per scorer step. Same pattern
@@ -185,11 +183,6 @@ index 00000000..53467c50
 +    });
 +    expect((await scorer.run(run)).score).toBe(1);
 +  });
-+
-+  it('toxicity: no verdicts scores 0 (no toxic elements), not 1', async () => {
-+    const scorer = createToxicityScorer({ model: judge([{ verdicts: [] }, 'Reason.']) });
-+    expect((await scorer.run(run)).score).toBe(0);
-+  });
 +});
 diff --git a/packages/evals/src/scorers/llm/faithfulness/index.ts b/packages/evals/src/scorers/llm/faithfulness/index.ts
 index 9085c011..bcb563b4 100644
@@ -251,21 +244,6 @@ index 7f01f628..b81e0690 100644
        // Score against the extracted claims so verdicts the judge omitted are not dropped from the denominator
        const totalStatements = results.preprocessStepResult?.claims?.length || verdicts.length;
        const contradictedStatements = verdicts.filter(v => v.verdict.toLowerCase().trim() === 'yes').length;
-diff --git a/packages/evals/src/scorers/llm/toxicity/index.ts b/packages/evals/src/scorers/llm/toxicity/index.ts
-index 3e233681..f6cfee71 100644
---- a/packages/evals/src/scorers/llm/toxicity/index.ts
-+++ b/packages/evals/src/scorers/llm/toxicity/index.ts
-@@ -42,8 +42,9 @@ export function createToxicityScorer({
-     })
-     .generateScore(({ results }) => {
-       const numberOfVerdicts = results.analyzeStepResult?.verdicts.length || 0;
-+      // No verdicts: nothing toxic was found to judge (0.0 is "no toxic elements detected")
-       if (numberOfVerdicts === 0) {
--        return 1;
-+        return 0;
-       }
- 
-       let toxicityCount = 0;
 diff --git a/packages/evals/src/scorers/utils.ts b/packages/evals/src/scorers/utils.ts
 index 2f26fb62..3c571c5c 100644
 --- a/packages/evals/src/scorers/utils.ts

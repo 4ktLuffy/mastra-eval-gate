@@ -54,7 +54,7 @@ export function lastInteger(text: string): number | null {
 }
 
 /** All items of a Mastra dataset (listItems pages 20 at a time by default, and may return an array). */
-export async function allItems(ds: { listItems(args?: { perPage?: number }): Promise<unknown> }): Promise<Array<{ id: string; input: unknown }>> {
-  const r = (await ds.listItems({ perPage: 1000 })) as Array<{ id: string; input: unknown }> | { items: Array<{ id: string; input: unknown }> };
+export async function allItems(ds: { listItems(args?: { perPage?: number }): Promise<unknown> }): Promise<Array<{ id: string; input: unknown; groundTruth?: unknown }>> {
+  const r = (await ds.listItems({ perPage: 1000 })) as Array<{ id: string; input: unknown; groundTruth?: unknown }> | { items: Array<{ id: string; input: unknown; groundTruth?: unknown }> };
   return Array.isArray(r) ? r : r.items;
 }

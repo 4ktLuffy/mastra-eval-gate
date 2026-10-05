@@ -115,11 +115,14 @@ R1–R4 are the same configuration run four times, so every comparison between t
 R5 is the same configuration with `itemTimeout: 20_000`; in R1–R3, 21 of 90 items took longer than
 20 s (median 15.0 s, max 47.4 s), so the timeout sits at about the 77th percentile.
 
-| Comparison | Mastra `hasRegression` | gate failed |
-|---|---|---|
-| No change, no failures (R1–R3, 6 ordered pairs) | **3 of 6** | 0 of 6 |
-| No change, but R4 had 2 Codex calls that never returned (6 pairs with R4) | 3 of 6 | 3 of 6 (the 3 with R4 as candidate, for the 2 failures) |
-| 7 of 30 items time out (R5 vs each of R1–R4) | **2 of 4** | 4 of 4 |
+| Comparison | Mastra `hasRegression` | gate (0.2.0) fail, default `'strict'` | gate `'statistical'` |
+|---|---|---|---|
+| No change, no failures (R1–R3, 6 ordered pairs) | **3 of 6** | 0 of 6 | 0 of 6 |
+| No change, but R4 had 2 Codex calls that never returned (6 pairs with R4) | 3 of 6 | 3 of 6 (the 3 with R4 as candidate) | 0 of 6 |
+| 7 of 30 items time out (R5 vs each of R1–R4) | **2 of 4** | 4 of 4 | 3 of 4 |
+
+Gate verdicts in this section are from 0.2.0, recomputed offline from the saved rows by
+`bench/regate.ts` (`results/real/regate.md`); 0.1.0 gave the same fail counts here.
 
 - **Real noise.** With nothing changed, exact-answer accuracy moved by up to 3 items in 30 between
   runs (R1 0.467, R2 0.400, R3 0.500). Mastra's zero-tolerance rule flagged half of the clean
@@ -189,11 +192,47 @@ serve the correct output through Mastra's `toolMocks`. Exact-answer scorer, 387 
   that mocks make small datasets usable here.
 - **The gate false-alarmed once** (M2 → M3: *worse by 0.200 on 30 paired items, 95% CI −0.367 to
   −0.033, Holm p = 0.035*), with nothing changed. Across all 20 real no-change comparisons in this
-  repository (R1–R3, B1↔B2, L1–L3, M1–M3), **the gate failed 1 (5%) and Mastra flagged 10 (50%)**,
-  matching the simulation.
+  repository (R1–R3, B1↔B2, L1–L3, M1–M3), re-gated with 0.2.0: **the gate failed 1 (5%), passed
+  17, and reported insufficient evidence on 2** (B1↔B2, where the Codex judge errored on an item in
+  each run); **Mastra flagged 10 (50%)**.
 - **What a 30-item dataset can see.** With noise like this, a 0.1 drop needs about 160–180 items;
   30 items reliably see only drops of about 0.23 (the gate's `minimumDetectable` in the effort run).
   The gate reports that number instead of passing silently.
+
+### A customer-style benchmark (no difference between the two, here)
+
+`bench/real-support.ts` and `bench/support-tickets.ts`, specified in the file header before running
+(workload, seeded regression, runs, decision rules); `results/real/SB1-3.json`, `SX1-2.json`,
+`support-summary.json`. A support agent for an online shop on Codex (`gpt-5.6-luna`, effort none)
+answers 30 seeded tickets with three tools (`lookupOrder`, `issueRefund`, `escalate`) under a
+four-rule refund policy. The `action` scorer checks the refund/escalate calls against the policy.
+The seeded regression deletes rule 2 ("orders over $100 must be escalated"), which only the 8
+escalate tickets can feel. 377 Codex calls, 480,386 tokens.
+
+| | runs | accuracy | Mastra flagged | gate (0.2.0) |
+|---|---|---|---|---|
+| baseline | SB1, SB2, SB3 | 29/30 each | 0 of 6 no-change pairs | 6 pass |
+| rule 2 deleted | SX1, SX2 | 21/30 each | 6 of 6 | 6 fail (change −0.267, Holm p ≈ 0.004) |
+
+- **This workload does not separate the tools.** The agent was almost deterministic here, so there
+  was no noise for Mastra's zero-tolerance rule to trip on, and the regression turned out to be the
+  largest the deleted rule could cause (all 8 escalate tickets lost), not a modest one. Both catch
+  it; neither false-alarms. What it does show: the gate is not over-cautious on a realistic
+  workload, catching a real policy regression with 30 tickets at p ≈ 0.004 while passing every
+  no-change pair (its estimate of the smallest drop it could catch here was 0.12–0.20).
+- **The baseline's one miss per run was a claimed action that never happened.** Each baseline run
+  got one escalate ticket wrong, a different one each time, and each time the agent told the
+  customer it had escalated ("I've escalated your refund request to a human agent") without
+  calling `escalate`. A judge reading only the reply would have passed it.
+- **The regression issued refunds the policy forbids.** Without rule 2, the agent called the refund
+  tool for over-$100 orders it should have escalated ($482, $499, $872, $881 in SX1) and declined
+  others. The tool is simulated (it returns an acknowledgement), so no money moved; in production it
+  would have.
+- **The scorer in this run checked tool names, not arguments** (a second review, gpt-6-astra, showed
+  `issueRefund` on the wrong order followed by `escalate` would score 1). The saved accuracies use
+  that scorer. `bench/real-support.ts` now checks the order id, the refund amount, and that exactly
+  one action was taken, and saves full tool calls; a dry run on 4 tickets scored as expected. The
+  saved run was not repeated.
 
 ## Judge-side finding: empty verdict lists score silently (simplification)
 
@@ -208,13 +247,18 @@ judge failures from the mean, so the fix makes it a scorer error.
 
 **Fixed in `upstream/empty-judge-verdicts.patch`** (base `b2e9cd46`): bias, hallucination,
 faithfulness and answer-relevancy throw when the judge returns no verdicts for items it extracted
-(the same treatment Mastra already gives a structured-output validation failure); toxicity, which
-has no extraction step, scores no verdicts as 0, matching its docs ("0.0: No toxic elements
-detected"; the `return 1` dates from the scorer's first version, `e473f27ed9`, July 2025, with no test
-covering it); bias trims verdicts. A new test (`scorers/llm/empty-verdicts.test.ts`, Mastra's own
-mock-judge pattern) passes 7/7 and fails 6/7 on the original scorers (the seventh is the
-nothing-extracted control). In the full checkout, all 601 `@mastra/evals` tests pass (including
-the recorded-LLM scorer tests), `tsc --noEmit` passes, Prettier is clean, and it has a changeset.
+(the same treatment Mastra already gives a structured-output validation failure); bias trims
+verdicts. A new test (`scorers/llm/empty-verdicts.test.ts`, Mastra's own mock-judge pattern) passes
+6/6 and fails 5/6 on the original scorers (the sixth is the nothing-extracted control). In the full
+checkout, all 600 `@mastra/evals` tests pass (including the recorded-LLM scorer tests), `tsc
+--noEmit` passes, Prettier is clean, and it has a changeset.
+
+**Toxicity is left as an open question, not patched.** Its `return 1` on no verdicts dates from the
+scorer's first version (`e473f27ed9`, July 2025) with no test covering it, and the docs say "0.0: No
+toxic elements detected". But toxicity has no extraction step, so an empty verdict list can't tell
+"nothing to judge" (a terse answer like "42") from "the judge failed". An earlier version of the
+patch changed it to 0; the second review (gpt-6-astra) objected, and making it an error would break
+every short answer, so it is raised for the maintainers instead.
 
 ## Side findings
 
@@ -229,58 +273,89 @@ the recorded-LLM scorer tests), `tsc --noEmit` passes, Prettier is clean, and it
 - **Filed already, reproduced here:** in-band stream errors never advance the model fallback chain
   (#21280, fallback called 0 times vs once for a thrown error), and parallel tool results are held
   until the slowest tool finishes (#21902, a fast result delayed ~2.7 s).
-- **LibSQL file store with concurrent experiment items** raised `SQLITE_BUSY` once in this repo's
-  CLI test. Not yet reproduced in isolation.
+- **Experiments on a local LibSQL file fail at Mastra's default concurrency.** `evidence/sqlite-busy.ts`:
+  a 20-item experiment with `startExperiment` (default `maxConcurrency` 5) against
+  `LibSQLStore({ url: 'file:…' })` failed in 4 of 5 trials with `SQLITE_BUSY` (extended code
+  `SQLITE_BUSY_SNAPSHOT`) from `ExperimentsLibSQL.updateExperiment`; `maxConcurrency` 4 succeeded
+  5 of 5 in an earlier run, 8 failed 5 of 5. Raising `connectionTimeoutMs` (the store's busy
+  timeout) to 30 s did not help (5 of 5 failed), consistent with a WAL snapshot conflict, which a busy
+  timeout cannot resolve (a read transaction that later writes). @mastra/core 1.74.0, @mastra/libsql
+  1.25.0, mocked agent. The closest report, #4959 (2025, memory writes, closed), is a different
+  code path. Not investigated further.
 
 ## The fix
 
-`upstream/compare-experiments.patch` (base `b2e9cd46`, current `main` on 2026-10-05). New fields are additive, but two existing
-ones change meaning, on purpose:
+Two patches for `@mastra/core` against `main` at `b2e9cd46` (2026-10-05), split so the maintainers
+can take the bug fixes without the change in meaning:
 
-- **`delta` changes meaning**: it is now the mean change over items scored in both experiments
-  whose target run did not fail in either (new `pairedCount`). `statsA`/`statsB` still describe
-  each whole experiment, so `statsB.avgScore − statsA.avgScore` can differ from `delta`; the type
-  docs say so. A warning names differing item sets.
-- **`hasRegression` is also true when a scorer has no scores in B** (previously true or false
-  depending on the scorer's direction). The scorer gets `missingIn: 'A' | 'B'`, `delta: 0`, never
-  `regressed`. A scorer whose rows are all null counts as missing.
-- Repeated attempts are averaged per item. An item whose attempts mix null and a score counts as
-  scored.
+**`upstream/compare-experiments-failed-runs.patch`**: bug fixes, no existing field changes meaning.
+- Scores of failed target runs are left out of the stats. Each score is matched to its attempt with
+  Mastra's own `experimentScoreId(experimentId, itemId, attempt, scorerId)`, so a retried item keeps
+  only its successful attempts; a score with another id is matched to its item's only run.
+- Repeated attempts are averaged per item instead of last-one-wins.
+- A scorer with no scores in one experiment gets `missingIn: 'A' | 'B'`, `delta: 0`, never
+  `regressed`; one missing in B sets `hasRegression` (before, true or false by direction).
 - `failedItems: { a, b }` (items whose every attempt failed, the rule `finalizeExperiment` uses), a
-  warning for items that newly failed in B, and an opt-in `maxFailedItemIncrease` on newly failed
-  items.
-- Deltas smaller than 1e-9 relative to the scores' magnitude are treated as 0, so averaging noise
-  can't trip the zero default (mean(0.9, 0.1, 0.2) − 0.4 ≈ −1e-16; at a 1.2e7 scale the noise is
-  1.9e-9, which an absolute guard would flag).
+  warning naming newly failed items, and an opt-in `maxFailedItemIncrease`.
+- Deltas below 1e-9 relative to the scores' magnitude are treated as 0, so averaging noise can't
+  trip the zero default.
+- Tests: the unit test, plus `compare-experiments-failed-runs.test.ts`, which runs real experiments
+  through Mastra's runner (`startExperiment`, and `runExperimentItem` with two attempts per item):
+  11 tests pass, and all 11 fail on the original files. Note what this patch alone still does: an
+  agent that crashes on its hardest items still shows a higher mean for a scorer that errors on
+  failures (+0.18 in the unit test), with a warning and `failedItems`; the pairing below removes it.
 
-Verified in a full checkout of Mastra `main` at `b2e9cd46` (2026-10-05), where the patch applies
-cleanly: its test (`analytics/__tests__/compare.test.ts`) passes 10/10 and fails 10/10 on the
-original files (the float-noise test also fails if the guard is made absolute); all 465 tests in
-`packages/core/src/datasets` pass, including the existing caller-driven experiment tests that call
-`compareExperiments`; `pnpm typecheck` for `@mastra/core` passes; Prettier is clean; and it carries
-a changeset. An independent review (Claude Sonnet) found 8 problems in the first version of the
-patch, including a type error in `buildEmptyResult`; all are fixed and each has a test.
+**`upstream/compare-experiments-paired-delta.patch`** (on top of the first): **`delta` changes
+meaning**, from the difference of each experiment's own mean to the mean change over items scored
+in both experiments whose target run did not fail in either (new `pairedCount`). `statsA`/`statsB`
+still describe each whole experiment, so `statsB.avgScore − statsA.avgScore` can differ from
+`delta`; the type docs and changeset say so, and it is marked a minor change.
+
+Both verified in a full checkout of `b2e9cd46`: they apply in sequence and give exactly the tested
+files; all 466 (first) and 467 (both) tests in `packages/core/src/datasets` pass, including
+Mastra's caller-driven experiment tests that call `compareExperiments`; `pnpm typecheck` passes;
+Prettier is clean; each has a changeset. Two independent reviews shaped them: Claude Sonnet found 8
+problems in the first version (including a type error in `buildEmptyResult`), and Codex gpt-6-astra
+found that a failed attempt's score was still averaged after a successful retry and that the change
+in `delta`'s meaning belonged in its own patch.
 
 ## The gate, and what it does not do
 
-`src/` adds what a CI gate needs on top of the fix (and goes further than the patch: a candidate
-that skipped baseline items, disjoint item sets, and non-finite scores fail coverage; a score is
-matched to its own attempt, so a crashed attempt's score is dropped even when a retry succeeded): a one-sided paired sign-flip test per scorer
-(Holm-adjusted across scorers), a bootstrap interval for the change, an exact McNemar test for new
-failures, scores of failed runs excluded from quality (counted under reliability instead), and the
-smallest regression the dataset can detect.
+`src/` adds what a CI gate needs beyond the fix: a verdict of pass / fail / **insufficient**
+(empty or unscored runs, unfinished experiments, scorer outages, skipped items and too few items
+never pass), validated options, per-item failure rates with `'strict'` or `'statistical'`
+reliability, a one-sided paired sign-flip test per scorer (Holm-adjusted), optional `clusters`, an
+approximate minimum detectable effect, and the items behind the verdict. 0.2.0 exists because a
+review of 0.1.0 (Codex gpt-6-astra, REVIEWS.md) found that empty experiments and NaN thresholds
+passed; CHANGELOG.md lists what changed.
 
-Measured in `bench/power.ts`, including two negative results:
+`PASS` means *no evidence of a regression at this sample size*, not that quality is fine.
 
-- False alarms when nothing changed (tolerance 0): **0.9–5.2%** for the gate vs 38.6–51.7% for the
-  default rule. When the true drop equals a non-zero tolerance, the gate's exact test peaks at 5.7%.
+Measured on the whole gate (`bench/gate-sim.ts`, `results/gate-sim.md`, 1000 trials per cell), FAIL
+rate with nothing worse:
+
+- Symmetric noise 5.5–5.9%; unequal repetitions 3.2–3.5%; three correlated scorers 2.5–2.8%.
+- **Skewed changes** (a constant 0.1 against 0/1 at 10%, same mean): **12.1–12.2%**. The sign-flip
+  test assumes symmetric changes under no regression, and this breaks it. **A mistake, caught in
+  review:** 0.2.0 drafts added a "studentized" sign-flip test to fix this, and a simulation seemed
+  to show it behaving differently. Codex gpt-6-astra pointed out that under sign flips the sum of
+  squares is fixed, so the t-statistic is a monotonic function of the sum and the two tests give
+  identical p-values; the simulation's differences came only from using different random seeds per
+  test. The option was removed. No fix for skew is offered; averaging repeated attempts reduces it.
+- **Correlated items** (5 clusters) undeclared: **12.0–20.0%**; declared through `clusters`: 2.4–3.7%.
+- **Random target failures** at 5% in both runs: `'strict'` fails **64.7–92.6%** of comparisons, by
+  design (any extra failure fails); `'statistical'` 5.8–6.6%. When failures really rise from 5% to
+  20%, `'statistical'` catches 19.8–62.4% (20–50 items) and `'strict'` 98.4–100%.
+- Power is set by sample size: a 0.1 drop in pass/fail scores is caught 8.9–19.0% of the time with
+  20–50 items; a 0.1 drop in continuous scores 63.0–94.4%.
+
+From the earlier test-level simulation (`bench/power.ts`):
+
 - **No power gain from pairing in this simulation.** An unpaired rule given an oracle cut-off
   (taken from the simulated null, which users can't know) detects real drops slightly more often,
   e.g. pass/fail scores, 20 items, drop 0.2: 32.1% vs the gate's 25.8%. The gate's value is
   controlled false alarms without knowing the noise, plus correct handling of failures, coverage
   and missing scorers, not extra power.
-- **The exact test is conservative on discrete scores** (0.9–3.5% false alarms with no change). An opt-in mid-p
-  version recovers power (25.8% → 36.0% above) but reached 6.65% false alarms when the true drop
-  equals the tolerance, so it is not the default.
-- Small pass/fail datasets cannot see small drops with any calibrated rule: with 20 items, at most
-  ~36% detection of a 0.2 drop. The gate says so instead of passing silently.
+- **The exact test is conservative on discrete scores** (0.9–3.5% false alarms with no change). An
+  opt-in mid-p version recovers power (25.8% → 36.0% above) but reached 6.65% false alarms when the
+  true drop equals the tolerance, so it is not the default.

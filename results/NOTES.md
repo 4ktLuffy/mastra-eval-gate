@@ -72,3 +72,26 @@ each with a test (test/compare.test.ts "review fixes", test/load.test.ts, test/m
 - toolMocks: flips 12/30, paired SD 0.512, N 162; Mastra 3/6, gate 1/6 (M2→M3 p=0.035, false alarm).
 - Negative: mocks barely reduce noise; model variance dominates; agent retries hid the tool flakiness.
 - All real no-change pairs: gate 1/20, Mastra 10/20.
+
+## 2026-10-05 — 0.2.0 (after the gpt-6-astra review)
+- Whole-gate simulation (bench/gate-sim.ts): symmetric 4.8–5.5%; skewed 10.9–11.1% (studentized did
+  not fix: 11.6–13.2%, negative); clustered undeclared 12.6–22.5%, declared 3.2–4.2%; random 5%
+  failures strict 63.9–90.0%, statistical 4.5–7.6%; failures 5%→20% statistical catches 23–68%,
+  strict 99–100%.
+- Saved real runs re-gated (bench/regate.ts): 20 clean no-change pairs → 17 pass, 1 fail (M2→M3),
+  2 insufficient (B1↔B2 judge outage). Mastra 10/20 flagged.
+- Support benchmark (bench/real-support.ts; Codex gpt-5.6-luna @ none; 377 calls, 480,386 tokens):
+  baselines 29/30 ×3, rule-2-deleted 21/30 ×2. Mastra 0/6 no-change flagged, 6/6 regressed flagged;
+  gate same (p ≈ 0.004). No separation: nearly deterministic agent, maximal regression. Baseline misses
+  were claimed escalations without the tool call; regression issued forbidden refunds up to $881.
+
+## 2026-10-05 — third review (gpt-6-astra on 0.2.0 drafts) and fixes
+- Found: test/mastra.test.ts didn't load (duplicate const; my check grepped only the Tests line);
+  unscored baseline / all-null / all-NaN passed; `constructor` scorer id disabled the threshold;
+  attempt-level scorer outages read as improvements; cluster-id collision; overflow passed;
+  unbounded resamples; studentized test identical to plain (my sim used different seeds per test);
+  support scorer checked tool names only; "moved real money" false. All fixed or corrected; 65 tests.
+- Whole-gate sim rerun (studentized removed): symmetric 5.5/5.9, skewed 12.2/12.1, clustered
+  12.0/20.0 → declared 2.4/3.7, random-failures strict 64.7/92.6 → statistical 5.8/6.6.
+- SQLITE_BUSY reproduced: default maxConcurrency 5 → 4/5 experiments fail (BUSY_SNAPSHOT in
+  updateExperiment); 30 s busy timeout doesn't help.

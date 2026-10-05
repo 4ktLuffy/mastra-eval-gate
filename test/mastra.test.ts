@@ -13,10 +13,11 @@ import {
 } from '@mastra/evals/scorers/prebuilt';
 import { describe, expect, it } from 'vitest';
 import { gate } from '../src/index.js';
+import { allItems } from '../bench/real-dataset.js';
 import { dataset, mastraWith, mockAgent, qualityScorer } from './helpers.js';
 
 const hardIsLow = (n: number) => (n >= 8 ? 0.3 : 0.9);
-const crashesOnHard = (n: number) => (n >= 8 ? 'throw' : 'ok') as const;
+const crashesOnHard = (n: number): 'throw' | 'ok' => (n >= 8 ? 'throw' : 'ok');
 
 describe('target failures (G5)', () => {
   it('negative control: identical agents pass both', async () => {
@@ -83,7 +84,7 @@ describe('item sets, missing scorers, repeated attempts', () => {
     const m = mastraWith({ a: mockAgent('a', undefined, hardIsLow), b: mockAgent('b', undefined, n => hardIsLow(n) + 0.05) });
     const ds = await dataset(m);
     const A = await ds.startExperiment({ targetType: 'agent', targetId: 'a', scorers: [qualityScorer()] });
-    const { items } = await ds.listItems();
+    const items = await allItems(ds);
     const subset = items
       .filter(i => Number(String(i.input).slice(1)) >= 8)
       .map(i => ({ id: i.id, input: i.input, groundTruth: i.groundTruth }));
@@ -97,8 +98,11 @@ describe('item sets, missing scorers, repeated attempts', () => {
     expect(ours.scorers.quality!.pairedN).toBe(3);
     expect(ours.scorers.quality!.change).toBeCloseTo(0.05, 10);
     expect(ours.scorers.quality!.regressed).toBe(false);
-    expect(ours.reasons.map(r => r.kind)).toEqual(['coverage']);
-    expect((await gate(m, { baseline: A.experimentId, candidate: B.experimentId, allowSubset: true })).passed).toBe(true);
+    expect(ours.verdict).toBe('insufficient');
+    expect(ours.reasons.map(r => r.kind)).toEqual(['coverage', 'too-few-items']);
+    // Accepting the subset still leaves 3 paired items, too few for any verdict at alpha 0.05.
+    const accepted = await gate(m, { baseline: A.experimentId, candidate: B.experimentId, allowSubset: true });
+    expect(accepted.reasons.map(r => r.kind)).toEqual(['too-few-items']);
   });
 
   it('G3: a scorer dropped from the candidate is a missing scorer, not a mean of 0', async () => {
@@ -120,8 +124,8 @@ describe('item sets, missing scorers, repeated attempts', () => {
   it('G4: repeated attempts are averaged, not last-one-wins', async () => {
     const flaky = (_n: number, call: number) => [0.9, 0.1, 0.2][call] ?? 0.2;
     const m = mastraWith({ a: mockAgent('a', undefined, () => 0.4), b: mockAgent('b', undefined, flaky) }, { quality: qualityScorer() });
-    const ds = await dataset(m, 4);
-    const { items } = await ds.listItems();
+    const ds = await dataset(m, 6);
+    const items = await allItems(ds);
     const run = async (target: string, attempts: number) => {
       const { experimentId } = await ds.createExperiment({ targetType: 'agent', targetId: target, scorers: ['quality'] });
       for (const item of items) for (let attempt = 0; attempt < attempts; attempt++) await ds.runExperimentItem({ experimentId, itemId: item.id, attempt });
@@ -148,7 +152,7 @@ describe('item sets, missing scorers, repeated attempts', () => {
     const zeroOnMissing = qualityScorer('quality', { onMissing: 'zero' });
     const m = mastraWith({ a: mockAgent('a', undefined, () => 0.9), b }, { quality: zeroOnMissing });
     const ds = await dataset(m, 6);
-    const { items } = await ds.listItems();
+    const items = await allItems(ds);
     const run = async (target: string, attempts: number) => {
       const { experimentId } = await ds.createExperiment({ targetType: 'agent', targetId: target, scorers: ['quality'] });
       for (const item of items) for (let attempt = 0; attempt < attempts; attempt++) await ds.runExperimentItem({ experimentId, itemId: item.id, attempt });

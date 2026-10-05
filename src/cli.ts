@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
  * mastra-eval-gate --mastra <module> --baseline <experimentId> --candidate <experimentId>
- *   [--threshold scorer=0.05[:lower]] [--alpha 0.05] [--max-new-failures 0] [--max-coverage-loss 0]
- *   [--mid-p] [--json]
+ *   [--threshold scorer=0.05[:lower]] [--expect scorer] [--alpha 0.05] [--reliability strict|statistical]
+ *   [--max-new-failures 0] [--max-coverage-loss 0] [--allow-subset] [--mid-p] [--json]
  *
  * <module> must export a configured `mastra` instance (default export or named `mastra`). A
  * TypeScript module (.ts/.mts/.cts/.tsx), such as a Mastra project's src/mastra/index.ts, is
  * loaded through tsx, so no build step or wrapper is needed.
- * Exit code: 0 pass, 1 fail, 2 usage or load error.
+ * Exit code: 0 pass, 1 fail, 2 usage or load error, 3 insufficient evidence.
  */
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -34,6 +34,9 @@ async function main(): Promise<number> {
       baseline: { type: 'string' },
       candidate: { type: 'string' },
       threshold: { type: 'string', multiple: true },
+      expect: { type: 'string', multiple: true },
+      reliability: { type: 'string' },
+      'allow-subset': { type: 'boolean' },
       alpha: { type: 'string' },
       'max-new-failures': { type: 'string' },
       'max-coverage-loss': { type: 'string' },
@@ -43,7 +46,9 @@ async function main(): Promise<number> {
     },
   });
   if (values.help || !values.mastra || !values.baseline || !values.candidate) {
-    console.error('usage: mastra-eval-gate --mastra <module> --baseline <id> --candidate <id> [--threshold scorer=0.05[:lower]] [--json]');
+    console.error(
+      'usage: mastra-eval-gate --mastra <module> --baseline <id> --candidate <id> [--threshold scorer=0.05[:lower]] [--expect scorer] [--reliability strict|statistical] [--json]',
+    );
     return 2;
   }
 
@@ -56,25 +61,43 @@ async function main(): Promise<number> {
 
   const thresholds: Record<string, ScorerThreshold> = {};
   for (const t of values.threshold ?? []) {
-    const m = t.match(/^([^=]+)=([\d.]+)(?::(lower|higher))?$/);
+    const m = t.match(/^([^=]+)=(\d+(?:\.\d+)?|\.\d+)(?::(lower|higher))?$/);
     if (!m) {
       console.error(`bad --threshold "${t}" (expected scorer=0.05 or scorer=0.05:lower)`);
       return 2;
     }
     thresholds[m[1]!] = { value: Number(m[2]), direction: m[3] === 'lower' ? 'lower-is-better' : 'higher-is-better' };
   }
+  const num = (name: string, x: string | undefined) => {
+    if (x === undefined) return undefined;
+    const n = Number(x);
+    if (x.trim() === '' || !Number.isFinite(n)) throw new TypeError(`--${name} must be a number (got "${x}")`);
+    return n;
+  };
 
-  const result = await gate(mastra, {
-    baseline: values.baseline,
-    candidate: values.candidate,
-    thresholds,
-    alpha: values.alpha ? Number(values.alpha) : undefined,
-    maxNewTargetFailures: values['max-new-failures'] ? Number(values['max-new-failures']) : undefined,
-    maxCoverageLoss: values['max-coverage-loss'] ? Number(values['max-coverage-loss']) : undefined,
-    midP: values['mid-p'],
-  });
+  let result;
+  try {
+    result = await gate(mastra, {
+      baseline: values.baseline,
+      candidate: values.candidate,
+      thresholds,
+      expectedScorers: values.expect,
+      reliability: values.reliability as 'strict' | 'statistical' | undefined,
+      alpha: num('alpha', values.alpha),
+      maxNewTargetFailures: num('max-new-failures', values['max-new-failures']),
+      maxCoverageLoss: num('max-coverage-loss', values['max-coverage-loss']),
+      allowSubset: values['allow-subset'],
+      midP: values['mid-p'],
+    });
+  } catch (e) {
+    if (e instanceof TypeError) {
+      console.error(e.message);
+      return 2;
+    }
+    throw e;
+  }
   console.log(values.json ? JSON.stringify(result, null, 2) : formatReport(result));
-  return result.passed ? 0 : 1;
+  return result.verdict === 'pass' ? 0 : result.verdict === 'fail' ? 1 : 3;
 }
 
 main().then(
