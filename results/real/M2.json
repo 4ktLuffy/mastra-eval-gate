@@ -1,0 +1,527 @@
+{
+  "name": "M2",
+  "condition": "toolMocks",
+  "tool": {
+    "calls": 0,
+    "errors": 0
+  },
+  "rows": {
+    "id": "ffbae2ca-3b7e-444d-a5f9-80883c9cafa9",
+    "results": [
+      {
+        "itemId": "efc15a16-9748-4197-92cb-656fa4886fbe",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "c21c0496-31bb-48a8-8257-1ab5df055d5a",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "cab1c8e8-59ec-4d49-a619-3063f9fb485e",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "dc4dc2e8-2944-4984-9c54-aa86ea69c78e",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "a9096047-c637-4b46-897b-461edd7fcae1",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "a812eeac-1d5c-448c-b7cf-595f88b21c18",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "a379a2fc-4dd5-4586-b4da-a2f46d990865",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "99e40ec8-5407-40f7-aff9-9c6d7f63c3fd",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "86416c75-203b-43f2-ad66-27b13eb2a20c",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "85d26873-30e1-4dca-bd46-64cb6c835e13",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "8582d36e-88e3-489a-bd79-a2bd1b106ee5",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "7fe114ac-99e7-4ee4-8103-bd1a0d4fad9f",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "7f1e714c-1b8b-4c87-bb96-a16b120faa94",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "7c1db182-8fd2-454e-80d3-1ffc9d43b5b4",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "641232bb-ed13-46d1-8326-83ee8e492ad7",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "51df217e-1ce4-4e48-a9db-088bbff9d1cd",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "47d8b432-3384-46e7-8ea9-7805c318569a",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "3ed6607a-da43-4cbb-8f82-ebb83264db64",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "3d58a9af-a6e0-49c7-9a3c-bde13b0614aa",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "3d45a6b3-9344-42a8-98f4-17cb4caf997b",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "3a7d3c0b-e1b5-4f28-b732-cf479c761a82",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "38294477-606f-435a-ba13-9e8e98c3af0c",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "309c6e44-643c-4b79-8866-ca2b12f67034",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "29cba34b-c9fd-4a70-9fe8-e7b5732bbc58",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "2474a01b-83d1-4db3-99c4-53284fbdf8c4",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "239a292e-e947-450f-a035-0fe117809eb9",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "1b7c7668-f8b1-41c9-90c4-a7eb706bec25",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "156a3897-52b9-48b4-88c7-a9b7443cc16e",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "135ca2ad-7a40-4464-812d-f2eb1b6e688c",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "0cb9e0bf-effe-4e57-be58-8b25f916323e",
+        "attempt": 0,
+        "error": null
+      }
+    ],
+    "scores": [
+      {
+        "scorerId": "exact",
+        "entityId": "dc4dc2e8-2944-4984-9c54-aa86ea69c78e",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "c21c0496-31bb-48a8-8257-1ab5df055d5a",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "efc15a16-9748-4197-92cb-656fa4886fbe",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "cab1c8e8-59ec-4d49-a619-3063f9fb485e",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "a9096047-c637-4b46-897b-461edd7fcae1",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "a812eeac-1d5c-448c-b7cf-595f88b21c18",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "a379a2fc-4dd5-4586-b4da-a2f46d990865",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "99e40ec8-5407-40f7-aff9-9c6d7f63c3fd",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "86416c75-203b-43f2-ad66-27b13eb2a20c",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "85d26873-30e1-4dca-bd46-64cb6c835e13",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "7fe114ac-99e7-4ee4-8103-bd1a0d4fad9f",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "8582d36e-88e3-489a-bd79-a2bd1b106ee5",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "7f1e714c-1b8b-4c87-bb96-a16b120faa94",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "7c1db182-8fd2-454e-80d3-1ffc9d43b5b4",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "641232bb-ed13-46d1-8326-83ee8e492ad7",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "51df217e-1ce4-4e48-a9db-088bbff9d1cd",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "47d8b432-3384-46e7-8ea9-7805c318569a",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "3ed6607a-da43-4cbb-8f82-ebb83264db64",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "3d45a6b3-9344-42a8-98f4-17cb4caf997b",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "3d58a9af-a6e0-49c7-9a3c-bde13b0614aa",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "3a7d3c0b-e1b5-4f28-b732-cf479c761a82",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "309c6e44-643c-4b79-8866-ca2b12f67034",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "38294477-606f-435a-ba13-9e8e98c3af0c",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "29cba34b-c9fd-4a70-9fe8-e7b5732bbc58",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "2474a01b-83d1-4db3-99c4-53284fbdf8c4",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "239a292e-e947-450f-a035-0fe117809eb9",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "1b7c7668-f8b1-41c9-90c4-a7eb706bec25",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "135ca2ad-7a40-4464-812d-f2eb1b6e688c",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "156a3897-52b9-48b4-88c7-a9b7443cc16e",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "0cb9e0bf-effe-4e57-be58-8b25f916323e",
+        "score": 1,
+        "attempt": null
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "itemId": "efc15a16-9748-4197-92cb-656fa4886fbe",
+      "text": "10",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "dc4dc2e8-2944-4984-9c54-aa86ea69c78e",
+      "text": "The warehouse ends with 105 parcels. 30 + (7 × 11) − 2 = 105.",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "cab1c8e8-59ec-4d49-a619-3063f9fb485e",
+      "text": "After discarding 1 coin: 33 − 1 = 32. Keeping one of 4 equal shares: 32 ÷ 4 = 8. Adding crates: 3×7 + 3×4 = 33. Final: 41 coins.",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "c21c0496-31bb-48a8-8257-1ab5df055d5a",
+      "text": "82",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "a9096047-c637-4b46-897b-461edd7fcae1",
+      "text": "Starting with 74: double to 148, ship 25 → 123, discard 3 → 120, keep one-fourth → 30, discard 2 → 28, keep one-fourth → 7. Final number: 7",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "a812eeac-1d5c-448c-b7cf-595f88b21c18",
+      "text": "185",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "a379a2fc-4dd5-4586-b4da-a2f46d990865",
+      "text": "Start with 24. After shipping 3: 21. Discard 1: 20; split into 4 and keep one room: 5. Discard 1: 4; split into 4 and keep one room: 1. Final number: 1",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "99e40ec8-5407-40f7-aff9-9c6d7f63c3fd",
+      "text": "15",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "86416c75-203b-43f2-ad66-27b13eb2a20c",
+      "text": "Start with 31 apples.\n\n5×12 = 60 and 4×4 = 16, so 31 + 60 + 16 = 107.\nDoubling twice: 107×2×2 = 428.\nNo damaged apples are removed. Splitting equally into 4 rooms gives 428÷4 = 107 apples per room. Keeping one room leaves **107** apples.\n\n107",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "85d26873-30e1-4dca-bd46-64cb6c835e13",
+      "text": "87",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "8582d36e-88e3-489a-bd79-a2bd1b106ee5",
+      "text": "48",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "7fe114ac-99e7-4ee4-8103-bd1a0d4fad9f",
+      "text": "3",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "7f1e714c-1b8b-4c87-bb96-a16b120faa94",
+      "text": "After receiving 44 parcels: 20 + 44 = 64. Each of the three rounds divides equally among 4 rooms and keeps one share, so 64 ÷ 4 ÷ 4 ÷ 4 = 1 parcel.\n\n1",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "7c1db182-8fd2-454e-80d3-1ffc9d43b5b4",
+      "text": "25",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "641232bb-ed13-46d1-8326-83ee8e492ad7",
+      "text": "91",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "51df217e-1ce4-4e48-a9db-088bbff9d1cd",
+      "text": "70",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "47d8b432-3384-46e7-8ea9-7805c318569a",
+      "text": "The warehouse starts with 52 books. It receives 4 × 6 = 24 books, giving 76. Doubling twice gives 304, and shipping 11 leaves **293 books**.\n\n293",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "3ed6607a-da43-4cbb-8f82-ebb83264db64",
+      "text": "10",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "3d58a9af-a6e0-49c7-9a3c-bde13b0614aa",
+      "text": "29",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "3d45a6b3-9344-42a8-98f4-17cb4caf997b",
+      "text": "166",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "3a7d3c0b-e1b5-4f28-b732-cf479c761a82",
+      "text": "63 - 3 + (5 × 7) - 3 = 92; 92 ÷ 4 = 23. Final number: 23",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "38294477-606f-435a-ba13-9e8e98c3af0c",
+      "text": "122",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "309c6e44-643c-4b79-8866-ca2b12f67034",
+      "text": "4",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "29cba34b-c9fd-4a70-9fe8-e7b5732bbc58",
+      "text": "113",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "2474a01b-83d1-4db3-99c4-53284fbdf8c4",
+      "text": "128",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "239a292e-e947-450f-a035-0fe117809eb9",
+      "text": "792",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "1b7c7668-f8b1-41c9-90c4-a7eb706bec25",
+      "text": "112",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "156a3897-52b9-48b4-88c7-a9b7443cc16e",
+      "text": "29 - 4 - 1 + (5 × 4) = 44 chairs. 44",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "135ca2ad-7a40-4464-812d-f2eb1b6e688c",
+      "text": "The final number of parcels is 39.",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "0cb9e0bf-effe-4e57-be58-8b25f916323e",
+      "text": "36 - 2 - 2 = 32; 32 ÷ 4 = 8. Final number: 8",
+      "toolCalls": 1,
+      "error": null
+    }
+  ]
+}

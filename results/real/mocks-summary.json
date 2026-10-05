@@ -1,0 +1,165 @@
+{
+  "model": "codex gpt-5.6-luna @ effort none",
+  "flakiness": "30% of live lookupStock calls throw (simulated)",
+  "codex": {
+    "calls": 387,
+    "tokens": 557468,
+    "medianSeconds": 15.22
+  },
+  "runs": {
+    "L1": {
+      "id": "7c94abd0-3d42-4506-a31c-ce76a96c1056",
+      "failed": 0
+    },
+    "L2": {
+      "id": "307eaca3-7c54-4935-b91d-9e55b85550a6",
+      "failed": 0
+    },
+    "L3": {
+      "id": "eea2bb5b-7a03-49d3-b3ff-b432ca48dc77",
+      "failed": 0
+    },
+    "M1": {
+      "id": "50c7b4b2-6bba-4a14-8714-a74e2625de2d",
+      "failed": 0
+    },
+    "M2": {
+      "id": "ffbae2ca-3b7e-444d-a5f9-80883c9cafa9",
+      "failed": 0
+    },
+    "M3": {
+      "id": "21129ff5-bc0c-4f3d-ad7e-f7e365a47c18",
+      "failed": 0
+    }
+  },
+  "live": {
+    "itemsWithFlippingOutcome": "13 of 30",
+    "meanAccuracy": [
+      0.4,
+      0.36666666666666664,
+      0.5333333333333333
+    ],
+    "failedItems": [
+      0,
+      0,
+      0
+    ],
+    "noChangePairs": {
+      "total": 6,
+      "mastraFlagged": 3,
+      "gateFailed": 0
+    },
+    "pairedSd": 0.5330523604452749,
+    "itemsToDetect0_1Drop": 176,
+    "pairs": [
+      {
+        "pair": "L1->L2",
+        "mastraRegression": true,
+        "mastraDelta": -0.03333333333333338,
+        "gatePassed": true,
+        "reasons": []
+      },
+      {
+        "pair": "L1->L3",
+        "mastraRegression": false,
+        "mastraDelta": 0.1333333333333333,
+        "gatePassed": true,
+        "reasons": []
+      },
+      {
+        "pair": "L2->L1",
+        "mastraRegression": false,
+        "mastraDelta": 0.03333333333333338,
+        "gatePassed": true,
+        "reasons": []
+      },
+      {
+        "pair": "L2->L3",
+        "mastraRegression": false,
+        "mastraDelta": 0.16666666666666669,
+        "gatePassed": true,
+        "reasons": []
+      },
+      {
+        "pair": "L3->L1",
+        "mastraRegression": true,
+        "mastraDelta": -0.1333333333333333,
+        "gatePassed": true,
+        "reasons": []
+      },
+      {
+        "pair": "L3->L2",
+        "mastraRegression": true,
+        "mastraDelta": -0.16666666666666669,
+        "gatePassed": true,
+        "reasons": []
+      }
+    ]
+  },
+  "mocked": {
+    "itemsWithFlippingOutcome": "12 of 30",
+    "meanAccuracy": [
+      0.5666666666666667,
+      0.6333333333333333,
+      0.43333333333333335
+    ],
+    "failedItems": [
+      0,
+      0,
+      0
+    ],
+    "noChangePairs": {
+      "total": 6,
+      "mastraFlagged": 3,
+      "gateFailed": 1
+    },
+    "pairedSd": 0.5115397431910053,
+    "itemsToDetect0_1Drop": 162,
+    "pairs": [
+      {
+        "pair": "M1->M2",
+        "mastraRegression": false,
+        "mastraDelta": 0.06666666666666665,
+        "gatePassed": true,
+        "reasons": []
+      },
+      {
+        "pair": "M1->M3",
+        "mastraRegression": true,
+        "mastraDelta": -0.1333333333333333,
+        "gatePassed": true,
+        "reasons": []
+      },
+      {
+        "pair": "M2->M1",
+        "mastraRegression": true,
+        "mastraDelta": -0.06666666666666665,
+        "gatePassed": true,
+        "reasons": []
+      },
+      {
+        "pair": "M2->M3",
+        "mastraRegression": true,
+        "mastraDelta": -0.19999999999999996,
+        "gatePassed": false,
+        "reasons": [
+          "\"exact\" is worse by 0.200 on 30 paired items (95% CI of change -0.367 to -0.033; Holm p = 0.035)."
+        ]
+      },
+      {
+        "pair": "M3->M1",
+        "mastraRegression": false,
+        "mastraDelta": 0.1333333333333333,
+        "gatePassed": true,
+        "reasons": []
+      },
+      {
+        "pair": "M3->M2",
+        "mastraRegression": false,
+        "mastraDelta": 0.19999999999999996,
+        "gatePassed": true,
+        "reasons": []
+      }
+    ]
+  }
+}

@@ -34,7 +34,10 @@ comes from a script in this repo, run on `@mastra/core` 1.74.0):
 - **On a real model too.** A Mastra agent and judge on Codex, 30 problems, the same configuration
   run three times: Mastra flagged 3 of 6 comparisons, the gate none. With a 20 s item timeout
   (7 of 30 items timed out), Mastra reported no regression in 2 of 4 comparisons and showed
-  accuracy *improving* by 0.12; the gate failed all 4.
+  accuracy *improving* by 0.12; the gate failed all 4. On a real regression (reasoning effort
+  lowered from medium to none: 30/30 → 13/30 correct) both flag it; the gate with
+  p = 5e-5 and a 95% interval for the drop. Over all 20 real no-change comparisons, the gate
+  failed 1 (5%) and Mastra flagged 10 (50%).
 
 ## Use it
 
@@ -100,7 +103,9 @@ From `bench/power.ts` (2000 simulated comparisons per cell, table in
 - **Small pass/fail datasets can't see small drops.** With 20 items, no calibrated rule here
   detects a 0.2 drop more than ~36% of the time. The gate warns when a non-zero tolerance is
   below what the dataset can detect, and when there are too few items to detect anything.
-- The exact test is conservative on discrete scores (0.9–3.5% false alarms with no change). `midP: true` recovers
+- The exact test is conservative on discrete scores (0.9–3.5% false alarms with no change).
+- **Mastra's tool mocks did not shrink the noise much** in the real tool-using run (items needed to
+  detect a 0.1 drop: 176 live, 162 mocked); the model's own run-to-run variance dominated. `midP: true` recovers
   power but reached 6.65% false alarms at the tolerance boundary, so it is opt-in.
 
 ## The upstream fix
@@ -118,9 +123,11 @@ full Mastra monorepo.
 ```bash
 npm install
 npm run build                 # the CLI test runs dist/cli.js
-npm test                      # 44 tests: unit, real Mastra experiments, CLI over LibSQL
+npm test                      # 45 tests: unit, real Mastra experiments, CLI over LibSQL
 npx tsx bench/power.ts        # M1 simulation → results/power.{json,md}
 npx tsx bench/real.ts         # real run on Codex (~300 calls; needs the Codex CLI signed in)
+npx tsx bench/real-effort.ts  # real regression: effort medium vs none (60 calls)
+npx tsx bench/real-mocks.ts   # live tool vs Mastra toolMocks, 3 runs each (~390 calls)
 npx tsx examples/crash-demo.ts
 cd evidence/phase0 && npm install && node g5_prebuilt.mjs   # each finding has a gN.mjs script
 ```

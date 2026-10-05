@@ -174,4 +174,16 @@ describe('compareRows', () => {
       expect(c.warnings).toEqual([]);
     });
   });
+
+  it('coverage is net: a scorer that misses an item in each run is not a failure', () => {
+    // Real case (bench/real-detect.ts): a Codex judge errored on one item in each run.
+    const a = exp('A', items(6).map((item, i) => ({ item, scores: i === 0 ? { quality: 0.8 } : { quality: 0.8, judge: 1 } })));
+    const b = exp('B', items(6).map((item, i) => ({ item, scores: i === 1 ? { quality: 0.8 } : { quality: 0.8, judge: 1 } })));
+    const c = compareRows(a, b);
+    expect(c.scorers.judge!.lostInB['no-score']).toBe(1);
+    expect(c.scorers.judge!.lostInA['no-score']).toBe(1);
+    expect(c.passed).toBe(true);
+    const worse = exp('B', items(6).map((item, i) => ({ item, scores: i <= 2 ? { quality: 0.8 } : { quality: 0.8, judge: 1 } })));
+    expect(compareRows(a, worse).reasons.map(r => r.kind)).toEqual(['coverage']); // lost 2 net
+  });
 });

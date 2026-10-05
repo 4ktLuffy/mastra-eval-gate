@@ -135,9 +135,65 @@ R5 is the same configuration with `itemTimeout: 20_000`; in R1–R3, 21 of 90 it
 - **R4's failures came from this harness.** Two Codex calls had not returned after 300 s and the
   adapter's own 5-minute cap (`bench/codex-model.ts`) killed them. They are real hangs, but the
   cut-off is ours, not Mastra's.
-- **What this run does not show:** a real quality regression. Nothing in R1–R5 changed the
-  agent's quality, so there is no detection result on real data here, only false alarms and
-  hidden failures.
+- R1–R5 contain no real quality change, so detection is tested separately below.
+
+### Detecting a real regression
+
+`bench/real-effort.ts`, `results/real/MED.json`, `NONE.json`, `effort-summary.json`. A change teams
+actually make to save cost: the same agent and prompt, with reasoning effort lowered from medium to
+none. Same Mastra instance and dataset, exact-answer scorer, 60 Codex calls.
+
+| | effort medium | effort none |
+|---|---|---|
+| exact-answer accuracy | 30 / 30 | 13 / 30 |
+
+Mastra flags it (delta −0.567) and so does the gate: *worse by 0.567 on 30 paired items, 95% CI
+−0.733 to −0.400, Holm p = 5.0e-5*. On a large real regression the two agree; the difference is the
+no-change runs, where the gate stayed quiet and Mastra did not.
+
+**A first attempt found no regression to detect (negative result).** `bench/real-detect.ts`
+(`results/real/B1.json`, `B2.json`, `D.json`, `detect-summary.json`) compared the baseline prompt
+with one that says *reply with only the final number, do not work the problem out*. At effort none
+that did not lower accuracy: B1 0.567, B2 0.467, D 0.517. The same run gave one more Mastra false
+alarm (B1 → B2, no change: delta −0.10, `hasRegression: true`).
+
+**It also exposed a flaw in the gate, now fixed.** The Codex judge errored on one item in B2 and on
+others in B1 (Codex returned "Selected model is at capacity" in this period). The gate's coverage
+check counted only items the candidate's scorer lost, so a judge that misses an item now and then
+failed even the no-change comparison. Coverage is now net (lost in the candidate minus lost in the
+baseline), like reliability; `test/compare.test.ts` "coverage is net" reproduces the case. The
+saved B1/B2/D files record question text for 20 of 30 items (a pagination slip in the script,
+fixed), which is why the effort comparison was run in one instance instead of against them.
+
+### Do Mastra's tool mocks reduce noise? (mostly no, here)
+
+`bench/real-mocks.ts`, `results/real/L1-3.json`, `M1-3.json`, `mocks-summary.json`. The same 30
+problems, but the starting stock comes from a `lookupStock` tool (the Codex adapter's tool-calling
+path). L1–L3 use the live tool, which throws a 503 on 30% of calls (**simulated** flakiness); M1–M3
+serve the correct output through Mastra's `toolMocks`. Exact-answer scorer, 387 Codex calls.
+
+| | live tool (L1–L3) | `toolMocks` (M1–M3) |
+|---|---|---|
+| tool calls / simulated 503s | 120 / 37 | 0 / 0 (all served by mocks) |
+| accuracy per run | 0.400, 0.367, 0.533 | 0.567, 0.633, 0.433 |
+| items whose outcome differs across runs | 13 / 30 | 12 / 30 |
+| SD of paired per-item change | 0.533 | 0.512 |
+| items needed to detect a 0.1 drop (80% power, normal approx.) | 176 | 162 |
+| Mastra `hasRegression`, 6 no-change pairs | 3 | 3 |
+| gate failed, 6 no-change pairs | 0 | **1** |
+
+- **Mocks removed the tool's failures but barely the noise.** The agent retried after each 503 and
+  every item still succeeded, so the remaining run-to-run variance is the model's own: about 40% of
+  items flip between runs at reasoning effort none. Mocks raised accuracy (fewer failed lookups)
+  but cut the items needed for a 0.1 drop only from 176 to 162. A negative result for the idea
+  that mocks make small datasets usable here.
+- **The gate false-alarmed once** (M2 → M3: *worse by 0.200 on 30 paired items, 95% CI −0.367 to
+  −0.033, Holm p = 0.035*), with nothing changed. Across all 20 real no-change comparisons in this
+  repository (R1–R3, B1↔B2, L1–L3, M1–M3), **the gate failed 1 (5%) and Mastra flagged 10 (50%)**,
+  matching the simulation.
+- **What a 30-item dataset can see.** With noise like this, a 0.1 drop needs about 160–180 items;
+  30 items reliably see only drops of about 0.23 (the gate's `minimumDetectable` in the effort run).
+  The gate reports that number instead of passing silently.
 
 ## Judge-side finding: empty verdict lists score silently (simplification)
 

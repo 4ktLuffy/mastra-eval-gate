@@ -1,0 +1,30 @@
+{
+  "model": "codex gpt-5.6-luna; baseline effort medium, candidate effort none",
+  "codex": {
+    "calls": 60,
+    "tokens": 120761
+  },
+  "mastra": {
+    "hasRegression": true,
+    "delta": -0.5666666666666667,
+    "meanA": 1,
+    "meanB": 0.43333333333333335
+  },
+  "gate": {
+    "passed": false,
+    "reasons": [
+      "\"exact\" is worse by 0.567 on 30 paired items (95% CI of change -0.733 to -0.400; Holm p = 5.0e-5)."
+    ],
+    "n": 30,
+    "meanA": 1,
+    "meanB": 0.43333333333333335,
+    "change": -0.5666666666666667,
+    "ci": [
+      -0.7333333333333333,
+      -0.4
+    ],
+    "p": 0.00004999750012499375,
+    "regressed": true,
+    "minimumDetectable": 0.22880207088915352
+  }
+}

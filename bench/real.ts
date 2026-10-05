@@ -20,7 +20,7 @@ import { InMemoryStore } from '@mastra/core/storage';
 import { getAssistantMessageFromRunOutput, getUserMessageFromRunInput } from '@mastra/evals/scorers/utils';
 import { compareRows, loadExperimentRows, type ExperimentRows } from '../src/index.js';
 import { codexModel, SECONDS, TOKENS } from './codex-model.js';
-import { lastInteger, problems } from './real-dataset.js';
+import { allItems, lastInteger, problems } from './real-dataset.js';
 
 const OUT = process.env.OUT ?? 'results/real';
 mkdirSync(OUT, { recursive: true });
@@ -79,12 +79,13 @@ for (const [name, extra] of [
   const seconds = (Date.now() - t) / 1000;
   runs.push({ name, id: r.experimentId, seconds, failed: r.failedCount });
   const rows = await loadExperimentRows(mastra, r.experimentId);
+  const questions = new Map((await allItems(ds)).map(i => [i.id, String(i.input)]));
   const outputs = r.results.map(x => {
     const t = x as { startedAt?: Date | string; completedAt?: Date | string };
     const seconds = t.startedAt && t.completedAt ? (new Date(t.completedAt).getTime() - new Date(t.startedAt).getTime()) / 1000 : null;
     // Keep the message, not the stack (it holds local paths).
     const error = x.error ? String((x.error as { message?: string }).message ?? x.error).split('\n    at ')[0]! : null;
-    return { itemId: x.itemId, seconds, output: x.output, error };
+    return { itemId: x.itemId, question: questions.get(x.itemId), seconds, output: x.output, error };
   });
   writeFileSync(`${OUT}/${name}.json`, JSON.stringify({ name, config: { ...MODEL, ...extra }, seconds, rows, outputs }, null, 2));
   console.log(JSON.stringify({ name, seconds, succeeded: r.succeededCount, failed: r.failedCount, calls: TOKENS.length, tokens: TOKENS.reduce((a, b) => a + b, 0) }));

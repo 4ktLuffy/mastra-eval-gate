@@ -1,0 +1,1088 @@
+{
+  "name": "D",
+  "config": {
+    "model": "gpt-5.6-luna",
+    "effort": "none",
+    "prompt": "Reply with only the final number. Do not work the problem out or show any steps."
+  },
+  "rows": {
+    "id": "ac7a30bd-ceef-4ddc-8272-3e39b640696b",
+    "results": [
+      {
+        "itemId": "e6668523-d261-4452-9273-354c99af6001",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "ffdf8047-14bb-4e32-a7c3-ca6d16a4d054",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "eec14aab-cab0-4d54-9f81-f6ceb4fdaf84",
+        "attempt": 0,
+        "error": {
+          "message": "codex exited 1:  thrown away and the rest are split equally into 4 rooms; one room's share is kept and the other rooms are emptied. How many coins are in the warehouse at the end?\nERROR: Selected model is at capacity. Please try a different model.\nERROR: Selected model is at capacity. Please try a different model.\n",
+          "stack": "Error: codex exited 1:  thrown away and the rest are split equally into 4 rooms; one room's share is kept and the other rooms are emptied. How many coins are in the warehouse at the end?\nERROR: Selected model is at capacity. Please try a different model.\nERROR: Selected model is at capacity. Please try a different model.\n\n    at ChildProcess.<anonymous> (<repo>/bench/codex-model.ts:119:23)\n    at ChildProcess.emit (node:events:508:20)\n    at maybeClose (node:internal/child_process:1108:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:305:5)"
+        }
+      },
+      {
+        "itemId": "fd8d4740-444a-4d59-a23e-b7a9fd6d6934",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "de41482e-6afd-40bf-8427-fe8d9d9e949b",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "cf6770b8-5d39-47cb-aea9-bea23d1f45d7",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "c4366c68-860e-4e4f-9a68-d6d02b2de364",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "bc0d6f5c-c81b-481c-9602-dd21402b3d33",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "ab9a9b3d-ee7d-4da9-bb56-6e68255691a4",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "9c66bb6e-38db-4078-80ba-9cec4421fc4f",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "96756b55-310c-47e9-a6bc-cb616802b5e4",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "962f19ce-f746-497b-adca-1cc9ac6a9b74",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "94c0d29e-3360-4dcd-902a-c76dcd16c5b5",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "91513bc0-4aaa-4fd0-b1eb-df1357899b74",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "8e9deec7-5458-4ee5-bd89-6b641f555669",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "742894e9-b4c7-4a05-b015-7b026edaf2d2",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "6f6da741-710c-4ba4-a719-2bc53b38cffc",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "6aec29a4-0fd8-474b-bf59-547bf53cf847",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "600030e7-be27-43de-9cb5-743f4e66c8d7",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "4b82e519-dc67-4b23-9bb3-5c416ac2aee3",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "480001e5-38c9-4785-946e-e5b92bf0f5e4",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "3d7958cf-8471-4db1-9710-2fcc1a65f303",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "34b41d25-35d5-49bd-ad1b-0c25bfc75757",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "3335940d-d45b-438e-b685-2142b2b50d42",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "2f852f43-d26a-4bf9-a58d-2277b57ca60a",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "2be26abb-a1d4-4939-843b-dc3e520bf1a9",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "17d043f4-51be-4a29-9424-9a70d879047f",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "1075eb39-1cbd-42ac-aa87-80a7bb5314aa",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "0d19c8a5-83d9-458a-93ea-4e02ff1bb8a2",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "0c92ffd6-752e-4817-859a-ebec73dce97c",
+        "attempt": 0,
+        "error": null
+      }
+    ],
+    "scores": [
+      {
+        "scorerId": "exact",
+        "entityId": "e6668523-d261-4452-9273-354c99af6001",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "ffdf8047-14bb-4e32-a7c3-ca6d16a4d054",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "fd8d4740-444a-4d59-a23e-b7a9fd6d6934",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "fd8d4740-444a-4d59-a23e-b7a9fd6d6934",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "ffdf8047-14bb-4e32-a7c3-ca6d16a4d054",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "de41482e-6afd-40bf-8427-fe8d9d9e949b",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "eec14aab-cab0-4d54-9f81-f6ceb4fdaf84",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "cf6770b8-5d39-47cb-aea9-bea23d1f45d7",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "e6668523-d261-4452-9273-354c99af6001",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "de41482e-6afd-40bf-8427-fe8d9d9e949b",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "c4366c68-860e-4e4f-9a68-d6d02b2de364",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "bc0d6f5c-c81b-481c-9602-dd21402b3d33",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "cf6770b8-5d39-47cb-aea9-bea23d1f45d7",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "ab9a9b3d-ee7d-4da9-bb56-6e68255691a4",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "c4366c68-860e-4e4f-9a68-d6d02b2de364",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "bc0d6f5c-c81b-481c-9602-dd21402b3d33",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "9c66bb6e-38db-4078-80ba-9cec4421fc4f",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "ab9a9b3d-ee7d-4da9-bb56-6e68255691a4",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "962f19ce-f746-497b-adca-1cc9ac6a9b74",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "9c66bb6e-38db-4078-80ba-9cec4421fc4f",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "94c0d29e-3360-4dcd-902a-c76dcd16c5b5",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "96756b55-310c-47e9-a6bc-cb616802b5e4",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "94c0d29e-3360-4dcd-902a-c76dcd16c5b5",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "91513bc0-4aaa-4fd0-b1eb-df1357899b74",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "96756b55-310c-47e9-a6bc-cb616802b5e4",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "8e9deec7-5458-4ee5-bd89-6b641f555669",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "742894e9-b4c7-4a05-b015-7b026edaf2d2",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "742894e9-b4c7-4a05-b015-7b026edaf2d2",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "91513bc0-4aaa-4fd0-b1eb-df1357899b74",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "6f6da741-710c-4ba4-a719-2bc53b38cffc",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "8e9deec7-5458-4ee5-bd89-6b641f555669",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "6aec29a4-0fd8-474b-bf59-547bf53cf847",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "6f6da741-710c-4ba4-a719-2bc53b38cffc",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "600030e7-be27-43de-9cb5-743f4e66c8d7",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "4b82e519-dc67-4b23-9bb3-5c416ac2aee3",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "6aec29a4-0fd8-474b-bf59-547bf53cf847",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "480001e5-38c9-4785-946e-e5b92bf0f5e4",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "4b82e519-dc67-4b23-9bb3-5c416ac2aee3",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "600030e7-be27-43de-9cb5-743f4e66c8d7",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "3d7958cf-8471-4db1-9710-2fcc1a65f303",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "34b41d25-35d5-49bd-ad1b-0c25bfc75757",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "480001e5-38c9-4785-946e-e5b92bf0f5e4",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "3335940d-d45b-438e-b685-2142b2b50d42",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "3d7958cf-8471-4db1-9710-2fcc1a65f303",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "34b41d25-35d5-49bd-ad1b-0c25bfc75757",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "2f852f43-d26a-4bf9-a58d-2277b57ca60a",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "3335940d-d45b-438e-b685-2142b2b50d42",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "2be26abb-a1d4-4939-843b-dc3e520bf1a9",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "1075eb39-1cbd-42ac-aa87-80a7bb5314aa",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "17d043f4-51be-4a29-9424-9a70d879047f",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "0d19c8a5-83d9-458a-93ea-4e02ff1bb8a2",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "2be26abb-a1d4-4939-843b-dc3e520bf1a9",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "1075eb39-1cbd-42ac-aa87-80a7bb5314aa",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "17d043f4-51be-4a29-9424-9a70d879047f",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "0c92ffd6-752e-4817-859a-ebec73dce97c",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "0d19c8a5-83d9-458a-93ea-4e02ff1bb8a2",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "0c92ffd6-752e-4817-859a-ebec73dce97c",
+        "score": 1,
+        "attempt": null
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "itemId": "ffdf8047-14bb-4e32-a7c3-ca6d16a4d054",
+      "output": {
+        "text": "484",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2225,
+          "raw": {
+            "totalTokens": 2225
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "fd8d4740-444a-4d59-a23e-b7a9fd6d6934",
+      "output": {
+        "text": "86",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2209,
+          "raw": {
+            "totalTokens": 2209
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "eec14aab-cab0-4d54-9f81-f6ceb4fdaf84",
+      "output": null,
+      "error": "codex exited 1:  thrown away and the rest are split equally into 4 rooms; one room's share is kept and the other rooms are emptied. How many coins are in the warehouse at the end?\nERROR: Selected model is at capacity. Please try a different model.\nERROR: Selected model is at capacity. Please try a different model.\n"
+    },
+    {
+      "itemId": "e6668523-d261-4452-9273-354c99af6001",
+      "output": {
+        "text": "50",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2252,
+          "raw": {
+            "totalTokens": 2252
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "de41482e-6afd-40bf-8427-fe8d9d9e949b",
+      "output": {
+        "text": "10",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2191,
+          "raw": {
+            "totalTokens": 2191
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "cf6770b8-5d39-47cb-aea9-bea23d1f45d7",
+      "output": {
+        "text": "84",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2272,
+          "raw": {
+            "totalTokens": 2272
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "c4366c68-860e-4e4f-9a68-d6d02b2de364",
+      "output": {
+        "text": "163",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2195,
+          "raw": {
+            "totalTokens": 2195
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "bc0d6f5c-c81b-481c-9602-dd21402b3d33",
+      "output": {
+        "text": "105",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2177,
+          "raw": {
+            "totalTokens": 2177
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "ab9a9b3d-ee7d-4da9-bb56-6e68255691a4",
+      "output": {
+        "text": "16",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2209,
+          "raw": {
+            "totalTokens": 2209
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "9c66bb6e-38db-4078-80ba-9cec4421fc4f",
+      "output": {
+        "text": "131",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2222,
+          "raw": {
+            "totalTokens": 2222
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "96756b55-310c-47e9-a6bc-cb616802b5e4",
+      "question": "A warehouse starts with 33 coins. Then 1 damaged coins are thrown away and the rest are split equally into 4 rooms; one room's share is kept and the other rooms are emptied. It receives 3 crates of 7 coins each. It receives 3 crates of 4 coins each. How many coins are in the warehouse at the end?",
+      "output": {
+        "text": "19",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2213,
+          "raw": {
+            "totalTokens": 2213
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "962f19ce-f746-497b-adca-1cc9ac6a9b74",
+      "question": "A warehouse starts with 36 boxes. It ships out 2 boxes. Then 2 damaged boxes are thrown away and the rest are split equally into 4 rooms; one room's share is kept and the other rooms are emptied. How many boxes are in the warehouse at the end?",
+      "output": {
+        "text": "8",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2198,
+          "raw": {
+            "totalTokens": 2198
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "94c0d29e-3360-4dcd-902a-c76dcd16c5b5",
+      "question": "A warehouse starts with 24 tickets. It ships out 3 tickets. Then 1 damaged tickets are thrown away and the rest are split equally into 4 rooms; one room's share is kept and the other rooms are emptied. Then 1 damaged tickets are thrown away and the rest are split equally into 4 rooms; one room's share is kept and the other rooms are emptied. How many tickets are in the warehouse at the end?",
+      "output": {
+        "text": "1",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2230,
+          "raw": {
+            "totalTokens": 2230
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "91513bc0-4aaa-4fd0-b1eb-df1357899b74",
+      "question": "A warehouse starts with 21 bottles. Then 1 damaged bottles are thrown away and the rest are split equally into 4 rooms; one room's share is kept and the other rooms are emptied. Then the stock is doubled. How many bottles are in the warehouse at the end?",
+      "output": {
+        "text": "10",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2197,
+          "raw": {
+            "totalTokens": 2197
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "8e9deec7-5458-4ee5-bd89-6b641f555669",
+      "question": "A warehouse starts with 59 apples. It receives 7 crates of 9 apples each. How many apples are in the warehouse at the end?",
+      "output": {
+        "text": "122",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2170,
+          "raw": {
+            "totalTokens": 2170
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "742894e9-b4c7-4a05-b015-7b026edaf2d2",
+      "question": "A warehouse starts with 82 chairs. Then the stock is doubled. It ships out 36 chairs. How many chairs are in the warehouse at the end?",
+      "output": {
+        "text": "128",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 9084,
+          "raw": {
+            "totalTokens": 9084
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "6f6da741-710c-4ba4-a719-2bc53b38cffc",
+      "question": "A warehouse starts with 39 tickets. It ships out 4 tickets. Then the stock is doubled. Then 2 damaged tickets are thrown away and the rest are split equally into 4 rooms; one room's share is kept and the other rooms are emptied. It ships out 5 tickets. It receives 3 crates of 7 tickets each. How many tickets are in the warehouse at the end?",
+      "output": {
+        "text": "48",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2222,
+          "raw": {
+            "totalTokens": 2222
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "6aec29a4-0fd8-474b-bf59-547bf53cf847",
+      "question": "A warehouse starts with 41 books. Then the stock is doubled. How many books are in the warehouse at the end?",
+      "output": {
+        "text": "82",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2165,
+          "raw": {
+            "totalTokens": 2165
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "600030e7-be27-43de-9cb5-743f4e66c8d7",
+      "question": "A warehouse starts with 50 books. Then the stock is doubled. Then 0 damaged books are thrown away and the rest are split equally into 4 rooms; one room's share is kept and the other rooms are emptied. How many books are in the warehouse at the end?",
+      "output": {
+        "text": "25",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2197,
+          "raw": {
+            "totalTokens": 2197
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "4b82e519-dc67-4b23-9bb3-5c416ac2aee3",
+      "question": "A warehouse starts with 29 chairs. It ships out 4 chairs. It ships out 1 chairs. It receives 5 crates of 4 chairs each. How many chairs are in the warehouse at the end?",
+      "output": {
+        "text": "44",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2184,
+          "raw": {
+            "totalTokens": 2184
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "480001e5-38c9-4785-946e-e5b92bf0f5e4",
+      "question": "A warehouse starts with 33 parcels. It receives 6 crates of 12 parcels each. Then 1 damaged parcels are thrown away and the rest are split equally into 4 rooms; one room's share is kept and the other rooms are emptied. It receives 5 crates of 10 parcels each. Then 0 damaged parcels are thrown away and the rest are split equally into 4 rooms; one room's share is kept and the other rooms are emptied. It receives 7 crates of 12 parcels each. How many parcels are in the warehouse at the end?",
+      "output": {
+        "text": "70",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2256,
+          "raw": {
+            "totalTokens": 2256
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "3d7958cf-8471-4db1-9710-2fcc1a65f303",
+      "question": "A warehouse starts with 20 tickets. Then the stock is doubled. It ships out 1 tickets. Then the stock is doubled. It receives 5 crates of 4 tickets each. How many tickets are in the warehouse at the end?",
+      "output": {
+        "text": "79",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2189,
+          "raw": {
+            "totalTokens": 2189
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "34b41d25-35d5-49bd-ad1b-0c25bfc75757",
+      "question": "A warehouse starts with 56 tickets. Then the stock is doubled. How many tickets are in the warehouse at the end?",
+      "output": {
+        "text": "112",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2165,
+          "raw": {
+            "totalTokens": 2165
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "3335940d-d45b-438e-b685-2142b2b50d42",
+      "question": "A warehouse starts with 41 parcels. Then 1 damaged parcels are thrown away and the rest are split equally into 4 rooms; one room's share is kept and the other rooms are emptied. How many parcels are in the warehouse at the end?",
+      "output": {
+        "text": "10",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2191,
+          "raw": {
+            "totalTokens": 2191
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "2f852f43-d26a-4bf9-a58d-2277b57ca60a",
+      "question": "A warehouse starts with 20 parcels. It receives 4 crates of 11 parcels each. Then 0 damaged parcels are thrown away and the rest are split equally into 4 rooms; one room's share is kept and the other rooms are emptied. Then 0 damaged parcels are thrown away and the rest are split equally into 4 rooms; one room's share is kept and the other rooms are emptied. Then 0 damaged parcels are thrown away and the rest are split equally into 4 rooms; one room's share is kept and the other rooms are emptied. How many parcels are in the warehouse at the end?",
+      "output": {
+        "text": "6",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2266,
+          "raw": {
+            "totalTokens": 2266
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "2be26abb-a1d4-4939-843b-dc3e520bf1a9",
+      "question": "A warehouse starts with 76 bottles. It receives 9 crates of 12 bottles each. It ships out 29 bottles. It receives 4 crates of 11 bottles each. Then 3 damaged bottles are thrown away and the rest are split equally into 4 rooms; one room's share is kept and the other rooms are emptied. How many bottles are in the warehouse at the end?",
+      "output": {
+        "text": "80",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 1196,
+          "raw": {
+            "totalTokens": 1196
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "17d043f4-51be-4a29-9424-9a70d879047f",
+      "question": "A warehouse starts with 52 books. It receives 4 crates of 6 books each. Then the stock is doubled. Then the stock is doubled. It ships out 11 books. How many books are in the warehouse at the end?",
+      "output": {
+        "text": "244",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2189,
+          "raw": {
+            "totalTokens": 2189
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "1075eb39-1cbd-42ac-aa87-80a7bb5314aa",
+      "question": "A warehouse starts with 72 coins. It ships out 24 coins. How many coins are in the warehouse at the end?",
+      "output": {
+        "text": "48",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2166,
+          "raw": {
+            "totalTokens": 2166
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "0d19c8a5-83d9-458a-93ea-4e02ff1bb8a2",
+      "question": "A warehouse starts with 36 bottles. Then the stock is doubled. Then the stock is doubled. It receives 9 crates of 11 bottles each. How many bottles are in the warehouse at the end?",
+      "output": {
+        "text": "243",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2182,
+          "raw": {
+            "totalTokens": 2182
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "0c92ffd6-752e-4817-859a-ebec73dce97c",
+      "question": "A warehouse starts with 64 chairs. It ships out 1 chairs. Then 3 damaged chairs are thrown away and the rest are split equally into 4 rooms; one room's share is kept and the other rooms are emptied. How many chairs are in the warehouse at the end?",
+      "output": {
+        "text": "15",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2198,
+          "raw": {
+            "totalTokens": 2198
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    }
+  ]
+}

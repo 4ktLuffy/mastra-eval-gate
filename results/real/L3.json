@@ -1,0 +1,527 @@
+{
+  "name": "L3",
+  "condition": "live tool, 30% simulated 503s",
+  "tool": {
+    "calls": 39,
+    "errors": 10
+  },
+  "rows": {
+    "id": "eea2bb5b-7a03-49d3-b3ff-b432ca48dc77",
+    "results": [
+      {
+        "itemId": "dfef65bd-4226-4d34-b5aa-858c2cd6d532",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "cef814b2-8651-4b4c-9558-4a525ae58557",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "e9de433e-4563-4f02-b193-8ca97e729135",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "d248d334-0d3d-4376-bd76-4bf2aee14b2b",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "cc3da5b5-a5bd-4713-af1d-47de2dfc0eb3",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "ba472ace-06c4-4521-9bc7-6400cb8d70e0",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "add3ece9-067b-437c-a15d-dbff979ca452",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "9ab6b400-1c2a-46bf-a0a9-30efbba51897",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "996ca80f-b09a-43e4-908e-fc8c381b252e",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "8fca0cee-2cca-49ad-8e5c-0c6f8192b8a2",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "86528ccc-935c-45b7-b1f6-31bd2b500c4b",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "84085077-b78e-4082-8439-cf332c8f7c53",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "73d1ae35-e198-4de0-ac98-3c93bf713759",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "726062f9-02b1-4fd7-9518-c540ba56921c",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "6951e88e-c5f8-4947-8c94-a4acc8942c49",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "5ec97ce2-1c3b-43cc-82f1-22955cca26f6",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "58a8e72e-4bbb-4d0b-b276-8f8782564f9a",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "572a73a7-6a72-4e9a-ac99-87478df9a2c8",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "4ba4f4d3-e401-4f65-a7ae-f3d7d634999b",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "46703cb5-4de3-493f-ade2-ffa9ed3abf2d",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "3663ce7c-8547-45dd-9361-9e235a1c1c1d",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "25bab6a0-7284-47eb-ab02-16788f1f74b5",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "258b1e6a-79e5-4ee7-9d8d-4e373b92e9c5",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "2429a156-8e71-4eb9-9dbd-586f137fcbe8",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "232f6676-1644-4210-9ca3-64d5e06c7b14",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "182b9f1f-55d7-43dc-9666-15bdec7e3083",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "10a492dc-082e-454a-933a-b8ad8db93289",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "105cd16c-12e3-493e-9421-bb5098db6f39",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "0801c4f6-9464-4ec9-ab3f-bbc9d198cc93",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "0257c760-763f-4331-bd6c-3c7e23412b47",
+        "attempt": 0,
+        "error": null
+      }
+    ],
+    "scores": [
+      {
+        "scorerId": "exact",
+        "entityId": "d248d334-0d3d-4376-bd76-4bf2aee14b2b",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "e9de433e-4563-4f02-b193-8ca97e729135",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "dfef65bd-4226-4d34-b5aa-858c2cd6d532",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "cc3da5b5-a5bd-4713-af1d-47de2dfc0eb3",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "cef814b2-8651-4b4c-9558-4a525ae58557",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "ba472ace-06c4-4521-9bc7-6400cb8d70e0",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "9ab6b400-1c2a-46bf-a0a9-30efbba51897",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "add3ece9-067b-437c-a15d-dbff979ca452",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "8fca0cee-2cca-49ad-8e5c-0c6f8192b8a2",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "996ca80f-b09a-43e4-908e-fc8c381b252e",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "86528ccc-935c-45b7-b1f6-31bd2b500c4b",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "73d1ae35-e198-4de0-ac98-3c93bf713759",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "84085077-b78e-4082-8439-cf332c8f7c53",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "726062f9-02b1-4fd7-9518-c540ba56921c",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "5ec97ce2-1c3b-43cc-82f1-22955cca26f6",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "58a8e72e-4bbb-4d0b-b276-8f8782564f9a",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "6951e88e-c5f8-4947-8c94-a4acc8942c49",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "572a73a7-6a72-4e9a-ac99-87478df9a2c8",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "46703cb5-4de3-493f-ade2-ffa9ed3abf2d",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "4ba4f4d3-e401-4f65-a7ae-f3d7d634999b",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "3663ce7c-8547-45dd-9361-9e235a1c1c1d",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "2429a156-8e71-4eb9-9dbd-586f137fcbe8",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "232f6676-1644-4210-9ca3-64d5e06c7b14",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "25bab6a0-7284-47eb-ab02-16788f1f74b5",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "258b1e6a-79e5-4ee7-9d8d-4e373b92e9c5",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "10a492dc-082e-454a-933a-b8ad8db93289",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "105cd16c-12e3-493e-9421-bb5098db6f39",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "182b9f1f-55d7-43dc-9666-15bdec7e3083",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "0801c4f6-9464-4ec9-ab3f-bbc9d198cc93",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "0257c760-763f-4331-bd6c-3c7e23412b47",
+        "score": 0,
+        "attempt": null
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "itemId": "e9de433e-4563-4f02-b193-8ca97e729135",
+      "text": "128",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "dfef65bd-4226-4d34-b5aa-858c2cd6d532",
+      "text": "8",
+      "toolCalls": 2,
+      "error": null
+    },
+    {
+      "itemId": "d248d334-0d3d-4376-bd76-4bf2aee14b2b",
+      "text": "Unable to retrieve the starting stock.",
+      "toolCalls": 0,
+      "error": null
+    },
+    {
+      "itemId": "cef814b2-8651-4b4c-9558-4a525ae58557",
+      "text": "10",
+      "toolCalls": 3,
+      "error": null
+    },
+    {
+      "itemId": "cc3da5b5-a5bd-4713-af1d-47de2dfc0eb3",
+      "text": "23",
+      "toolCalls": 2,
+      "error": null
+    },
+    {
+      "itemId": "ba472ace-06c4-4521-9bc7-6400cb8d70e0",
+      "text": "29",
+      "toolCalls": 2,
+      "error": null
+    },
+    {
+      "itemId": "add3ece9-067b-437c-a15d-dbff979ca452",
+      "text": "42",
+      "toolCalls": 2,
+      "error": null
+    },
+    {
+      "itemId": "9ab6b400-1c2a-46bf-a0a9-30efbba51897",
+      "text": "274",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "996ca80f-b09a-43e4-908e-fc8c381b252e",
+      "text": "Starting with 43 books: (43 − 8) × 2 = 70; after discarding 2, 68 split among 4 gives 17 kept. Then 17 − 3 + (8 × 11) = 102.\n\n102",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "8fca0cee-2cca-49ad-8e5c-0c6f8192b8a2",
+      "text": "82",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "86528ccc-935c-45b7-b1f6-31bd2b500c4b",
+      "text": "65",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "84085077-b78e-4082-8439-cf332c8f7c53",
+      "text": "10",
+      "toolCalls": 2,
+      "error": null
+    },
+    {
+      "itemId": "73d1ae35-e198-4de0-ac98-3c93bf713759",
+      "text": "74",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "726062f9-02b1-4fd7-9518-c540ba56921c",
+      "text": "The warehouse starts with 52 books. It receives 4 × 6 = 24, giving 76. Doubling twice gives 304. After shipping 11, 293 books remain.\n\n293",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "6951e88e-c5f8-4947-8c94-a4acc8942c49",
+      "text": "2",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "5ec97ce2-1c3b-43cc-82f1-22955cca26f6",
+      "text": "33",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "58a8e72e-4bbb-4d0b-b276-8f8782564f9a",
+      "text": "104",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "572a73a7-6a72-4e9a-ac99-87478df9a2c8",
+      "text": "48",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "4ba4f4d3-e401-4f65-a7ae-f3d7d634999b",
+      "text": "The warehouse starts with 20 parcels. Adding 4 crates of 11 gives 64 parcels. Each of the three rounds keeps one-fourth:\n64 ÷ 4 = 16\n16 ÷ 4 = 4\n4 ÷ 4 = 1\n\nFinal number: 1",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "46703cb5-4de3-493f-ade2-ffa9ed3abf2d",
+      "text": "25",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "3663ce7c-8547-45dd-9361-9e235a1c1c1d",
+      "text": "74 × 2 = 148; 148 − 25 = 123; 123 − 3 = 120; 120 ÷ 4 = 30; 30 − 2 = 28; 28 ÷ 4 = 7. Final number: 7",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "25bab6a0-7284-47eb-ab02-16788f1f74b5",
+      "text": "105",
+      "toolCalls": 3,
+      "error": null
+    },
+    {
+      "itemId": "258b1e6a-79e5-4ee7-9d8d-4e373b92e9c5",
+      "text": "10",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "2429a156-8e71-4eb9-9dbd-586f137fcbe8",
+      "text": "112",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "232f6676-1644-4210-9ca3-64d5e06c7b14",
+      "text": "12.5",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "182b9f1f-55d7-43dc-9666-15bdec7e3083",
+      "text": "15",
+      "toolCalls": 2,
+      "error": null
+    },
+    {
+      "itemId": "10a492dc-082e-454a-933a-b8ad8db93289",
+      "text": "1",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "105cd16c-12e3-493e-9421-bb5098db6f39",
+      "text": "122",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "0801c4f6-9464-4ec9-ab3f-bbc9d198cc93",
+      "text": "17",
+      "toolCalls": 1,
+      "error": null
+    },
+    {
+      "itemId": "0257c760-763f-4331-bd6c-3c7e23412b47",
+      "text": "20",
+      "toolCalls": 1,
+      "error": null
+    }
+  ]
+}

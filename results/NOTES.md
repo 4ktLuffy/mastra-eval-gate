@@ -56,3 +56,19 @@ each with a test (test/compare.test.ts "review fixes", test/load.test.ts, test/m
 - R4: 2 Codex calls hung > 300 s and were killed by the adapter's own cap (not Mastra's).
 - Judge scored timed-out (empty) replies 0; exact scorer threw and stored nothing.
 - No real quality regression was present, so no real detection result.
+
+## 2026-10-05 — real detection (model: Codex gpt-5.6-luna)
+- bench/real-detect.ts (175 calls, 334,987 tokens): "answer without working" prompt did NOT lower
+  accuracy (B1 0.567, B2 0.467, D 0.517) — negative result, nothing to detect. Mastra false-alarmed
+  B1→B2. Gate failed every pair on judge coverage (Codex capacity errors) → coverage made net, test added.
+  Saved files have question text for 20/30 items (listItems default page 20; fixed).
+- bench/real-effort.ts (60 calls, 120,761 tokens): effort medium 30/30 vs none 13/30. Mastra and gate
+  both flag; gate change −0.567, 95% CI [−0.733, −0.400], Holm p 5.0e-5.
+- Wasted by my mistakes: ~60 calls (stray full B1 run) and 30 calls (effort run against
+  partially-matchable saved runs).
+
+## 2026-10-05 — tool mocks (bench/real-mocks.ts; Codex gpt-5.6-luna @ none; 387 calls, 557,468 tokens)
+- Live (30% simulated 503s): flips 13/30, paired SD 0.533, N for 0.1 drop 176; Mastra 3/6, gate 0/6.
+- toolMocks: flips 12/30, paired SD 0.512, N 162; Mastra 3/6, gate 1/6 (M2→M3 p=0.035, false alarm).
+- Negative: mocks barely reduce noise; model variance dominates; agent retries hid the tool flakiness.
+- All real no-change pairs: gate 1/20, Mastra 10/20.

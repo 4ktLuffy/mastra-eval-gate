@@ -51,7 +51,10 @@ export interface CompareOptions {
   alpha?: number;
   /** Items that newly fail in the candidate before reliability counts as regressed. Default 0. */
   maxNewTargetFailures?: number;
-  /** Items that lose their score for reasons other than a target failure. Default 0. */
+  /**
+   * Net items that lose their score for reasons other than a target failure (lost in the
+   * candidate minus lost in the baseline). Default 0.
+   */
   maxCoverageLoss?: number;
   /**
    * Accept a candidate that did not run some of the baseline's items. Default false: an item the
@@ -365,12 +368,15 @@ export function compareRows(baseline: ExperimentRows, candidate: ExperimentRows,
     } else if (r.tolerance > 0 && r.minimumDetectable > r.tolerance) {
       warnings.push(`"${r.scorerId}": with ${r.pairedN} items this comparison can only reliably see drops of about ${fmt(r.minimumDetectable)}, larger than the tolerance ${fmt(r.tolerance)}.`);
     }
+    // Net, like reliability: a scorer that errors now and then (an LLM judge hitting capacity
+    // limits) loses items in both runs, and only the excess counts against the candidate.
     const lostToScorer = r.lostInB['no-score'];
-    if (lostToScorer > maxCoverageLoss) {
+    const gainedFromScorer = r.lostInA['no-score'];
+    if (lostToScorer - gainedFromScorer > maxCoverageLoss) {
       reasons.push({
         kind: 'coverage',
         scorerId: r.scorerId,
-        message: `"${r.scorerId}" produced no valid score for ${lostToScorer} item(s) the baseline scored, with no target failure (scorer error, skipped, or non-finite).`,
+        message: `"${r.scorerId}" produced no valid score for ${lostToScorer} item(s) the baseline scored (and scored ${gainedFromScorer} the baseline didn't), with no target failure (scorer error, skipped, or non-finite); allowed net ${maxCoverageLoss}.`,
       });
     }
     if (r.lostInB['target-error'] > 0) {

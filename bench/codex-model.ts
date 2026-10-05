@@ -14,6 +14,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import type { LanguageModelV2, LanguageModelV2CallOptions, LanguageModelV2Prompt } from '@ai-sdk/provider';
+import type { MastraModelConfig } from '@mastra/core/llm';
 
 const WORKDIR = resolve(import.meta.dirname, '..', 'results', 'scratch', 'codex');
 
@@ -126,10 +127,12 @@ export async function runCodex(
   });
 }
 
-export function codexModel(options: CodexOptions = {}): LanguageModelV2 {
+export function codexModel(options: CodexOptions = {}): MastraModelConfig {
   const modelId = `${options.model ?? 'gpt-5.6-luna'}@${options.effort ?? 'none'}`;
   const generate = async (call: LanguageModelV2CallOptions) => {
     const { instructions, prompt } = split(call.prompt);
+    const tools = (call.tools ?? []).filter(t => t.type === 'function');
+    if (tools.length > 0) return generateWithTools(instructions, prompt, tools, call);
     const schema = call.responseFormat?.type === 'json' ? (call.responseFormat.schema ?? undefined) : undefined;
     const text = await runCodex(
       instructions + (schema ? '\nReply with JSON only, matching the requested schema.' : ''),
@@ -145,6 +148,61 @@ export function codexModel(options: CodexOptions = {}): LanguageModelV2 {
       warnings: [],
     };
   };
+
+  /**
+   * `codex exec` has no function calling, so a tool-using step asks for one structured reply:
+   * either the answer, or one tool call with its arguments as a JSON string. A tool call is
+   * returned as an AI SDK tool-call part; Mastra runs the tool and calls the model again with the
+   * result in the conversation.
+   */
+  const generateWithTools = async (
+    instructions: string,
+    prompt: string,
+    tools: Array<{ name: string; description?: string; inputSchema: unknown }>,
+    call: LanguageModelV2CallOptions,
+  ) => {
+    const toolList = tools.map(t => `- ${t.name}: ${t.description ?? ''}\n  arguments JSON schema: ${JSON.stringify(t.inputSchema)}`).join('\n');
+    const toolInstructions = `${instructions}
+
+Tools: you do not run tools yourself. The application runs them for you when you request one, and
+then shows you the result. Available tools:
+${toolList}
+
+Reply with JSON only, in one of two forms:
+- To request a tool: action "call_tool", tool = the tool's name, arguments = a JSON string of its
+  arguments (for example "{\\"warehouse\\":\\"W-101\\"}"), answer = "".
+- To give your final reply: action "answer", answer = the reply, tool = "", arguments = "".
+If you need information a tool provides and you have not received its result yet, request the tool.
+Results of tools you requested appear in the conversation as [tool result ...].`;
+    const schema = {
+      type: 'object',
+      properties: {
+        action: { type: 'string', enum: ['answer', 'call_tool'] },
+        answer: { type: 'string' },
+        tool: { type: 'string' },
+        arguments: { type: 'string' },
+      },
+      required: ['action', 'answer', 'tool', 'arguments'],
+    };
+    const reply = JSON.parse(await runCodex(toolInstructions, prompt, options, schema, call.abortSignal)) as {
+      action: 'answer' | 'call_tool';
+      answer: string;
+      tool: string;
+      arguments: string;
+    };
+    const usage = { inputTokens: undefined, outputTokens: undefined, totalTokens: TOKENS.at(-1) };
+    if (reply.action === 'call_tool' && tools.some(t => t.name === reply.tool)) {
+      return {
+        content: [
+          { type: 'tool-call' as const, toolCallId: `call_${Math.random().toString(36).slice(2, 10)}`, toolName: reply.tool, input: reply.arguments || '{}' },
+        ],
+        finishReason: 'tool-calls' as const,
+        usage,
+        warnings: [],
+      };
+    }
+    return { content: [{ type: 'text' as const, text: reply.answer }], finishReason: 'stop' as const, usage, warnings: [] };
+  };
   return {
     specificationVersion: 'v2',
     provider: 'codex-cli',
@@ -153,18 +211,23 @@ export function codexModel(options: CodexOptions = {}): LanguageModelV2 {
     doGenerate: generate,
     async doStream(call) {
       const result = await generate(call);
-      const text = result.content[0]!.text;
       const stream = new ReadableStream({
         start(controller) {
           controller.enqueue({ type: 'stream-start', warnings: [] });
-          controller.enqueue({ type: 'text-start', id: '0' });
-          controller.enqueue({ type: 'text-delta', id: '0', delta: text });
-          controller.enqueue({ type: 'text-end', id: '0' });
-          controller.enqueue({ type: 'finish', finishReason: 'stop', usage: result.usage });
+          for (const part of result.content) {
+            if (part.type === 'text') {
+              controller.enqueue({ type: 'text-start', id: '0' });
+              controller.enqueue({ type: 'text-delta', id: '0', delta: part.text });
+              controller.enqueue({ type: 'text-end', id: '0' });
+            } else {
+              controller.enqueue(part);
+            }
+          }
+          controller.enqueue({ type: 'finish', finishReason: result.finishReason, usage: result.usage });
           controller.close();
         },
       });
       return { stream };
     },
-  } as LanguageModelV2;
+  } as LanguageModelV2 as unknown as MastraModelConfig; // Mastra types models against its own bundled copy of @ai-sdk/provider
 }

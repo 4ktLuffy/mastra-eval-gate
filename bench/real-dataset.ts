@@ -52,3 +52,9 @@ export function lastInteger(text: string): number | null {
   const all = text.replace(/,/g, '').match(/-?\d+/g);
   return all ? Number(all[all.length - 1]) : null;
 }
+
+/** All items of a Mastra dataset (listItems pages 20 at a time by default, and may return an array). */
+export async function allItems(ds: { listItems(args?: { perPage?: number }): Promise<unknown> }): Promise<Array<{ id: string; input: unknown }>> {
+  const r = (await ds.listItems({ perPage: 1000 })) as Array<{ id: string; input: unknown }> | { items: Array<{ id: string; input: unknown }> };
+  return Array.isArray(r) ? r : r.items;
+}
