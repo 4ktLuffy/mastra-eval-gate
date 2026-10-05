@@ -1,0 +1,1127 @@
+{
+  "name": "R1",
+  "config": {
+    "model": "gpt-5.6-luna",
+    "effort": "none"
+  },
+  "seconds": 311.587,
+  "rows": {
+    "id": "19fc0d55-f0e0-4b4a-bb0f-61339ea39198",
+    "results": [
+      {
+        "itemId": "facdcf74-acc0-411c-8e8f-3987a6dca8ef",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "f403e61f-c301-444b-a9ea-4f1af4ed6a62",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "e860515c-7c44-4bb1-b3bc-ccf2578ba21f",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "e7e15666-31b7-4582-aad2-806586c61a5c",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "e28cae87-d03b-4d7f-95c8-92523ceed831",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "e0542cc8-93a0-4e38-a415-8239840af990",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "d92cc111-b695-4be1-b251-9e2b0574987e",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "d8c34aaf-bd4a-4899-820c-ecf6da802455",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "d0ddbbb8-6216-4d03-afc6-e95387e6c6f7",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "c4c17522-adc6-4730-95c1-54324c99cbc2",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "b31c1f58-f152-4130-92c7-49326498b253",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "b2b53c7f-2242-4134-830f-38776b6f8b42",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "b120147f-a4b2-427a-9315-fa69cbda9d8e",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "ad90e542-7ffa-49f9-9c3f-854dcb3f3166",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "a309ec48-3bc5-41b7-8eb7-c487c4a3b1fa",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "9b85b4b5-e85a-45f4-848e-bfcb27a7c69a",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "7e9a201c-9bee-464b-9c80-5daaa2d4552b",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "7c5d5a8c-0f86-4e08-8acd-000a54afce76",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "7667a582-0237-4c58-9c9f-e3001ed87c0f",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "63ac93c6-d4c8-42a6-92f9-7558c65557b1",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "60594458-4712-4dfa-86d1-93a2641a1687",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "48ee003e-b9ae-412e-9c77-24cc3f9bcc99",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "440b6157-8ecc-43a2-be67-ce009a4fbca6",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "423e3093-1379-44ac-971e-163334abbc46",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "41595005-7026-4f62-ac32-7e9a344c5da1",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "1f256f00-1801-4f8d-b992-6d3740794358",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "1eaad209-671c-4350-8dfd-1d172535effa",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "04922139-2090-4209-a687-9caee8cef5d9",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "04424d35-490a-4482-ad87-dd56ea5e2567",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "03cc7c69-ccf5-4622-a8f7-d3685814ba35",
+        "attempt": 0,
+        "error": null
+      }
+    ],
+    "scores": [
+      {
+        "scorerId": "exact",
+        "entityId": "e7e15666-31b7-4582-aad2-806586c61a5c",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "e860515c-7c44-4bb1-b3bc-ccf2578ba21f",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "f403e61f-c301-444b-a9ea-4f1af4ed6a62",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "facdcf74-acc0-411c-8e8f-3987a6dca8ef",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "e7e15666-31b7-4582-aad2-806586c61a5c",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "e860515c-7c44-4bb1-b3bc-ccf2578ba21f",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "f403e61f-c301-444b-a9ea-4f1af4ed6a62",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "facdcf74-acc0-411c-8e8f-3987a6dca8ef",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "e0542cc8-93a0-4e38-a415-8239840af990",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "e28cae87-d03b-4d7f-95c8-92523ceed831",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "d92cc111-b695-4be1-b251-9e2b0574987e",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "d8c34aaf-bd4a-4899-820c-ecf6da802455",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "e0542cc8-93a0-4e38-a415-8239840af990",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "d92cc111-b695-4be1-b251-9e2b0574987e",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "d8c34aaf-bd4a-4899-820c-ecf6da802455",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "e28cae87-d03b-4d7f-95c8-92523ceed831",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "d0ddbbb8-6216-4d03-afc6-e95387e6c6f7",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "c4c17522-adc6-4730-95c1-54324c99cbc2",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "b31c1f58-f152-4130-92c7-49326498b253",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "b2b53c7f-2242-4134-830f-38776b6f8b42",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "d0ddbbb8-6216-4d03-afc6-e95387e6c6f7",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "b31c1f58-f152-4130-92c7-49326498b253",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "c4c17522-adc6-4730-95c1-54324c99cbc2",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "b2b53c7f-2242-4134-830f-38776b6f8b42",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "b120147f-a4b2-427a-9315-fa69cbda9d8e",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "ad90e542-7ffa-49f9-9c3f-854dcb3f3166",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "a309ec48-3bc5-41b7-8eb7-c487c4a3b1fa",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "9b85b4b5-e85a-45f4-848e-bfcb27a7c69a",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "b120147f-a4b2-427a-9315-fa69cbda9d8e",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "ad90e542-7ffa-49f9-9c3f-854dcb3f3166",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "9b85b4b5-e85a-45f4-848e-bfcb27a7c69a",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "7e9a201c-9bee-464b-9c80-5daaa2d4552b",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "a309ec48-3bc5-41b7-8eb7-c487c4a3b1fa",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "7c5d5a8c-0f86-4e08-8acd-000a54afce76",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "7e9a201c-9bee-464b-9c80-5daaa2d4552b",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "7667a582-0237-4c58-9c9f-e3001ed87c0f",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "7c5d5a8c-0f86-4e08-8acd-000a54afce76",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "60594458-4712-4dfa-86d1-93a2641a1687",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "7667a582-0237-4c58-9c9f-e3001ed87c0f",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "63ac93c6-d4c8-42a6-92f9-7558c65557b1",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "440b6157-8ecc-43a2-be67-ce009a4fbca6",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "63ac93c6-d4c8-42a6-92f9-7558c65557b1",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "48ee003e-b9ae-412e-9c77-24cc3f9bcc99",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "60594458-4712-4dfa-86d1-93a2641a1687",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "423e3093-1379-44ac-971e-163334abbc46",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "41595005-7026-4f62-ac32-7e9a344c5da1",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "48ee003e-b9ae-412e-9c77-24cc3f9bcc99",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "440b6157-8ecc-43a2-be67-ce009a4fbca6",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "423e3093-1379-44ac-971e-163334abbc46",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "1f256f00-1801-4f8d-b992-6d3740794358",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "41595005-7026-4f62-ac32-7e9a344c5da1",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "1eaad209-671c-4350-8dfd-1d172535effa",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "04922139-2090-4209-a687-9caee8cef5d9",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "04424d35-490a-4482-ad87-dd56ea5e2567",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "1eaad209-671c-4350-8dfd-1d172535effa",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "1f256f00-1801-4f8d-b992-6d3740794358",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "04922139-2090-4209-a687-9caee8cef5d9",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "04424d35-490a-4482-ad87-dd56ea5e2567",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "03cc7c69-ccf5-4622-a8f7-d3685814ba35",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "03cc7c69-ccf5-4622-a8f7-d3685814ba35",
+        "score": 1,
+        "attempt": null
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "itemId": "facdcf74-acc0-411c-8e8f-3987a6dca8ef",
+      "seconds": 35.088,
+      "output": {
+        "text": "222",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2183,
+          "raw": {
+            "totalTokens": 2183
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "f403e61f-c301-444b-a9ea-4f1af4ed6a62",
+      "seconds": 31.498,
+      "output": {
+        "text": "1",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2224,
+          "raw": {
+            "totalTokens": 2224
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "e860515c-7c44-4bb1-b3bc-ccf2578ba21f",
+      "seconds": 22.185,
+      "output": {
+        "text": "121",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2216,
+          "raw": {
+            "totalTokens": 2216
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "e7e15666-31b7-4582-aad2-806586c61a5c",
+      "seconds": 18.675,
+      "output": {
+        "text": "48",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2160,
+          "raw": {
+            "totalTokens": 2160
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "e28cae87-d03b-4d7f-95c8-92523ceed831",
+      "seconds": 37.8,
+      "output": {
+        "text": "82",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 1135,
+          "raw": {
+            "totalTokens": 1135
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "e0542cc8-93a0-4e38-a415-8239840af990",
+      "seconds": 25.732,
+      "output": {
+        "text": "49",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2178,
+          "raw": {
+            "totalTokens": 2178
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "d92cc111-b695-4be1-b251-9e2b0574987e",
+      "seconds": 19.461,
+      "output": {
+        "text": "28",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 1190,
+          "raw": {
+            "totalTokens": 1190
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "d8c34aaf-bd4a-4899-820c-ecf6da802455",
+      "seconds": 20.148,
+      "output": {
+        "text": "157",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2189,
+          "raw": {
+            "totalTokens": 2189
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "d0ddbbb8-6216-4d03-afc6-e95387e6c6f7",
+      "seconds": 22.796,
+      "output": {
+        "text": "49",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2171,
+          "raw": {
+            "totalTokens": 2171
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "c4c17522-adc6-4730-95c1-54324c99cbc2",
+      "seconds": 20.852,
+      "output": {
+        "text": "173",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2250,
+          "raw": {
+            "totalTokens": 2250
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "b31c1f58-f152-4130-92c7-49326498b253",
+      "seconds": 18.427,
+      "output": {
+        "text": "48",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2219,
+          "raw": {
+            "totalTokens": 2219
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "b2b53c7f-2242-4134-830f-38776b6f8b42",
+      "seconds": 23.541,
+      "output": {
+        "text": "51",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2266,
+          "raw": {
+            "totalTokens": 2266
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "b120147f-a4b2-427a-9315-fa69cbda9d8e",
+      "seconds": 14.345,
+      "output": {
+        "text": "77",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 168,
+          "raw": {
+            "totalTokens": 168
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "ad90e542-7ffa-49f9-9c3f-854dcb3f3166",
+      "seconds": 16.28,
+      "output": {
+        "text": "5.",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2192,
+          "raw": {
+            "totalTokens": 2192
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "a309ec48-3bc5-41b7-8eb7-c487c4a3b1fa",
+      "seconds": 15.675,
+      "output": {
+        "text": "10",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2185,
+          "raw": {
+            "totalTokens": 2185
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "9b85b4b5-e85a-45f4-848e-bfcb27a7c69a",
+      "seconds": 14.703,
+      "output": {
+        "text": "31",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2246,
+          "raw": {
+            "totalTokens": 2246
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "7e9a201c-9bee-464b-9c80-5daaa2d4552b",
+      "seconds": 18.428,
+      "output": {
+        "text": "122",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 1140,
+          "raw": {
+            "totalTokens": 1140
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "7c5d5a8c-0f86-4e08-8acd-000a54afce76",
+      "seconds": 20.582,
+      "output": {
+        "text": "122",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2203,
+          "raw": {
+            "totalTokens": 2203
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "7667a582-0237-4c58-9c9f-e3001ed87c0f",
+      "seconds": 17.587,
+      "output": {
+        "text": "20 + 4×11 = 64.  \nDividing equally among 4 rooms three times and keeping one room’s share: 64 ÷ 4³ = 1.\n\n1",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2298,
+          "raw": {
+            "totalTokens": 2298
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "63ac93c6-d4c8-42a6-92f9-7558c65557b1",
+      "seconds": 27.181,
+      "output": {
+        "text": "128",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2166,
+          "raw": {
+            "totalTokens": 2166
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "60594458-4712-4dfa-86d1-93a2641a1687",
+      "seconds": 14.474,
+      "output": {
+        "text": "63",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2183,
+          "raw": {
+            "totalTokens": 2183
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "48ee003e-b9ae-412e-9c77-24cc3f9bcc99",
+      "seconds": 22.631,
+      "output": {
+        "text": "36 × 2 × 2 + 9 × 11 = 144 + 99 = **243**",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2198,
+          "raw": {
+            "totalTokens": 2198
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "440b6157-8ecc-43a2-be67-ce009a4fbca6",
+      "seconds": 14.032,
+      "output": {
+        "text": "112",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 9071,
+          "raw": {
+            "totalTokens": 9071
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "423e3093-1379-44ac-971e-163334abbc46",
+      "seconds": 14.169,
+      "output": {
+        "text": "15",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 1179,
+          "raw": {
+            "totalTokens": 1179
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "41595005-7026-4f62-ac32-7e9a344c5da1",
+      "seconds": 13.985,
+      "output": {
+        "text": "45",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 9119,
+          "raw": {
+            "totalTokens": 9119
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "1f256f00-1801-4f8d-b992-6d3740794358",
+      "seconds": 12.865,
+      "output": {
+        "text": "25",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 9103,
+          "raw": {
+            "totalTokens": 9103
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "1eaad209-671c-4350-8dfd-1d172535effa",
+      "seconds": 12.406,
+      "output": {
+        "text": "74 coins → 148 → 123 → 120 ÷ 4 = 30 → 28 ÷ 4 = 7\n\n7",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2259,
+          "raw": {
+            "totalTokens": 2259
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "04922139-2090-4209-a687-9caee8cef5d9",
+      "seconds": 12.016,
+      "output": {
+        "text": "8",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2192,
+          "raw": {
+            "totalTokens": 2192
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "04424d35-490a-4482-ad87-dd56ea5e2567",
+      "seconds": 12.615,
+      "output": {
+        "text": "10",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2185,
+          "raw": {
+            "totalTokens": 2185
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "03cc7c69-ccf5-4622-a8f7-d3685814ba35",
+      "seconds": 12.426,
+      "output": {
+        "text": "15",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 1168,
+          "raw": {
+            "totalTokens": 1168
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    }
+  ]
+}

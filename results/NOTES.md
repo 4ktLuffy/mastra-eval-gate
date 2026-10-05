@@ -47,3 +47,12 @@ crashed-but-scored items still paired, all-null scorer not missing, counts-not-i
 epsilon, delta/stats inconsistency, missing scorer never gates, mixed null attempts). All fixed,
 each with a test (test/compare.test.ts "review fixes", test/load.test.ts, test/mastra.test.ts
 "review bug 1", and the upstream test file).
+
+## 2026-10-05 — real-model run (`npx tsx bench/real.ts`; model: Codex gpt-5.6-luna @ effort none, agent and judge)
+300 Codex calls, 739,563 tokens, median call 14.0 s. Full table in FINDINGS.md "On a real model".
+- Clean no-change pairs (R1–R3): Mastra flagged 3/6, gate 0/6.
+- R5 (itemTimeout 20 s, 7/30 timed out) vs R1–R4: Mastra flagged 2/4 and showed exact accuracy
+  +0.122/+0.129 in the two it missed; gate failed 4/4.
+- R4: 2 Codex calls hung > 300 s and were killed by the adapter's own cap (not Mastra's).
+- Judge scored timed-out (empty) replies 0; exact scorer threw and stored nothing.
+- No real quality regression was present, so no real detection result.

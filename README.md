@@ -31,6 +31,10 @@ comes from a script in this repo, run on `@mastra/core` 1.74.0):
 - **The default flags half of all no-change comparisons.** With zero tolerance, 38.6–51.7% of
   simulated comparisons between two runs of the *same* system are flagged; this gate flags
   0.9–5.2% (at most 5.7% when the true drop equals a non-zero tolerance).
+- **On a real model too.** A Mastra agent and judge on Codex, 30 problems, the same configuration
+  run three times: Mastra flagged 3 of 6 comparisons, the gate none. With a 20 s item timeout
+  (7 of 30 items timed out), Mastra reported no regression in 2 of 4 comparisons and showed
+  accuracy *improving* by 0.12; the gate failed all 4.
 
 ## Use it
 
@@ -53,6 +57,19 @@ npx tsx node_modules/.bin/mastra-eval-gate --mastra src/mastra/index.ts --baseli
 ```
 
 It exits 1 on a failed gate, with one line per reason. `--json` prints the full result.
+
+Or in a Vitest test, next to Mastra's own `expectEvals`:
+
+```ts
+import { expectGate } from 'mastra-eval-gate/vitest';
+
+test('candidate is not worse than the baseline', async () => {
+  await expectGate(mastra, { baseline, candidate, thresholds: { accuracy: { value: 0.05 } } }).toPass();
+});
+```
+
+A failed gate throws `GateFailedError` with the full report as its message. After
+`registerGateMatchers()`, `expect(await gate(mastra, { baseline, candidate })).toPassEvalGate()` works too.
 
 ## What it checks
 
@@ -101,14 +118,17 @@ full Mastra monorepo.
 ```bash
 npm install
 npm run build                 # the CLI test runs dist/cli.js
-npm test                      # 41 tests: unit, real Mastra experiments, CLI over LibSQL
+npm test                      # 44 tests: unit, real Mastra experiments, CLI over LibSQL
 npx tsx bench/power.ts        # M1 simulation → results/power.{json,md}
+npx tsx bench/real.ts         # real run on Codex (~300 calls; needs the Codex CLI signed in)
 npx tsx examples/crash-demo.ts
 cd evidence/phase0 && npm install && node g5_prebuilt.mjs   # each finding has a gN.mjs script
 ```
 
-No API keys and no network calls: models are scripted mocks (`ai/test`), so every run is
-deterministic. `evidence/pilot/` holds the fault-injection pilot that came first, including copies
+Apart from `bench/real.ts`, no API keys and no network calls: models are scripted mocks
+(`ai/test`), so every run is deterministic. `bench/real.ts` calls the Codex CLI (no API key) through
+`bench/codex-model.ts`, an AI SDK model adapter, and saves every output so its verdicts can be
+recomputed without calling it again. `evidence/pilot/` holds the fault-injection pilot that came first, including copies
 of three Mastra templates (Apache-2.0, © Mastra) used to test them under faults.
 
 ## Layout

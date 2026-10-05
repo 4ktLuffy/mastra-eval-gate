@@ -1,0 +1,1009 @@
+{
+  "name": "R5",
+  "config": {
+    "model": "gpt-5.6-luna",
+    "effort": "none",
+    "itemTimeout": 20000
+  },
+  "seconds": 221.84,
+  "rows": {
+    "id": "7315a601-9e0e-49f5-9983-dd888c7b78ef",
+    "results": [
+      {
+        "itemId": "facdcf74-acc0-411c-8e8f-3987a6dca8ef",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "f403e61f-c301-444b-a9ea-4f1af4ed6a62",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "e7e15666-31b7-4582-aad2-806586c61a5c",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "e860515c-7c44-4bb1-b3bc-ccf2578ba21f",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "e28cae87-d03b-4d7f-95c8-92523ceed831",
+        "attempt": 0,
+        "error": {
+          "message": "The operation was aborted due to timeout",
+          "stack": "TimeoutError: The operation was aborted due to timeout\n    at new DOMException (node:internal/per_context/domexception:76:18)\n    at Timeout._onTimeout (node:internal/abort_controller:154:9)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)"
+        }
+      },
+      {
+        "itemId": "e0542cc8-93a0-4e38-a415-8239840af990",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "d92cc111-b695-4be1-b251-9e2b0574987e",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "d8c34aaf-bd4a-4899-820c-ecf6da802455",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "d0ddbbb8-6216-4d03-afc6-e95387e6c6f7",
+        "attempt": 0,
+        "error": {
+          "message": "The operation was aborted due to timeout",
+          "stack": "TimeoutError: The operation was aborted due to timeout\n    at new DOMException (node:internal/per_context/domexception:76:18)\n    at Timeout._onTimeout (node:internal/abort_controller:154:9)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)"
+        }
+      },
+      {
+        "itemId": "c4c17522-adc6-4730-95c1-54324c99cbc2",
+        "attempt": 0,
+        "error": {
+          "message": "The operation was aborted due to timeout",
+          "stack": "TimeoutError: The operation was aborted due to timeout\n    at new DOMException (node:internal/per_context/domexception:76:18)\n    at Timeout._onTimeout (node:internal/abort_controller:154:9)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)"
+        }
+      },
+      {
+        "itemId": "b31c1f58-f152-4130-92c7-49326498b253",
+        "attempt": 0,
+        "error": {
+          "message": "The operation was aborted due to timeout",
+          "stack": "TimeoutError: The operation was aborted due to timeout\n    at new DOMException (node:internal/per_context/domexception:76:18)\n    at Timeout._onTimeout (node:internal/abort_controller:154:9)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)"
+        }
+      },
+      {
+        "itemId": "b2b53c7f-2242-4134-830f-38776b6f8b42",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "b120147f-a4b2-427a-9315-fa69cbda9d8e",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "ad90e542-7ffa-49f9-9c3f-854dcb3f3166",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "a309ec48-3bc5-41b7-8eb7-c487c4a3b1fa",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "9b85b4b5-e85a-45f4-848e-bfcb27a7c69a",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "7e9a201c-9bee-464b-9c80-5daaa2d4552b",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "7c5d5a8c-0f86-4e08-8acd-000a54afce76",
+        "attempt": 0,
+        "error": {
+          "message": "The operation was aborted due to timeout",
+          "stack": "TimeoutError: The operation was aborted due to timeout\n    at new DOMException (node:internal/per_context/domexception:76:18)\n    at Timeout._onTimeout (node:internal/abort_controller:154:9)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)"
+        }
+      },
+      {
+        "itemId": "7667a582-0237-4c58-9c9f-e3001ed87c0f",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "63ac93c6-d4c8-42a6-92f9-7558c65557b1",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "60594458-4712-4dfa-86d1-93a2641a1687",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "48ee003e-b9ae-412e-9c77-24cc3f9bcc99",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "440b6157-8ecc-43a2-be67-ce009a4fbca6",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "423e3093-1379-44ac-971e-163334abbc46",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "41595005-7026-4f62-ac32-7e9a344c5da1",
+        "attempt": 0,
+        "error": {
+          "message": "The operation was aborted due to timeout",
+          "stack": "TimeoutError: The operation was aborted due to timeout\n    at new DOMException (node:internal/per_context/domexception:76:18)\n    at Timeout._onTimeout (node:internal/abort_controller:154:9)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)"
+        }
+      },
+      {
+        "itemId": "1f256f00-1801-4f8d-b992-6d3740794358",
+        "attempt": 0,
+        "error": {
+          "message": "The operation was aborted due to timeout",
+          "stack": "TimeoutError: The operation was aborted due to timeout\n    at new DOMException (node:internal/per_context/domexception:76:18)\n    at Timeout._onTimeout (node:internal/abort_controller:154:9)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)"
+        }
+      },
+      {
+        "itemId": "1eaad209-671c-4350-8dfd-1d172535effa",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "04922139-2090-4209-a687-9caee8cef5d9",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "04424d35-490a-4482-ad87-dd56ea5e2567",
+        "attempt": 0,
+        "error": null
+      },
+      {
+        "itemId": "03cc7c69-ccf5-4622-a8f7-d3685814ba35",
+        "attempt": 0,
+        "error": null
+      }
+    ],
+    "scores": [
+      {
+        "scorerId": "exact",
+        "entityId": "facdcf74-acc0-411c-8e8f-3987a6dca8ef",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "f403e61f-c301-444b-a9ea-4f1af4ed6a62",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "e7e15666-31b7-4582-aad2-806586c61a5c",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "e860515c-7c44-4bb1-b3bc-ccf2578ba21f",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "e7e15666-31b7-4582-aad2-806586c61a5c",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "e860515c-7c44-4bb1-b3bc-ccf2578ba21f",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "f403e61f-c301-444b-a9ea-4f1af4ed6a62",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "facdcf74-acc0-411c-8e8f-3987a6dca8ef",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "e0542cc8-93a0-4e38-a415-8239840af990",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "d92cc111-b695-4be1-b251-9e2b0574987e",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "d8c34aaf-bd4a-4899-820c-ecf6da802455",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "e0542cc8-93a0-4e38-a415-8239840af990",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "d92cc111-b695-4be1-b251-9e2b0574987e",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "d8c34aaf-bd4a-4899-820c-ecf6da802455",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "e28cae87-d03b-4d7f-95c8-92523ceed831",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "c4c17522-adc6-4730-95c1-54324c99cbc2",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "d0ddbbb8-6216-4d03-afc6-e95387e6c6f7",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "b2b53c7f-2242-4134-830f-38776b6f8b42",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "b31c1f58-f152-4130-92c7-49326498b253",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "b120147f-a4b2-427a-9315-fa69cbda9d8e",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "ad90e542-7ffa-49f9-9c3f-854dcb3f3166",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "b2b53c7f-2242-4134-830f-38776b6f8b42",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "b120147f-a4b2-427a-9315-fa69cbda9d8e",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "a309ec48-3bc5-41b7-8eb7-c487c4a3b1fa",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "ad90e542-7ffa-49f9-9c3f-854dcb3f3166",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "9b85b4b5-e85a-45f4-848e-bfcb27a7c69a",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "7e9a201c-9bee-464b-9c80-5daaa2d4552b",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "a309ec48-3bc5-41b7-8eb7-c487c4a3b1fa",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "7e9a201c-9bee-464b-9c80-5daaa2d4552b",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "9b85b4b5-e85a-45f4-848e-bfcb27a7c69a",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "7667a582-0237-4c58-9c9f-e3001ed87c0f",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "7c5d5a8c-0f86-4e08-8acd-000a54afce76",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "63ac93c6-d4c8-42a6-92f9-7558c65557b1",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "60594458-4712-4dfa-86d1-93a2641a1687",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "7667a582-0237-4c58-9c9f-e3001ed87c0f",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "48ee003e-b9ae-412e-9c77-24cc3f9bcc99",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "63ac93c6-d4c8-42a6-92f9-7558c65557b1",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "60594458-4712-4dfa-86d1-93a2641a1687",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "440b6157-8ecc-43a2-be67-ce009a4fbca6",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "48ee003e-b9ae-412e-9c77-24cc3f9bcc99",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "423e3093-1379-44ac-971e-163334abbc46",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "440b6157-8ecc-43a2-be67-ce009a4fbca6",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "1eaad209-671c-4350-8dfd-1d172535effa",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "41595005-7026-4f62-ac32-7e9a344c5da1",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "423e3093-1379-44ac-971e-163334abbc46",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "1f256f00-1801-4f8d-b992-6d3740794358",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "04424d35-490a-4482-ad87-dd56ea5e2567",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "04922139-2090-4209-a687-9caee8cef5d9",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "1eaad209-671c-4350-8dfd-1d172535effa",
+        "score": 0,
+        "attempt": null
+      },
+      {
+        "scorerId": "exact",
+        "entityId": "03cc7c69-ccf5-4622-a8f7-d3685814ba35",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "04922139-2090-4209-a687-9caee8cef5d9",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "03cc7c69-ccf5-4622-a8f7-d3685814ba35",
+        "score": 1,
+        "attempt": null
+      },
+      {
+        "scorerId": "judge",
+        "entityId": "04424d35-490a-4482-ad87-dd56ea5e2567",
+        "score": 1,
+        "attempt": null
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "itemId": "facdcf74-acc0-411c-8e8f-3987a6dca8ef",
+      "seconds": 10.954,
+      "output": {
+        "text": "52 + (4 × 6) = 76  \n76 × 2 × 2 − 11 = **293**",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 160,
+          "raw": {
+            "totalTokens": 160
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "f403e61f-c301-444b-a9ea-4f1af4ed6a62",
+      "seconds": 10.99,
+      "output": {
+        "text": "0",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2224,
+          "raw": {
+            "totalTokens": 2224
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "e860515c-7c44-4bb1-b3bc-ccf2578ba21f",
+      "seconds": 11.819,
+      "output": {
+        "text": "83",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 1192,
+          "raw": {
+            "totalTokens": 1192
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "e7e15666-31b7-4582-aad2-806586c61a5c",
+      "seconds": 11.673,
+      "output": {
+        "text": "72 − 24 = 48 coins. **48**",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2171,
+          "raw": {
+            "totalTokens": 2171
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "e28cae87-d03b-4d7f-95c8-92523ceed831",
+      "seconds": 20.001,
+      "output": null,
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "itemId": "e0542cc8-93a0-4e38-a415-8239840af990",
+      "seconds": 10.645,
+      "output": {
+        "text": "44",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2178,
+          "raw": {
+            "totalTokens": 2178
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "d92cc111-b695-4be1-b251-9e2b0574987e",
+      "seconds": 10.751,
+      "output": {
+        "text": "76 + 9×12 − 29 + 4×11 = 199  \nAfter discarding 3: 196; split among 4 rooms gives 49 each. One room remains.\n\n49",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 207,
+          "raw": {
+            "totalTokens": 207
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "d8c34aaf-bd4a-4899-820c-ecf6da802455",
+      "seconds": 10.244,
+      "output": {
+        "text": "157",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2189,
+          "raw": {
+            "totalTokens": 2189
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "d0ddbbb8-6216-4d03-afc6-e95387e6c6f7",
+      "seconds": 20.001,
+      "output": null,
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "itemId": "c4c17522-adc6-4730-95c1-54324c99cbc2",
+      "seconds": 20,
+      "output": null,
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "itemId": "b31c1f58-f152-4130-92c7-49326498b253",
+      "seconds": 20.002,
+      "output": null,
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "itemId": "b2b53c7f-2242-4134-830f-38776b6f8b42",
+      "seconds": 17.551,
+      "output": {
+        "text": "20",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 218,
+          "raw": {
+            "totalTokens": 218
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "b120147f-a4b2-427a-9315-fa69cbda9d8e",
+      "seconds": 13.62,
+      "output": {
+        "text": "30",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 1192,
+          "raw": {
+            "totalTokens": 1192
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "ad90e542-7ffa-49f9-9c3f-854dcb3f3166",
+      "seconds": 13.689,
+      "output": {
+        "text": "11",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 143,
+          "raw": {
+            "totalTokens": 143
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "a309ec48-3bc5-41b7-8eb7-c487c4a3b1fa",
+      "seconds": 13.7,
+      "output": {
+        "text": "10",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2185,
+          "raw": {
+            "totalTokens": 2185
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "9b85b4b5-e85a-45f4-848e-bfcb27a7c69a",
+      "seconds": 11.355,
+      "output": {
+        "text": "(67 − 3) ÷ 4 − 1 + 3×12 = 48  \n(48 − 3) ÷ 4 + 4×8 = 43  \n\n43",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2287,
+          "raw": {
+            "totalTokens": 2287
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "7e9a201c-9bee-464b-9c80-5daaa2d4552b",
+      "seconds": 12.072,
+      "output": {
+        "text": "122",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2164,
+          "raw": {
+            "totalTokens": 2164
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "7c5d5a8c-0f86-4e08-8acd-000a54afce76",
+      "seconds": 20.002,
+      "output": null,
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "itemId": "7667a582-0237-4c58-9c9f-e3001ed87c0f",
+      "seconds": 10.549,
+      "output": {
+        "text": "1",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 1236,
+          "raw": {
+            "totalTokens": 1236
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "63ac93c6-d4c8-42a6-92f9-7558c65557b1",
+      "seconds": 10.693,
+      "output": {
+        "text": "128",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2166,
+          "raw": {
+            "totalTokens": 2166
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "60594458-4712-4dfa-86d1-93a2641a1687",
+      "seconds": 15.174,
+      "output": {
+        "text": "51",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 1159,
+          "raw": {
+            "totalTokens": 1159
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "48ee003e-b9ae-412e-9c77-24cc3f9bcc99",
+      "seconds": 12.063,
+      "output": {
+        "text": "1089",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 1153,
+          "raw": {
+            "totalTokens": 1153
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "440b6157-8ecc-43a2-be67-ce009a4fbca6",
+      "seconds": 10.847,
+      "output": {
+        "text": "112",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 1135,
+          "raw": {
+            "totalTokens": 1135
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "423e3093-1379-44ac-971e-163334abbc46",
+      "seconds": 10.4,
+      "output": {
+        "text": "16",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2203,
+          "raw": {
+            "totalTokens": 2203
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "41595005-7026-4f62-ac32-7e9a344c5da1",
+      "seconds": 20.001,
+      "output": null,
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "itemId": "1f256f00-1801-4f8d-b992-6d3740794358",
+      "seconds": 20.001,
+      "output": null,
+      "error": "The operation was aborted due to timeout"
+    },
+    {
+      "itemId": "1eaad209-671c-4350-8dfd-1d172535effa",
+      "seconds": 18.826,
+      "output": {
+        "text": "2",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2230,
+          "raw": {
+            "totalTokens": 2230
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "04922139-2090-4209-a687-9caee8cef5d9",
+      "seconds": 12.552,
+      "output": {
+        "text": "8",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2192,
+          "raw": {
+            "totalTokens": 2192
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "04424d35-490a-4482-ad87-dd56ea5e2567",
+      "seconds": 11.701,
+      "output": {
+        "text": "10",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 3209,
+          "raw": {
+            "totalTokens": 3209
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    },
+    {
+      "itemId": "03cc7c69-ccf5-4622-a8f7-d3685814ba35",
+      "seconds": 11.399,
+      "output": {
+        "text": "15",
+        "toolCalls": [],
+        "toolResults": [],
+        "sources": [],
+        "files": [],
+        "usage": {
+          "totalTokens": 2192,
+          "raw": {
+            "totalTokens": 2192
+          }
+        },
+        "traceId": null,
+        "error": null
+      },
+      "error": null
+    }
+  ]
+}

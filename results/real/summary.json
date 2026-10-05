@@ -1,0 +1,632 @@
+{
+  "model": "codex gpt-5.6-luna @ effort none (agent and judge)",
+  "items": 30,
+  "runs": [
+    {
+      "name": "R1",
+      "id": "19fc0d55-f0e0-4b4a-bb0f-61339ea39198",
+      "seconds": 311.587,
+      "failed": 0
+    },
+    {
+      "name": "R2",
+      "id": "34ffb515-ddf2-4053-b627-b04c20d97187",
+      "seconds": 289.977,
+      "failed": 0
+    },
+    {
+      "name": "R3",
+      "id": "6e128f95-98a0-450b-b86e-38a387f30b2f",
+      "seconds": 244.787,
+      "failed": 0
+    },
+    {
+      "name": "R4",
+      "id": "4c5dc1d1-d275-4cc4-a538-81604bb8c865",
+      "seconds": 474.739,
+      "failed": 2
+    },
+    {
+      "name": "R5",
+      "id": "7315a601-9e0e-49f5-9983-dd888c7b78ef",
+      "seconds": 221.84,
+      "failed": 7
+    }
+  ],
+  "codex": {
+    "calls": 300,
+    "tokens": 739563,
+    "medianSeconds": 13.981
+  },
+  "noChange": {
+    "pairs": 12,
+    "mastraFlagged": 6,
+    "gateFailed": 3
+  },
+  "timeout": [
+    {
+      "baseline": "R1",
+      "candidate": "R5",
+      "mastra": {
+        "hasRegression": true,
+        "deltas": {
+          "exact": 0.05507246376811592,
+          "judge": -0.033333333333333326
+        },
+        "errorRateB": {
+          "exact": 0,
+          "judge": 0
+        },
+        "warnings": []
+      },
+      "gate": {
+        "passed": false,
+        "reasons": [
+          "7 item(s) fail in the candidate that passed in the baseline (0 fixed); allowed net 0."
+        ],
+        "changes": {
+          "exact": 0,
+          "judge": 0.043478260869565216
+        },
+        "pAdjusted": {
+          "exact": 1,
+          "judge": 1
+        }
+      }
+    },
+    {
+      "baseline": "R2",
+      "candidate": "R5",
+      "mastra": {
+        "hasRegression": false,
+        "deltas": {
+          "exact": 0.12173913043478257,
+          "judge": 0
+        },
+        "errorRateB": {
+          "exact": 0,
+          "judge": 0
+        },
+        "warnings": []
+      },
+      "gate": {
+        "passed": false,
+        "reasons": [
+          "7 item(s) fail in the candidate that passed in the baseline (0 fixed); allowed net 0."
+        ],
+        "changes": {
+          "exact": 0.08695652173913043,
+          "judge": 0.13043478260869565
+        },
+        "pAdjusted": {
+          "exact": 1,
+          "judge": 1
+        }
+      }
+    },
+    {
+      "baseline": "R3",
+      "candidate": "R5",
+      "mastra": {
+        "hasRegression": true,
+        "deltas": {
+          "exact": 0.021739130434782594,
+          "judge": -0.09999999999999998
+        },
+        "errorRateB": {
+          "exact": 0,
+          "judge": 0
+        },
+        "warnings": []
+      },
+      "gate": {
+        "passed": false,
+        "reasons": [
+          "7 item(s) fail in the candidate that passed in the baseline (0 fixed); allowed net 0."
+        ],
+        "changes": {
+          "exact": 0,
+          "judge": 0
+        },
+        "pAdjusted": {
+          "exact": 1,
+          "judge": 1
+        }
+      }
+    },
+    {
+      "baseline": "R4",
+      "candidate": "R5",
+      "mastra": {
+        "hasRegression": false,
+        "deltas": {
+          "exact": 0.12888198757763975,
+          "judge": 0.10000000000000003
+        },
+        "errorRateB": {
+          "exact": 0,
+          "judge": 0
+        },
+        "warnings": []
+      },
+      "gate": {
+        "passed": false,
+        "reasons": [
+          "7 item(s) fail in the candidate that passed in the baseline (2 fixed); allowed net 0."
+        ],
+        "changes": {
+          "exact": 0.047619047619047616,
+          "judge": 0.14285714285714285
+        },
+        "pAdjusted": {
+          "exact": 1,
+          "judge": 1
+        }
+      }
+    }
+  ],
+  "pairs": [
+    {
+      "baseline": "R1",
+      "candidate": "R2",
+      "mastra": {
+        "hasRegression": true,
+        "deltas": {
+          "exact": -0.06666666666666665,
+          "judge": -0.033333333333333326
+        },
+        "errorRateB": {
+          "exact": 0,
+          "judge": 0
+        },
+        "warnings": []
+      },
+      "gate": {
+        "passed": true,
+        "reasons": [],
+        "changes": {
+          "exact": -0.06666666666666667,
+          "judge": -0.03333333333333333
+        },
+        "pAdjusted": {
+          "exact": 0.6863656817159142,
+          "judge": 0.6863656817159142
+        }
+      }
+    },
+    {
+      "baseline": "R1",
+      "candidate": "R3",
+      "mastra": {
+        "hasRegression": false,
+        "deltas": {
+          "exact": 0.033333333333333326,
+          "judge": 0.06666666666666665
+        },
+        "errorRateB": {
+          "exact": 0,
+          "judge": 0
+        },
+        "warnings": []
+      },
+      "gate": {
+        "passed": true,
+        "reasons": [],
+        "changes": {
+          "exact": 0.03333333333333333,
+          "judge": 0.06666666666666667
+        },
+        "pAdjusted": {
+          "exact": 1,
+          "judge": 1
+        }
+      }
+    },
+    {
+      "baseline": "R1",
+      "candidate": "R4",
+      "mastra": {
+        "hasRegression": true,
+        "deltas": {
+          "exact": -0.07380952380952382,
+          "judge": -0.13333333333333336
+        },
+        "errorRateB": {
+          "exact": 0,
+          "judge": 0
+        },
+        "warnings": []
+      },
+      "gate": {
+        "passed": false,
+        "reasons": [
+          "2 item(s) fail in the candidate that passed in the baseline (0 fixed); allowed net 0."
+        ],
+        "changes": {
+          "exact": -0.10714285714285714,
+          "judge": -0.14285714285714285
+        },
+        "pAdjusted": {
+          "exact": 0.12739363031848408,
+          "judge": 0.12739363031848408
+        }
+      }
+    },
+    {
+      "baseline": "R1",
+      "candidate": "R5",
+      "mastra": {
+        "hasRegression": true,
+        "deltas": {
+          "exact": 0.05507246376811592,
+          "judge": -0.033333333333333326
+        },
+        "errorRateB": {
+          "exact": 0,
+          "judge": 0
+        },
+        "warnings": []
+      },
+      "gate": {
+        "passed": false,
+        "reasons": [
+          "7 item(s) fail in the candidate that passed in the baseline (0 fixed); allowed net 0."
+        ],
+        "changes": {
+          "exact": 0,
+          "judge": 0.043478260869565216
+        },
+        "pAdjusted": {
+          "exact": 1,
+          "judge": 1
+        }
+      }
+    },
+    {
+      "baseline": "R2",
+      "candidate": "R1",
+      "mastra": {
+        "hasRegression": false,
+        "deltas": {
+          "exact": 0.06666666666666665,
+          "judge": 0.033333333333333326
+        },
+        "errorRateB": {
+          "exact": 0,
+          "judge": 0
+        },
+        "warnings": []
+      },
+      "gate": {
+        "passed": true,
+        "reasons": [],
+        "changes": {
+          "exact": 0.06666666666666667,
+          "judge": 0.03333333333333333
+        },
+        "pAdjusted": {
+          "exact": 1,
+          "judge": 1
+        }
+      }
+    },
+    {
+      "baseline": "R2",
+      "candidate": "R3",
+      "mastra": {
+        "hasRegression": false,
+        "deltas": {
+          "exact": 0.09999999999999998,
+          "judge": 0.09999999999999998
+        },
+        "errorRateB": {
+          "exact": 0,
+          "judge": 0
+        },
+        "warnings": []
+      },
+      "gate": {
+        "passed": true,
+        "reasons": [],
+        "changes": {
+          "exact": 0.1,
+          "judge": 0.1
+        },
+        "pAdjusted": {
+          "exact": 1,
+          "judge": 1
+        }
+      }
+    },
+    {
+      "baseline": "R2",
+      "candidate": "R4",
+      "mastra": {
+        "hasRegression": true,
+        "deltas": {
+          "exact": -0.007142857142857173,
+          "judge": -0.10000000000000003
+        },
+        "errorRateB": {
+          "exact": 0,
+          "judge": 0
+        },
+        "warnings": []
+      },
+      "gate": {
+        "passed": false,
+        "reasons": [
+          "2 item(s) fail in the candidate that passed in the baseline (0 fixed); allowed net 0."
+        ],
+        "changes": {
+          "exact": 0,
+          "judge": -0.07142857142857142
+        },
+        "pAdjusted": {
+          "exact": 0.6882155892205389,
+          "judge": 0.623768811559422
+        }
+      }
+    },
+    {
+      "baseline": "R2",
+      "candidate": "R5",
+      "mastra": {
+        "hasRegression": false,
+        "deltas": {
+          "exact": 0.12173913043478257,
+          "judge": 0
+        },
+        "errorRateB": {
+          "exact": 0,
+          "judge": 0
+        },
+        "warnings": []
+      },
+      "gate": {
+        "passed": false,
+        "reasons": [
+          "7 item(s) fail in the candidate that passed in the baseline (0 fixed); allowed net 0."
+        ],
+        "changes": {
+          "exact": 0.08695652173913043,
+          "judge": 0.13043478260869565
+        },
+        "pAdjusted": {
+          "exact": 1,
+          "judge": 1
+        }
+      }
+    },
+    {
+      "baseline": "R3",
+      "candidate": "R1",
+      "mastra": {
+        "hasRegression": true,
+        "deltas": {
+          "exact": -0.033333333333333326,
+          "judge": -0.06666666666666665
+        },
+        "errorRateB": {
+          "exact": 0,
+          "judge": 0
+        },
+        "warnings": []
+      },
+      "gate": {
+        "passed": true,
+        "reasons": [],
+        "changes": {
+          "exact": -0.03333333333333333,
+          "judge": -0.06666666666666667
+        },
+        "pAdjusted": {
+          "exact": 0.6852657367131644,
+          "judge": 0.6852657367131644
+        }
+      }
+    },
+    {
+      "baseline": "R3",
+      "candidate": "R2",
+      "mastra": {
+        "hasRegression": true,
+        "deltas": {
+          "exact": -0.09999999999999998,
+          "judge": -0.09999999999999998
+        },
+        "errorRateB": {
+          "exact": 0,
+          "judge": 0
+        },
+        "warnings": []
+      },
+      "gate": {
+        "passed": true,
+        "reasons": [],
+        "changes": {
+          "exact": -0.1,
+          "judge": -0.1
+        },
+        "pAdjusted": {
+          "exact": 0.2455877206139693,
+          "judge": 0.2455877206139693
+        }
+      }
+    },
+    {
+      "baseline": "R3",
+      "candidate": "R4",
+      "mastra": {
+        "hasRegression": true,
+        "deltas": {
+          "exact": -0.10714285714285715,
+          "judge": -0.2
+        },
+        "errorRateB": {
+          "exact": 0,
+          "judge": 0
+        },
+        "warnings": []
+      },
+      "gate": {
+        "passed": false,
+        "reasons": [
+          "2 item(s) fail in the candidate that passed in the baseline (0 fixed); allowed net 0."
+        ],
+        "changes": {
+          "exact": -0.07142857142857142,
+          "judge": -0.14285714285714285
+        },
+        "pAdjusted": {
+          "exact": 0.312134393280336,
+          "judge": 0.22138893055347234
+        }
+      }
+    },
+    {
+      "baseline": "R3",
+      "candidate": "R5",
+      "mastra": {
+        "hasRegression": true,
+        "deltas": {
+          "exact": 0.021739130434782594,
+          "judge": -0.09999999999999998
+        },
+        "errorRateB": {
+          "exact": 0,
+          "judge": 0
+        },
+        "warnings": []
+      },
+      "gate": {
+        "passed": false,
+        "reasons": [
+          "7 item(s) fail in the candidate that passed in the baseline (0 fixed); allowed net 0."
+        ],
+        "changes": {
+          "exact": 0,
+          "judge": 0
+        },
+        "pAdjusted": {
+          "exact": 1,
+          "judge": 1
+        }
+      }
+    },
+    {
+      "baseline": "R4",
+      "candidate": "R1",
+      "mastra": {
+        "hasRegression": false,
+        "deltas": {
+          "exact": 0.07380952380952382,
+          "judge": 0.13333333333333336
+        },
+        "errorRateB": {
+          "exact": 0,
+          "judge": 0
+        },
+        "warnings": []
+      },
+      "gate": {
+        "passed": true,
+        "reasons": [],
+        "changes": {
+          "exact": 0.10714285714285714,
+          "judge": 0.14285714285714285
+        },
+        "pAdjusted": {
+          "exact": 1,
+          "judge": 1
+        }
+      }
+    },
+    {
+      "baseline": "R4",
+      "candidate": "R2",
+      "mastra": {
+        "hasRegression": false,
+        "deltas": {
+          "exact": 0.007142857142857173,
+          "judge": 0.10000000000000003
+        },
+        "errorRateB": {
+          "exact": 0,
+          "judge": 0
+        },
+        "warnings": []
+      },
+      "gate": {
+        "passed": true,
+        "reasons": [],
+        "changes": {
+          "exact": 0,
+          "judge": 0.07142857142857142
+        },
+        "pAdjusted": {
+          "exact": 1,
+          "judge": 1
+        }
+      }
+    },
+    {
+      "baseline": "R4",
+      "candidate": "R3",
+      "mastra": {
+        "hasRegression": false,
+        "deltas": {
+          "exact": 0.10714285714285715,
+          "judge": 0.2
+        },
+        "errorRateB": {
+          "exact": 0,
+          "judge": 0
+        },
+        "warnings": []
+      },
+      "gate": {
+        "passed": true,
+        "reasons": [],
+        "changes": {
+          "exact": 0.07142857142857142,
+          "judge": 0.14285714285714285
+        },
+        "pAdjusted": {
+          "exact": 1,
+          "judge": 1
+        }
+      }
+    },
+    {
+      "baseline": "R4",
+      "candidate": "R5",
+      "mastra": {
+        "hasRegression": false,
+        "deltas": {
+          "exact": 0.12888198757763975,
+          "judge": 0.10000000000000003
+        },
+        "errorRateB": {
+          "exact": 0,
+          "judge": 0
+        },
+        "warnings": []
+      },
+      "gate": {
+        "passed": false,
+        "reasons": [
+          "7 item(s) fail in the candidate that passed in the baseline (2 fixed); allowed net 0."
+        ],
+        "changes": {
+          "exact": 0.047619047619047616,
+          "judge": 0.14285714285714285
+        },
+        "pAdjusted": {
+          "exact": 1,
+          "judge": 1
+        }
+      }
+    }
+  ]
+}

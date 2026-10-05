@@ -103,6 +103,42 @@ flagged **38.6–51.7%** of no-change comparisons across score types and dataset
 to 40.3% at tolerance 0.05 (pass/fail scores, 10 items). This is a documented default, so it is
 **not a fault**; it is listed because it is what users get unless they set thresholds.
 
+## On a real model (Codex)
+
+`bench/real.ts`, every row and output saved in `results/real/` (`R1.json` … `R5.json`,
+`summary.json`). A Mastra agent on Codex (`gpt-5.6-luna`, reasoning effort none) answers 30
+multi-step arithmetic word problems (`bench/real-dataset.ts`, exact answers known). Two scorers: an
+exact-answer code scorer, and an LLM judge that is also Codex (one call per item). 300 Codex calls,
+739,563 tokens, median call 14 s.
+
+R1–R4 are the same configuration run four times, so every comparison between them is "no change".
+R5 is the same configuration with `itemTimeout: 20_000`; in R1–R3, 21 of 90 items took longer than
+20 s (median 15.0 s, max 47.4 s), so the timeout sits at about the 77th percentile.
+
+| Comparison | Mastra `hasRegression` | gate failed |
+|---|---|---|
+| No change, no failures (R1–R3, 6 ordered pairs) | **3 of 6** | 0 of 6 |
+| No change, but R4 had 2 Codex calls that never returned (6 pairs with R4) | 3 of 6 | 3 of 6 (the 3 with R4 as candidate, for the 2 failures) |
+| 7 of 30 items time out (R5 vs each of R1–R4) | **2 of 4** | 4 of 4 |
+
+- **Real noise.** With nothing changed, exact-answer accuracy moved by up to 3 items in 30 between
+  runs (R1 0.467, R2 0.400, R3 0.500). Mastra's zero-tolerance rule flagged half of the clean
+  no-change comparisons; the gate flagged none.
+- **Real timeouts hidden.** Against R2 and R4, Mastra reported no regression for R5 and showed
+  exact-answer accuracy *improving* (+0.122 and +0.129), because the 7 timed-out items left that
+  scorer's mean (R5 scored 23 items, mean 0.522). The gate failed all four comparisons on the 7 new
+  failures.
+- **The two scorers disagree about failures.** The Codex judge graded the empty replies of
+  timed-out items as wrong (score 0, stored), while the exact-answer scorer threw and stored
+  nothing. So within one experiment one scorer counted the failures and the other hid them; which
+  way Mastra's verdict goes depends on that, not on the agent.
+- **R4's failures came from this harness.** Two Codex calls had not returned after 300 s and the
+  adapter's own 5-minute cap (`bench/codex-model.ts`) killed them. They are real hangs, but the
+  cut-off is ours, not Mastra's.
+- **What this run does not show:** a real quality regression. Nothing in R1–R5 changed the
+  agent's quality, so there is no detection result on real data here, only false alarms and
+  hidden failures.
+
 ## Judge-side finding: empty verdict lists score silently (simplification)
 
 `evidence/phase0/g6.mjs`.
