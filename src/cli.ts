@@ -4,8 +4,9 @@
  *   [--threshold scorer=0.05[:lower]] [--alpha 0.05] [--max-new-failures 0] [--max-coverage-loss 0]
  *   [--mid-p] [--json]
  *
- * <module> must export a configured `mastra` instance (default export or named `mastra`).
- * For a TypeScript module, run the CLI through tsx: `npx tsx node_modules/.bin/mastra-eval-gate ...`.
+ * <module> must export a configured `mastra` instance (default export or named `mastra`). A
+ * TypeScript module (.ts/.mts/.cts/.tsx), such as a Mastra project's src/mastra/index.ts, is
+ * loaded through tsx, so no build step or wrapper is needed.
  * Exit code: 0 pass, 1 fail, 2 usage or load error.
  */
 import { resolve } from 'node:path';
@@ -15,6 +16,16 @@ import type { Mastra } from '@mastra/core';
 import type { ScorerThreshold } from './compare.js';
 import { gate } from './index.js';
 import { formatReport } from './report.js';
+
+/** Import a JS module directly, or a TypeScript one through tsx's loader. */
+async function loadModule(path: string): Promise<unknown> {
+  const url = pathToFileURL(resolve(path)).href;
+  if (/\.[cm]?tsx?$/.test(path)) {
+    const { tsImport } = await import('tsx/esm/api');
+    return tsImport(url, import.meta.url);
+  }
+  return import(url);
+}
 
 async function main(): Promise<number> {
   const { values } = parseArgs({
@@ -36,7 +47,7 @@ async function main(): Promise<number> {
     return 2;
   }
 
-  const mod = (await import(pathToFileURL(resolve(values.mastra)).href)) as { mastra?: Mastra; default?: Mastra };
+  const mod = (await loadModule(values.mastra)) as { mastra?: Mastra; default?: Mastra };
   const mastra = mod.mastra ?? mod.default;
   if (!mastra || typeof (mastra as Mastra).getStorage !== 'function') {
     console.error(`${values.mastra} does not export a Mastra instance (as default or "mastra").`);

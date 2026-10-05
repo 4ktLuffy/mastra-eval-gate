@@ -203,8 +203,18 @@ When the judge returns well-formed JSON with an empty verdict list while the pre
 extracted claims or opinions, the prebuilt LLM scorers return a number with no error and no
 `notScorable`: toxicity **1** (worst, and ignores `scale`), faithfulness and answer-relevancy
 **0** (worst), bias and hallucination **0** (best). #25039 (merged 2026-09-24) changed the
-faithfulness/hallucination denominators but not this case. Not fixed here; mapping it to
-`notScorable` would hide judge failures from the mean, so the right fix is a scorer error.
+faithfulness/hallucination denominators but not this case. Mapping it to `notScorable` would hide
+judge failures from the mean, so the fix makes it a scorer error.
+
+**Fixed in `upstream/empty-judge-verdicts.patch`** (base `b2e9cd46`): bias, hallucination,
+faithfulness and answer-relevancy throw when the judge returns no verdicts for items it extracted
+(the same treatment Mastra already gives a structured-output validation failure); toxicity, which
+has no extraction step, scores no verdicts as 0, matching its docs ("0.0: No toxic elements
+detected"; the `return 1` dates from the scorer's first version, `e473f27ed9`, July 2025, with no test
+covering it); bias trims verdicts. A new test (`scorers/llm/empty-verdicts.test.ts`, Mastra's own
+mock-judge pattern) passes 7/7 and fails 6/7 on the original scorers (the seventh is the
+nothing-extracted control). In the full checkout, all 601 `@mastra/evals` tests pass (including
+the recorded-LLM scorer tests), `tsc --noEmit` passes, Prettier is clean, and it has a changeset.
 
 ## Side findings
 
@@ -224,7 +234,7 @@ faithfulness/hallucination denominators but not this case. Not fixed here; mappi
 
 ## The fix
 
-`upstream/compare-experiments.patch` (base `73aaaca04e`). New fields are additive, but two existing
+`upstream/compare-experiments.patch` (base `b2e9cd46`, current `main` on 2026-10-05). New fields are additive, but two existing
 ones change meaning, on purpose:
 
 - **`delta` changes meaning**: it is now the mean change over items scored in both experiments
@@ -243,12 +253,13 @@ ones change meaning, on purpose:
   can't trip the zero default (mean(0.9, 0.1, 0.2) − 0.4 ≈ −1e-16; at a 1.2e7 scale the noise is
   1.9e-9, which an absolute guard would flag).
 
-Its test (`analytics/__tests__/compare.test.ts` in the patch) passes 10/10 on the patched files and
-fails 10/10 on the original; the float-noise test also fails if the guard is made absolute. The
-patched files add no type errors over the original in a sparse checkout of `packages/core/src`
-(`upstream/tsconfig.check.json`). It has not been run inside the full Mastra monorepo.
-An independent review (Claude Sonnet) found 8 problems in the first version of the patch,
-including a type error in `buildEmptyResult`; all are fixed and each has a test.
+Verified in a full checkout of Mastra `main` at `b2e9cd46` (2026-10-05), where the patch applies
+cleanly: its test (`analytics/__tests__/compare.test.ts`) passes 10/10 and fails 10/10 on the
+original files (the float-noise test also fails if the guard is made absolute); all 465 tests in
+`packages/core/src/datasets` pass, including the existing caller-driven experiment tests that call
+`compareExperiments`; `pnpm typecheck` for `@mastra/core` passes; Prettier is clean; and it carries
+a changeset. An independent review (Claude Sonnet) found 8 problems in the first version of the
+patch, including a type error in `buildEmptyResult`; all are fixed and each has a test.
 
 ## The gate, and what it does not do
 

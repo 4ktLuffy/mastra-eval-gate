@@ -53,10 +53,10 @@ console.log(formatReport(result));
 if (!result.passed) process.exit(1);
 ```
 
-Or in CI, against a module that exports your configured `mastra`:
+Or in CI, against the module that exports your configured `mastra` (TypeScript is loaded directly):
 
 ```bash
-npx tsx node_modules/.bin/mastra-eval-gate --mastra src/mastra/index.ts --baseline <id> --candidate <id> --threshold faithfulness=0.05
+npx mastra-eval-gate --mastra src/mastra/index.ts --baseline <id> --candidate <id> --threshold faithfulness=0.05
 ```
 
 It exits 1 on a failed gate, with one line per reason. `--json` prints the full result.
@@ -108,15 +108,25 @@ From `bench/power.ts` (2000 simulated comparisons per cell, table in
   detect a 0.1 drop: 176 live, 162 mocked); the model's own run-to-run variance dominated. `midP: true` recovers
   power but reached 6.65% false alarms at the tolerance boundary, so it is opt-in.
 
-## The upstream fix
+## The upstream fixes
 
-[`upstream/compare-experiments.patch`](upstream/compare-experiments.patch) is a small fix to
-Mastra's own `compareExperiments` (base `73aaaca04e`): deltas over items scored in both runs and
-not failed in either, `missingIn` for absent scorers (and `hasRegression` when the candidate lost
-one), averaged attempts, a `failedItems` count with an opt-in gate on newly failed items, and a
-relative float-noise guard. `delta` changes meaning (see [FINDINGS.md](FINDINGS.md#the-fix)). Its
-test passes 10/10 on the patch and fails 10/10 on the original. It has not been run inside the
-full Mastra monorepo.
+Two patches against Mastra `main` (`b2e9cd46`, 2026-10-05), each verified in a full checkout with
+Mastra's own tests, type check, Prettier, and a changeset:
+
+- [`upstream/compare-experiments.patch`](upstream/compare-experiments.patch) (`@mastra/core`):
+  deltas over items scored in both runs and not failed in either, `missingIn` for absent scorers
+  (and `hasRegression` when the candidate lost one), averaged attempts, a `failedItems` count with
+  an opt-in gate on newly failed items, and a relative float-noise guard. `delta` changes meaning
+  (see [FINDINGS.md](FINDINGS.md#the-fix)). Its test passes 10/10 and fails 10/10 on the original;
+  all 465 core dataset tests pass.
+- [`upstream/empty-judge-verdicts.patch`](upstream/empty-judge-verdicts.patch) (`@mastra/evals`):
+  LLM scorers error when the judge returns no verdicts for extracted items, instead of scoring;
+  toxicity scores no verdicts 0, not 1. Its test passes 7/7 and fails 6/7 on the original; all 601
+  evals tests pass.
+
+To check them: clone `mastra-ai/mastra`, `git checkout b2e9cd46`, `git apply` the patch,
+`pnpm install`, `pnpm turbo build --filter "@mastra/evals^..."`, then run `pnpm vitest run` and
+`pnpm typecheck` (core) or `pnpm check` (evals) in the package.
 
 ## Reproduce
 

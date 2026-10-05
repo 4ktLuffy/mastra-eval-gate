@@ -1,9 +1,30 @@
+diff --git a/.changeset/compare-experiments-paired-delta.md b/.changeset/compare-experiments-paired-delta.md
+new file mode 100644
+index 00000000..0cc7625b
+--- /dev/null
++++ b/.changeset/compare-experiments-paired-delta.md
+@@ -0,0 +1,15 @@
++---
++'@mastra/core': patch
++---
++
++`compareExperiments` no longer reports a regression or an improvement that comes from comparing different items. `delta` is now the mean change over items scored in both experiments whose target run did not fail in either (`pairedCount`). A scorer with no scores in one experiment is marked `missingIn` instead of being averaged as 0, and one missing from the candidate sets `hasRegression`. Repeated attempts of an item are averaged instead of keeping the last one. The result now includes `failedItems`, a warning names items that newly failed, and the opt-in `maxFailedItemIncrease` makes them fail the check. Before, an agent that crashed on its hardest items could compare as an improvement.
++
++```ts
++const result = await compareExperiments(mastra, {
++  experimentIdA: baselineId,
++  experimentIdB: candidateId,
++  maxFailedItemIncrease: 0,
++});
++result.failedItems; // { a: 0, b: 3 }
++result.hasRegression; // true
++```
 diff --git a/packages/core/src/datasets/experiment/analytics/__tests__/compare.test.ts b/packages/core/src/datasets/experiment/analytics/__tests__/compare.test.ts
 new file mode 100644
-index 0000000..b4dd8f6
+index 00000000..e2472ec7
 --- /dev/null
 +++ b/packages/core/src/datasets/experiment/analytics/__tests__/compare.test.ts
-@@ -0,0 +1,152 @@
+@@ -0,0 +1,171 @@
 +/**
 + * compareExperiments over stored rows: paired deltas, missing scorers, repeated attempts,
 + * and failed items.
@@ -12,7 +33,12 @@ index 0000000..b4dd8f6
 +import type { Mastra } from '../../../../mastra';
 +import { compareExperiments } from '../compare';
 +
-+type Row = { itemId: string; attempt?: number; error?: { message: string } | null; scores?: Record<string, number | null> };
++type Row = {
++  itemId: string;
++  attempt?: number;
++  error?: { message: string } | null;
++  scores?: Record<string, number | null>;
++};
 +
 +/** A Mastra stand-in whose storage holds two experiments, A and B. */
 +function mastraWith(a: Row[], b: Row[]): Mastra {
@@ -30,7 +56,9 @@ index 0000000..b4dd8f6
 +      ),
 +    }),
 +  };
-+  const storage = { getStore: async (name: string) => (name === 'experiments' ? experiments : name === 'scores' ? scores : undefined) };
++  const storage = {
++    getStore: async (name: string) => (name === 'experiments' ? experiments : name === 'scores' ? scores : undefined),
++  };
 +  return { getStorage: () => storage } as unknown as Mastra;
 +}
 +
@@ -53,7 +81,9 @@ index 0000000..b4dd8f6
 +  it('compares items scored in both experiments when B ran a subset', async () => {
 +    const a = ids(10).map((itemId, i) => ({ itemId, scores: { quality: quality(i) } }));
 +    // B ran only the hard items, each 0.05 better than A.
-+    const b = ids(10).slice(7).map(itemId => ({ itemId, scores: { quality: 0.35 } }));
++    const b = ids(10)
++      .slice(7)
++      .map(itemId => ({ itemId, scores: { quality: 0.35 } }));
 +    const result = await compare(mastraWith(a, b));
 +    expect(result.scorers.quality!.pairedCount).toBe(3);
 +    expect(result.scorers.quality!.delta).toBeCloseTo(0.05, 10);
@@ -64,14 +94,18 @@ index 0000000..b4dd8f6
 +  it('does not treat a scorer missing from one experiment as a score of 0', async () => {
 +    const a = ids(5).map(itemId => ({ itemId, scores: { quality: 0.7, harm: 0.4 } }));
 +    const b = ids(5).map(itemId => ({ itemId, scores: { quality: 0.7 } }));
-+    const result = await compare(mastraWith(a, b), { thresholds: { harm: { value: 0.05, direction: 'lower-is-better' } } });
++    const result = await compare(mastraWith(a, b), {
++      thresholds: { harm: { value: 0.05, direction: 'lower-is-better' } },
++    });
 +    expect(result.scorers.harm!.missingIn).toBe('B');
 +    expect(result.scorers.harm!.delta).toBe(0);
 +    expect(result.scorers.harm!.regressed).toBe(false);
 +    expect(result.hasRegression).toBe(true); // a scorer the candidate dropped fails the quick check
 +    expect(result.warnings).toContain('Scorer "harm" has no scores in experiment B; it is not compared.');
 +
-+    const reversed = await compare(mastraWith(b, a), { thresholds: { harm: { value: 0.05, direction: 'lower-is-better' } } });
++    const reversed = await compare(mastraWith(b, a), {
++      thresholds: { harm: { value: 0.05, direction: 'lower-is-better' } },
++    });
 +    expect(reversed.scorers.harm!.missingIn).toBe('A');
 +    expect(reversed.hasRegression).toBe(false);
 +  });
@@ -86,7 +120,9 @@ index 0000000..b4dd8f6
 +
 +  it('averages repeated attempts of an item instead of keeping the last one', async () => {
 +    const a = ids(4).map(itemId => ({ itemId, scores: { quality: 0.4 } }));
-+    const b = ids(4).flatMap(itemId => [0.9, 0.1, 0.2].map((score, attempt) => ({ itemId, attempt, scores: { quality: score } })));
++    const b = ids(4).flatMap(itemId =>
++      [0.9, 0.1, 0.2].map((score, attempt) => ({ itemId, attempt, scores: { quality: score } })),
++    );
 +    const result = await compare(mastraWith(a, b));
 +    expect(result.scorers.quality!.statsB.avgScore).toBeCloseTo(0.4, 10);
 +    expect(result.scorers.quality!.statsB.totalItems).toBe(4);
@@ -138,7 +174,11 @@ index 0000000..b4dd8f6
 +    // real numbers, but to A - 1.9e-9 in floating point, which an absolute 1e-9 guard would flag.
 +    const a = ids(3).map(itemId => ({ itemId, scores: { throughput: 12345678.9 } }));
 +    const b = ids(3).flatMap(itemId =>
-+      [12345678.90504, 12345678.90336, 12345678.8916].map((v, attempt) => ({ itemId, attempt, scores: { throughput: v } })),
++      [12345678.90504, 12345678.90336, 12345678.8916].map((v, attempt) => ({
++        itemId,
++        attempt,
++        scores: { throughput: v },
++      })),
 +    );
 +    const result = await compare(mastraWith(a, b));
 +    expect(result.scorers.throughput!.delta).toBe(0);
@@ -157,7 +197,7 @@ index 0000000..b4dd8f6
 +  });
 +});
 diff --git a/packages/core/src/datasets/experiment/analytics/compare.ts b/packages/core/src/datasets/experiment/analytics/compare.ts
-index daea834..869fb1d 100644
+index daea8343..3f1fcb53 100644
 --- a/packages/core/src/datasets/experiment/analytics/compare.ts
 +++ b/packages/core/src/datasets/experiment/analytics/compare.ts
 @@ -7,7 +7,7 @@
@@ -277,7 +317,7 @@ index daea834..869fb1d 100644
      scorers,
      items,
      warnings,
-@@ -216,19 +264,39 @@ export async function compareExperiments(mastra: Mastra, config: CompareExperime
+@@ -216,19 +264,42 @@ export async function compareExperiments(mastra: Mastra, config: CompareExperime
  }
  
  /**
@@ -316,13 +356,16 @@ index daea834..869fb1d 100644
 +    result[scorerId] = {};
 +    for (const [itemId, rows] of Object.entries(byItem)) {
 +      const valid = rows.map(row => row.score).filter((score): score is number => score != null);
-+      result[scorerId][itemId] = { ...rows[rows.length - 1]!, score: valid.length > 0 ? computeMean(valid) : null } as ScoreRowData;
++      result[scorerId][itemId] = {
++        ...rows[rows.length - 1]!,
++        score: valid.length > 0 ? computeMean(valid) : null,
++      } as ScoreRowData;
      }
 -    result[scorerId][itemId] = score;
    }
  
    return result;
-@@ -254,6 +322,7 @@ function buildEmptyResult(
+@@ -254,6 +325,7 @@ function buildEmptyResult(
      },
      versionMismatch,
      hasRegression: false,
@@ -331,7 +374,7 @@ index daea834..869fb1d 100644
      items: [],
      warnings,
 diff --git a/packages/core/src/datasets/experiment/analytics/types.ts b/packages/core/src/datasets/experiment/analytics/types.ts
-index d9d2d97..9f7177c 100644
+index d9d2d974..9f7177cf 100644
 --- a/packages/core/src/datasets/experiment/analytics/types.ts
 +++ b/packages/core/src/datasets/experiment/analytics/types.ts
 @@ -41,8 +41,20 @@ export interface ScorerComparison {

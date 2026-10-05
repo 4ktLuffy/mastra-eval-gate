@@ -60,5 +60,18 @@ describe('CLI', () => {
     const json = JSON.parse(run(['--mastra', local, '--baseline', A.experimentId, '--candidate', B.experimentId, '--json']).out);
     expect(json.reliability.newFailures).toBe(3);
     rmSync(local);
+
+    // The same module as TypeScript, loaded by the CLI itself (no tsx wrapper).
+    const ts = join(__dirname, `.cli-fixture-${process.pid}.ts`);
+    writeFileSync(
+      ts,
+      `import { Mastra } from '@mastra/core';\nimport { LibSQLStore } from '@mastra/libsql';\n` +
+        `const url: string = ${JSON.stringify(url)};\n` +
+        `export const mastra: Mastra = new Mastra({ storage: new LibSQLStore({ id: 'gate-test', url }), logger: false });\n`,
+    );
+    const fromTs = run(['--mastra', ts, '--baseline', A.experimentId, '--candidate', B.experimentId]);
+    rmSync(ts);
+    expect(fromTs.code).toBe(1);
+    expect(fromTs.out).toContain('3 item(s) fail in the candidate');
   });
 });
